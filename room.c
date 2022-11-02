@@ -17,6 +17,7 @@ Room *newRoom(void)
     {
         r->map[i] = malloc(sizeof(char) * r->columns);
     }
+    //
     wallBorders(r);
     return r;
 }
