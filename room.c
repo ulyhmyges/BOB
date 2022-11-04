@@ -13,36 +13,146 @@ Room *newRoom(void)
     Room *r = malloc(sizeof(Room));
     r->rows = 9;
     r->columns = 15;
-    strcpy(r->objects, "RGSH");
+    // strcpy(r->objects, "RGSH");
+    r->rock = 'R';
+    r->gap = 'G';
+    r->spike = 'S';
+    r->health = 'H';
     r->map = malloc(sizeof(char *) * r->rows);
     for (int i = 0; i < r->rows; i += 1)
     {
         r->map[i] = malloc(sizeof(char) * r->columns);
     }
-    //
-    wallBorders(r);
-
-    // rochers 3 x 3 au centre de la pièce
-    putThing(r, r->objects[0], 3, r->rows / 2 - 1, r->columns / 2 - 1);
-
-    // gaps aux coins supérieurs de la pièce
-    putThing(r, r->objects[1], 2, 1, 1);
-    r->map[1][1] = ' ';
-    putThing(r, r->objects[1], 2, 1, r->columns - 3);
-    r->map[1][r->columns-2] = ' ';
-    
-    // gaps aux coins inférieurs de la pièce
-    putThing(r, r->objects[1], 2, r->rows - 3, 1);
-    r->map[r->rows-2][1] = ' ';
-    putThing(r, r->objects[1], 2, r->rows - 3, r->columns - 3);
-    r->map[r->rows-2][r->columns-2] = ' ';
+    wallBorders(r); // construction des murs et portes de la pièce
+    designRoom5(r); // construction de l'intérieur de la pièce
 
     return r;
 }
-
-void setThing(Room *r, char thing, int row, int column)
+/**
+ * @brief dessine l'intérieur de la pièce selon le modèle suivant :
+ * WWWWWWWDWWWWWWW
+ * WHG         G W
+ * WGG         GGW
+ * W     RRR     W
+ * D     RRR     D
+ * W     RRR     W
+ * WGG         GGW
+ * W G         GHW
+ * WWWWWWWDWWWWWWW
+ *
+ * @param r la pièce
+ */
+void designRoom1(Room *r)
 {
-    r->map[row][column] = thing;
+    // rochers 3 x 3 au centre de la pièce
+    putThing(r, r->rock, 3, r->rows / 2 - 1, r->columns / 2 - 1, 1, 1);
+
+    // gaps aux coins supérieurs de la pièce
+    putThing(r, r->gap, 2, 1, 1, 1, 1);
+    r->map[1][1] = 'H';
+    putThing(r, r->gap, 2, 1, r->columns - 3, 1, 1);
+    r->map[1][r->columns - 2] = ' ';
+
+    // gaps aux coins inférieurs de la pièce
+    putThing(r, r->gap, 2, r->rows - 3, 1, 1, 1);
+    r->map[r->rows - 2][1] = ' ';
+    putThing(r, r->gap, 2, r->rows - 3, r->columns - 3, 1, 1);
+    r->map[r->rows - 2][r->columns - 2] = 'H';
+}
+
+/**
+ * @brief dessine l'intérieur de la pièce selon le modèle suivant :
+ * WWWWWWWDWWWWWWW
+ * WHG         G W
+ * WGG         GGW
+ * W   S R R S   W
+ * D             D
+ * W   S R R S   W
+ * WGG         GGW
+ * W G         GHW
+ * WWWWWWWDWWWWWWW
+ *
+ * @param r
+ */
+void designRoom2(Room *r)
+{
+    // obstacles au centre de la pièce
+    putThing(r, r->spike, 3, r->rows / 2 - 1, r->columns / 2 - 3, 2, 2);
+    putThing(r, r->spike, 3, r->rows / 2 - 1, r->columns / 2 + 1, 2, 2);
+    putThing(r, r->rock, 3, r->rows / 2 - 1, r->columns / 2 - 1, 2, 2);
+
+    // gaps aux coins supérieurs de la pièce
+    putThing(r, r->gap, 2, 1, 1, 1, 1);
+    r->map[1][1] = 'H';
+    putThing(r, r->gap, 2, 1, r->columns - 3, 1, 1);
+    r->map[1][r->columns - 2] = ' ';
+
+    // gaps aux coins inférieurs de la pièce
+    putThing(r, r->gap, 2, r->rows - 3, 1, 1, 1);
+    r->map[r->rows - 2][1] = ' ';
+    putThing(r, r->gap, 2, r->rows - 3, r->columns - 3, 1, 1);
+    r->map[r->rows - 2][r->columns - 2] = 'H';
+}
+
+/**
+ * @brief dessine l'intérieur de la pièce selon le modèle suivant :
+ * WWWWWWWDWWWWWWW
+ * W             W
+ * W             W
+ * W   RRR RRR   W
+ * D             D
+ * W   RRR RRR   W
+ * W             W
+ * W             W
+ * WWWWWWWDWWWWWWW
+ * @param r
+ */
+void designRoom3(Room *r)
+{
+    // obstacles au centre de la pièce
+    putThing(r, r->rock, 3, r->rows / 2 - 1, r->columns / 2 - 3, 2, 1);
+    putThing(r, r->rock, 3, r->rows / 2 - 1, r->columns / 2 + 1, 2, 1);
+}
+
+/**
+ * @brief dessine l'intérieur de la pi!ce selon le modèle suivant :
+ * WWWWWWWDWWWWWWW
+ * W             W
+ * W             W
+ * W      S      W
+ * D     SHS     D
+ * W      S      W
+ * W             W
+ * W             W
+ * WWWWWWWDWWWWWWW
+ * 
+ * @param r la pièce
+ */
+void designRoom4(Room *r)
+{
+    putThing(r, r->spike, 3, r->rows / 2 - 1, r->columns / 2 - 1, 1, 1);
+    putThing(r, ' ', 3, r->rows / 2 - 1, r->columns / 2 - 1, 2, 2);
+    putThing(r, r->health, 1, r->rows / 2, r->columns / 2, 1, 1);
+}
+
+/**
+ * @brief dessine l'intérieur de la pi!ce selon le modèle suivant :
+ * WWWWWWWDWWWWWWW
+ * WG            W
+ * W             W
+ * W             W
+ * D             D
+ * W             W
+ * W             W
+ * W            GW
+ * WWWWWWWDWWWWWWW
+ * 
+ * @param r 
+ */
+void designRoom5(Room *r)
+{
+    putThing(r, r->gap, 1, 1, 1, 1, 1);
+    putThing(r, r->gap, 1, r->rows - 2, r->columns - 2, 1, 1);
 }
 
 /**
@@ -55,11 +165,11 @@ void setThing(Room *r, char thing, int row, int column)
  * @param row indice de la ligne
  * @param column indice de la colonne
  */
-void putThing(Room *r, char thing, int pow, int row, int column)
+void putThing(Room *r, char thing, int pow, int row, int column, int verticalIncrement, int horizontalIncrement)
 {
-    for (int i = row; i < row + pow && i < r->rows - 1; i += 1)
+    for (int i = row; i < row + pow && i < r->rows - 1; i += verticalIncrement)
     {
-        for (int j = column; j < column + pow && j < r->columns - 1; j += 1)
+        for (int j = column; j < column + pow && j < r->columns - 1; j += horizontalIncrement)
         {
             if (i > 0 && i < r->rows - 1 && j > 0 && j < r->columns - 1)
             {
