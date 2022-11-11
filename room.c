@@ -247,11 +247,16 @@ void showRoom(Room r)
     }
 }
 
+void updateRoom(Room *r, char thing, int row, int column){
+    r->map[row][column] = thing;
+}
+
 void freeRoom(Room *r)
 {
     for (int i = 0; i < r->rows; i += 1)
     {
         free(r->map[i]);
     }
+    free(r->map);
     free(r);
 }

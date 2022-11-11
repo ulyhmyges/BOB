@@ -15,9 +15,12 @@ typedef struct Room {
 } Room;
 
 Room * newRoom(void);
-void freeRoom(Room *r);
-void wallBorders(Room *r);
 void showRoom(Room r);
+void freeRoom(Room *r);
+void updateRoom(Room *r, char thing, int row, int column);
+
+// fonctions auxiliaires à la construction d'une pièce
+void wallBorders(Room *r);
 void putThing(Room *r, char thing, int pow, int row, int column, int verticalIncrement, int horizontalIncrement);
 void designRoom1(Room *r);
 void designRoom2(Room *r);
