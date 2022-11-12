@@ -23,6 +23,7 @@ int addRoom(RoomList *roomList, Room *room)
     {
         roomList->list[roomList->size] = room;
         roomList->size += 1;
+        room->id = roomList->size;
         return 1;
     }
     return 0;
@@ -82,5 +83,12 @@ void showRoomList(RoomList roomList)
     for (int i = 0; i < roomList.size; i += 1)
     {
         showRoom(*roomList.list[i]);
+    }
+}
+
+void printRoomList(RoomList roomList, FILE *f){
+    fprintf(f, "{%d}\n", roomList.size);
+    for (int i = 0; i < roomList.size; i += 1){
+        printRoom(*roomList.list[i], f);
     }
 }

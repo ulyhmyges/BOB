@@ -8,11 +8,11 @@
  *
  * @return Room*
  */
-Room *newRoom(void)
+Room *newRoom(int rows, int columns, int design)
 {
     Room *r = malloc(sizeof(Room));
-    r->rows = 9;
-    r->columns = 15;
+    r->rows = rows;
+    r->columns = columns;
     // strcpy(r->objects, "RGSH");
     r->rock = 'R';
     r->gap = 'G';
@@ -24,7 +24,23 @@ Room *newRoom(void)
         r->map[i] = malloc(sizeof(char) * r->columns);
     }
     wallBorders(r); // construction des murs et portes de la pièce
-    designRoom5(r); // construction de l'intérieur de la pièce
+    switch (design){    // construction de l'intérieur de la pièce
+        case 1:
+            designRoom1(r);
+            break;
+        case 2:
+            designRoom2(r);
+            break;
+        case 3:
+            designRoom3(r);
+            break;
+        case 4:
+            designRoom4(r);
+            break;
+        case 5:
+            designRoom5(r);
+            break;
+    }
 
     return r;
 }
@@ -246,17 +262,29 @@ void showRoom(Room r)
         printf("\n");
     }
 }
-
-void updateRoom(Room *r, char thing, int row, int column){
-    r->map[row][column] = thing;
+void printRoom(Room room, FILE *f)
+{
+    fprintf(f, "[%d|%d]%d\n", room.rows, room.columns, room.id);
+    for (int i = 0; i < room.rows; i += 1)
+    {
+        for (int j = 0; j < room.columns; j += 1)
+        {
+            fputc(room.map[i][j], f);
+        }
+        fputc('\n', f);
+    }
 }
 
-void freeRoom(Room *r)
+void updateRoom(Room *room, char thing, int row, int column){
+    room->map[row][column] = thing;
+}
+
+void freeRoom(Room *room)
 {
-    for (int i = 0; i < r->rows; i += 1)
+    for (int i = 0; i < room->rows; i += 1)
     {
-        free(r->map[i]);
+        free(room->map[i]);
     }
-    free(r->map);
-    free(r);
+    free(room->map);
+    free(room);
 }

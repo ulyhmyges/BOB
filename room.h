@@ -1,6 +1,7 @@
 #ifndef ROOM_H
 
 #define ROOM_H
+#include <stdio.h>
 
 typedef struct Room {
     int id;
@@ -14,9 +15,10 @@ typedef struct Room {
     char health;    //Objet généré aléatoirement (vie ou bouclier)
 } Room;
 
-Room * newRoom(void);
+Room * newRoom(int rows, int columns, int design);
 void showRoom(Room r);
 void freeRoom(Room *r);
+void printRoom(Room r, FILE *f);
 void updateRoom(Room *r, char thing, int row, int column);
 
 // fonctions auxiliaires à la construction d'une pièce

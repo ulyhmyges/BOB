@@ -1,8 +1,9 @@
-#include "room.h"
-
 #ifndef ROOMLIST_H
 
 #define ROOMLIST_H
+
+#include "room.h"
+
 
 typedef struct RoomList {
     Room **list;
@@ -17,4 +18,5 @@ int updateList(RoomList *roomList, Room *room, int index);
 int removeByRoom(RoomList *roomList, Room *room);
 int removeByIndex(RoomList *roomList, int index);
 void showRoomList(RoomList roomList);
+void printRoomList(RoomList roomList, FILE *f);
 #endif // ROOMLIST_H
