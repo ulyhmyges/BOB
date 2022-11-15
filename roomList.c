@@ -13,6 +13,9 @@ RoomList *newRoomList(void)
 
 void freeRoomList(RoomList *roomList)
 {
+    for (int i = 0; i < roomList->size; i += 1) {
+        freeRoom(roomList->list[i]);
+    }
     free(roomList->list);
     free(roomList);
 }

@@ -37,8 +37,8 @@ void addRoomFile(Room room, char *fichier){
         if (fscanf(file, "{%d}", &nbrooms) == -1){
             printf("Erreur fscanf dans addRoomFile!\n");
         }
-        fseek(file, 1, SEEK_SET);   // déplacement du curseur à la position 1
-        fprintf(file, "%d", nbrooms + 1);   // ajoute 1 au nombre total de pièces
+        fseek(file, 0, SEEK_SET);   // déplacement du curseur à la position 1
+        fprintf(file, "{%d}\n", nbrooms + 1);   // ajoute 1 au nombre total de pièces
         fclose(file);
     } else {
         printf("Erreur de lecture/écriture avec le fichier: %s\n", fichier);

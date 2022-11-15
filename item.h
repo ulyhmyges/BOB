@@ -22,4 +22,5 @@ typedef struct Item {
 Item * newItem(char *name, int hpMax, int shield, int dmg, boolean ps, boolean ss, boolean flight);
 void freeItem(Item *item);
 void showItem(Item item);
+void printItem(Item item, FILE *f);
 #endif

@@ -23,6 +23,11 @@ void freeItem(Item *item)
     free(item);
 }
 
+/**
+ * @brief affiche l'item avec ses attributs
+ * 
+ * @param item un objet personnage
+ */
 void showItem(Item item)
 {
     printf("---\n");
@@ -39,7 +44,49 @@ void showItem(Item item)
     {
         printf("dmg=%d\n", item.dmg);
     }
-    printf("ps=%s\n", item.ps ? "true" : "false");
-    printf("ss=%s\n", item.ss ? "true" : "false");
-    printf("flight=%s\n", item.flight ? "true" : "false");
+    if (item.ps){
+        printf("ps=%s\n", "true");
+    }
+    if (item.ss){
+        printf("ss=%s\n", "true");
+    }
+    if (item.flight){
+        printf("flight=%s\n", "true");
+    }
+}
+
+/**
+ * @brief écrit le contenu de l'item dans le fichier correspondant au pointeur f
+ * 
+ * @param item un objet personnage
+ * @param f pointeur FILE à l'état d'écriture
+ */
+void printItem(Item item, FILE *f)
+{
+    fputs("---\n", f);
+    fprintf(f, "name=%s\n", item.name);
+    if (item.hpMax)
+    {
+        fprintf(f, "hpMax=%d\n", item.hpMax);
+    }
+    if (item.shield)
+    {
+        fprintf(f, "shield=%d\n", item.shield);
+    }
+    if (item.dmg)
+    {
+        fprintf(f, "dmg=%d\n", item.dmg);
+    }
+    if (item.ps)
+    {
+        fprintf(f, "ps=%s\n", "true");
+    }
+    if (item.ss)
+    {
+        fprintf(f, "ss=%s\n", "true");
+    }
+    if (item.flight)
+    {
+        fprintf(f, "flight=%s\n", "true");
+    }
 }
