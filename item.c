@@ -3,7 +3,7 @@
 #include <string.h>
 #include "item.h"
 
-Item *newItem(char *name, int hpMax, int shield, int dmg, boolean ps, boolean ss, boolean flight)
+Item *newItem(char *name, int hpMax, int shield, float dmg, boolean ps, boolean ss, boolean flight)
 {
     Item *item = malloc(sizeof(Item));
     item->name = malloc(sizeof(char) * 35);
@@ -25,7 +25,7 @@ void freeItem(Item *item)
 
 /**
  * @brief affiche l'item avec ses attributs
- * 
+ *
  * @param item un objet personnage
  */
 void showItem(Item item)
@@ -42,22 +42,32 @@ void showItem(Item item)
     }
     if (item.dmg)
     {
-        printf("dmg=%d\n", item.dmg);
+        if (item.dmg == (int)item.dmg)
+        {
+            printf("dmg=%d\n", (int)item.dmg);
+        }
+        else
+        {
+            printf("dmg=%.1f\n", item.dmg);
+        }
     }
-    if (item.ps){
+    if (item.ps)
+    {
         printf("ps=%s\n", "true");
     }
-    if (item.ss){
+    if (item.ss)
+    {
         printf("ss=%s\n", "true");
     }
-    if (item.flight){
+    if (item.flight)
+    {
         printf("flight=%s\n", "true");
     }
 }
 
 /**
  * @brief écrit le contenu de l'item dans le fichier correspondant au pointeur f
- * 
+ *
  * @param item un objet personnage
  * @param f pointeur FILE à l'état d'écriture
  */
@@ -75,7 +85,14 @@ void printItem(Item item, FILE *f)
     }
     if (item.dmg)
     {
-        fprintf(f, "dmg=%d\n", item.dmg);
+        if (item.dmg == (int)item.dmg)
+        {
+            fprintf(f, "dmg=%d\n", (int)item.dmg);
+        }
+        else
+        {
+            fprintf(f, "dmg=%.1f\n", item.dmg);
+        }
     }
     if (item.ps)
     {
