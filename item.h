@@ -9,7 +9,7 @@ typedef enum boolean {
 
 typedef struct Item {
     char *name;
-    int hpMax;
+    float hpMax;
     int shield;
     float dmg;
     enum boolean ps;         //bouléen true=1 ou false=0
@@ -19,8 +19,9 @@ typedef struct Item {
 
 
 
-Item * newItem(char *name, int hpMax, int shield, float dmg, boolean ps, boolean ss, boolean flight);
+Item * newItem(char *name, float hpMax, int shield, float dmg, boolean ps, boolean ss, boolean flight);
 void freeItem(Item *item);
 void showItem(Item item);
 void printItem(Item item, FILE *f);
+Item * readItem(FILE *f);
 #endif

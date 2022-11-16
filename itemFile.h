@@ -4,12 +4,11 @@
 #include "itemList.h"
 
 void writeItemFile(ItemList itemList, char *fwd);
-void addItemFile(Item item, char *fwd);
+void addItemFile(Item *item, char *fwd);
 void removeItemFile(Item *item, char *fwd);
 void removeItemFileByName(char *name, char *fwd);
 void removeItemFileByIndex(int index, char *fwd);
+ItemList * readItemFile(char *fwd);
 
-ItemList * readItemList(char *fwd);
-Item * readItem(FILE *f);
 
 #endif // ITEMFILE_H

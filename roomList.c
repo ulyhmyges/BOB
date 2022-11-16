@@ -83,6 +83,7 @@ int removeByIndex(RoomList *roomList, int index)
 
 void showRoomList(RoomList roomList)
 {
+    printf("{%d}\n", roomList.size);
     for (int i = 0; i < roomList.size; i += 1)
     {
         showRoom(*roomList.list[i]);

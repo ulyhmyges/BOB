@@ -24,7 +24,7 @@ void freeItemList(ItemList *itemList)
 }
 /**
  * @brief écrit le contenu de la liste des items dans le fichier correspondant au pointeur f
- * 
+ *
  * @param itemList objet complexe contenant la liste des items
  * @param f pointeur f d'un fichier à l'état d'écriture
  */
@@ -37,19 +37,21 @@ void printItemList(ItemList itemList, FILE *f)
     }
 }
 
-void showItemList(ItemList itemList){
+void showItemList(ItemList itemList)
+{
     printf("{%d}\n", itemList.size);
-    for (int i = 0; i < itemList.size; i += 1){
+    for (int i = 0; i < itemList.size; i += 1)
+    {
         showItem(*itemList.list[i]);
     }
 }
 
 /**
  * @brief ajoute un item à la liste et retourne 1 en cas de succès et 0 sinon
- * 
+ *
  * @param item un objet personnage
  * @param itemList objet complexe contenant la liste des items
- * @return int 
+ * @return int
  */
 int addItemList(Item *item, ItemList *itemList)
 {
@@ -66,27 +68,52 @@ int addItemList(Item *item, ItemList *itemList)
     }
 }
 
+ItemList *readItemList(char *fwd)
+{
+    FILE *f = fopen(fwd, "r");
+    if (f != NULL)
+    {
+        ItemList *itemList = newItemList();
+        fscanf(f, "{%d}\n", &itemList->size);
+        for (int i = 0; i < itemList->size; i += 1)
+        {
+            itemList->list[i] = readItem(f);
+        }
+        fclose(f);
+        return itemList;
+    }
+    else
+    {
+        printf("Erreur à la lecture du fichier %s\n", fwd);
+        return NULL;
+    }
+}
+
 /**
  * @brief supprime la première occurrence item de la liste et retourne 1 en cas de succès et 0 sinon
- * 
+ *
  * @param item élément à supprimer
  * @param itemList objet contenant la liste des objets personnage
- * @return int 
+ * @return int
  */
 int removeItemList(Item *item, ItemList *itemList)
 {
     int i;
-    for (i = 0; i < itemList->size; i += 1){
-        if (itemList->list[i] == item){
+    for (i = 0; i < itemList->size; i += 1)
+    {
+        if (itemList->list[i] == item)
+        {
             freeItem(itemList->list[i]);
             itemList->size -= 1;
             break;
         }
     }
-    for (int j = i; j < itemList->size; j += 1){
+    for (int j = i; j < itemList->size; j += 1)
+    {
         itemList->list[j] = itemList->list[j + 1];
     }
-    if (i < itemList->size){
+    if (i <= itemList->size)
+    {
         return 1;
     }
     return 0;
@@ -94,10 +121,10 @@ int removeItemList(Item *item, ItemList *itemList)
 
 /**
  * @brief supprime un item de la liste selon l'attribut name
- * 
+ *
  * @param name attribut d'un item
  * @param itemList objet complexe contenant la liste des items
- * @return int 
+ * @return int
  */
 int removeItemListByName(char *name, ItemList *itemList)
 {
@@ -115,7 +142,23 @@ int removeItemListByName(char *name, ItemList *itemList)
     {
         itemList->list[j] = itemList->list[j + 1];
     }
-    if (i < itemList->size){
+    if (i <= itemList->size)
+    {
+        return 1;
+    }
+    return 0;
+}
+
+int removeItemListByIndex(int index, ItemList *itemList)
+{
+    if (index >= 0 && index < itemList->size)
+    {
+        freeItem(itemList->list[index]);
+        itemList->size -= 1;
+        for (int j = index; j < itemList->size; j += 1)
+        {
+            itemList->list[j] = itemList->list[j + 1];
+        }
         return 1;
     }
     return 0;

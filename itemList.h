@@ -16,5 +16,7 @@ void showItemList(ItemList itemList);
 int addItemList(Item *item, ItemList *itemList);
 int removeItemList(Item *item, ItemList *itemList);
 int removeItemListByName(char *name, ItemList *itemList);
+int removeItemListByIndex(int index, ItemList *itemList);
+ItemList * readItemList(char *fwd);
 
 #endif

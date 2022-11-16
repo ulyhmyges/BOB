@@ -3,7 +3,7 @@
 #include <string.h>
 #include "item.h"
 
-Item *newItem(char *name, int hpMax, int shield, float dmg, boolean ps, boolean ss, boolean flight)
+Item *newItem(char *name, float hpMax, int shield, float dmg, boolean ps, boolean ss, boolean flight)
 {
     Item *item = malloc(sizeof(Item));
     item->name = malloc(sizeof(char) * 35);
@@ -34,7 +34,14 @@ void showItem(Item item)
     printf("name=%s\n", item.name);
     if (item.hpMax)
     {
-        printf("hpMax=%d\n", item.hpMax);
+        if (item.hpMax == (int)item.hpMax)
+        {
+            printf("hpMax=%d\n", (int)item.hpMax);
+        }
+        else
+        {
+            printf("hpMax=%.1f\n", item.hpMax);
+        }
     }
     if (item.shield)
     {
@@ -77,7 +84,14 @@ void printItem(Item item, FILE *f)
     fprintf(f, "name=%s\n", item.name);
     if (item.hpMax)
     {
-        fprintf(f, "hpMax=%d\n", item.hpMax);
+        if (item.hpMax == (int)item.hpMax)
+        {
+            fprintf(f, "hpMax=%d\n", (int)item.hpMax);
+        }
+        else
+        {
+            fprintf(f, "hpMax=%.1f\n", item.hpMax);
+        }
     }
     if (item.shield)
     {
@@ -106,4 +120,54 @@ void printItem(Item item, FILE *f)
     {
         fprintf(f, "flight=%s\n", "true");
     }
+}
+
+Item *readItem(FILE *f)
+{
+    Item *item = newItem("a", 0, 0, 0, false, false, false);
+    char binaire[5];
+    char var[50];
+    fgets(var, 50, f);
+    if (!strcmp(var, "---\n"))
+    {
+        fgets(var, 30, f);
+    }
+    sscanf(var, "name=%[^\n]", item->name);
+    fgets(var, 30, f);
+    int i = sscanf(var, "hpMax=%f\n", &item->hpMax); // succès = 1 et échec = 0
+    if (i == 1)
+    {
+        fgets(var, 30, f);
+    }
+    i = sscanf(var, "shield=%d\n", &item->shield);
+    if (i == 1)
+    {
+        fgets(var, 30, f);
+    }
+    i = sscanf(var, "dmg=%f\n", &item->dmg);
+    if (i == 1)
+    {
+
+        fgets(var, 30, f);
+    }
+    i = sscanf(var, "ps=%s\n", binaire);
+    if (i == 1)
+    {
+        item->ps = true;
+        fgets(var, 30, f);
+    }
+    i = sscanf(var, "ss=%s\n", binaire);
+    if (i == 1)
+    {
+        item->ss = true;
+        fgets(var, 30, f);
+    }
+    i = sscanf(var, "flight=%s\n", binaire);
+    if (i == 1)
+    {
+        item->flight = true;
+        fgets(var, 30, f);
+    }
+    fseek(f, -4, SEEK_CUR);
+    return item;
 }
