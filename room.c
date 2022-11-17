@@ -13,7 +13,6 @@ Room *newRoom(int rows, int columns, int design)
     Room *r = malloc(sizeof(Room));
     r->rows = rows;
     r->columns = columns;
-    // strcpy(r->objects, "RGSH");
     r->rock = 'R';
     r->gap = 'G';
     r->spike = 'S';

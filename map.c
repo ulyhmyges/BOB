@@ -17,6 +17,11 @@ Map *newMap(int height, int width)
     {
         map->grid[i] = malloc(sizeof(char) * map->width);
     }
+    for (int i = 0; i < map->height; i += 1){
+        for (int j = 0; j < map->width; j += 1){
+            map->grid[i][j] = '0';
+        }
+    }
     return map;
 }
 
@@ -31,10 +36,16 @@ void freeMap(Map *map)
 }
 
 void showMap(Map map){
+    printf("\n--------map--------\n");
     for (int i = 0; i < map.height; i += 1){
         for (int j= 0; j < map.width; j += 1){
             printf("%c", map.grid[i][j]);
         }
         printf("\n");
     }
+    printf("--------map--------\n");
+}
+
+void updateMap(Map *map, int i, int j, char c){
+    map->grid[i][j] = c;
 }
