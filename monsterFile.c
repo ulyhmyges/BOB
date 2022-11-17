@@ -58,6 +58,6 @@ int addMonsterFile(Monster *monster, char *fwd)
         return 0;
     }
 }
-int removeMonsterFile(Monster *monster, char *fwd);
-int removeMonsterFileByName(char *name, char *fwd);
-int removeMonsterFileByIndex(int index, char *fwd);
+void removeMonsterFile(Monster *monster, char *fwd);
+void removeMonsterFileByName(char *name, char *fwd);
+void removeMonsterFileByIndex(int index, char *fwd);

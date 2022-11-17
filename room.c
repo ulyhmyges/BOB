@@ -23,23 +23,32 @@ Room *newRoom(int rows, int columns, int design)
     {
         r->map[i] = malloc(sizeof(char) * r->columns);
     }
-    wallBorders(r); // construction des murs et portes de la pièce
-    switch (design){    // construction de l'intérieur de la pièce
-        case 1:
-            designRoom1(r);
-            break;
-        case 2:
-            designRoom2(r);
-            break;
-        case 3:
-            designRoom3(r);
-            break;
-        case 4:
-            designRoom4(r);
-            break;
-        case 5:
-            designRoom5(r);
-            break;
+    
+    switch (design)
+    { 
+    case 1:
+        wallBorders(r);     //construction des murs et portes de la pièce
+        designRoom1(r);     //construction de l'intérieur de la pièce
+        break;
+    case 2:
+        wallBorders(r);
+        designRoom2(r);
+        break;
+    case 3:
+        wallBorders(r);
+        designRoom3(r);
+        break;
+    case 4:
+        wallBorders(r);
+        designRoom4(r);
+        break;
+    case 5:
+        wallBorders(r);
+        designRoom5(r);
+        break;
+    default:
+        wallBorders(r);     //pièce vide
+        break;
     }
 
     return r;
@@ -141,7 +150,7 @@ void designRoom3(Room *r)
  * W             W
  * W             W
  * WWWWWWWDWWWWWWW
- * 
+ *
  * @param r la pièce
  */
 void designRoom4(Room *r)
@@ -162,8 +171,8 @@ void designRoom4(Room *r)
  * W             W
  * W            GW
  * WWWWWWWDWWWWWWW
- * 
- * @param r 
+ *
+ * @param r
  */
 void designRoom5(Room *r)
 {
@@ -275,7 +284,8 @@ void printRoom(Room room, FILE *f)
     }
 }
 
-void updateRoom(Room *room, char thing, int row, int column){
+void updateRoom(Room *room, char thing, int row, int column)
+{
     room->map[row][column] = thing;
 }
 
