@@ -2,32 +2,80 @@
 #include <stdlib.h>
 #include <string.h>
 #include "room.h"
+#include "monsterFile.h"
 
 /**
  * @brief permet de créer une pièce du Donjon
  *
  * @return Room*
  */
-Room *newRoom(int rows, int columns, int design)
+Room *newRoom(int rows, int columns, char *type, int design, char *monsterfile)
 {
     Room *r = malloc(sizeof(Room));
+    r->id = 0;
+    r->type = malloc(sizeof(char) * 8);
+    strcpy(r->type, type);
     r->rows = rows;
     r->columns = columns;
     r->rock = 'R';
     r->gap = 'G';
     r->spike = 'S';
     r->health = 'H';
+    r->item = malloc(sizeof(Item));
+    r->item = newItem("Empty", 0, 0, 0, false, false, false);
+    createMap(r, design);
+    createMonsterList(r, monsterfile);
+    return r;
+}
+
+void createMonsterList(Room *r, char *monsterfile)
+{
+    r->monsters = newMonsterList();
+    MonsterList *monsterList = readMonsterFile(monsterfile);
+    int numberOne = rand() % 7;
+    int numberTwo = 0;
+    if (numberOne < 6)
+    {
+        numberTwo = rand() % (7 - numberOne) ;
+    }
+    int index = rand() % monsterList->size;
+    for (int i = 0; i < numberOne; i += 1){ 
+        addMonsterList(monsterList->list[index], r->monsters);
+    }
+    index = rand() % monsterList->size;
+    for (int i = 0; i < numberTwo; i += 1){ 
+        addMonsterList(monsterList->list[index], r->monsters);
+    }
+
+    int random = rand() % 10;
+    switch (random){
+        case 9:
+            for (int i = 0; i < r->monsters->size; i += 1){
+                r->monsters->list[i]->hpMax *= 2;
+                r->monsters->list[i]->dmg *= 2;
+            }
+            break;
+    }
+}
+
+/**
+ * @brief procédure qui dessine la pièce r selon le design
+ *
+ * @param r la pièce
+ * @param design
+ */
+void createMap(Room *r, int design)
+{
     r->map = malloc(sizeof(char *) * r->rows);
     for (int i = 0; i < r->rows; i += 1)
     {
         r->map[i] = malloc(sizeof(char) * r->columns);
     }
-    
     switch (design)
-    { 
+    {
     case 1:
-        wallBorders(r);     //construction des murs et portes de la pièce
-        designRoom1(r);     //construction de l'intérieur de la pièce
+        wallBorders(r); // construction des murs et portes de la pièce
+        designRoom1(r); // construction de l'intérieur de la pièce
         break;
     case 2:
         wallBorders(r);
@@ -45,12 +93,13 @@ Room *newRoom(int rows, int columns, int design)
         wallBorders(r);
         designRoom5(r);
         break;
+    case 6:
+        designNoRoom(r);
+        break;
     default:
-        wallBorders(r);     //pièce vide
+        wallBorders(r); // pièce vide
         break;
     }
-
-    return r;
 }
 /**
  * @brief dessine l'intérieur de la pièce selon le modèle suivant :
@@ -179,6 +228,24 @@ void designRoom5(Room *r)
     putThing(r, r->gap, 1, r->rows - 2, r->columns - 2, 1, 1);
 }
 
+void designNoRoom(Room *r)
+{
+    for (int i = 0; i < r->rows; i += 1)
+    {
+        for (int j = 0; j < r->columns; j += 1)
+        {
+            if (i == j)
+            {
+                r->map[i][j] = ' ';
+            }
+            else
+            {
+                r->map[i][j] = 'W';
+            }
+        }
+    }
+}
+
 /**
  * @brief dispose des objets thing sous forme d'un carré
  * dans la pièce si toutes les contraintes sont respectées
@@ -295,5 +362,8 @@ void freeRoom(Room *room)
         free(room->map[i]);
     }
     free(room->map);
+    freeItem(room->item);
+    freeMonsterList(room->monsters);
+    free(room->type);
     free(room);
 }

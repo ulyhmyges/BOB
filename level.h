@@ -34,15 +34,19 @@ typedef struct Level
     Room *bossRoom;
 } Level;
 
-Room *createSpecialRoom(int rows, int columns, char kind);
-Level *newLevel(int id, int rows, int columns);
+Room *createSpecialRoom(int rows, int columns, char kind, char *itemfile, char *monsterfile);
+void createFloor(Level *level, char *monsterfile);
+Level *newLevel(int id, int rows, int columns, char *roomfile, char *itemfile, char *monsterfile);
 void freeLevel(Level *level);
-void updateFloor(Room **floor, int i, int j, Room r);
+void updateFloor(Level *level, int i, int j, Room r);
+void showFloor(Level *level);
 int getU(Level *level);
 int getV(Level *level);
-void randFloor(Level *level);
+void randFloor(Level *level, char *fwd, char *monsterfile);
 int addBossRoom(Level *level);
-int addItemRoom(Level *level);
-int putItemRoom(Level *level, int i, int j);
+int addItemRoomBonus(Level *level);
+
+int addItemRoom(Level *level, Room *room);
+int putItemRoom(Level *level, int i, int j, Room *room);
 
 #endif // FLOOR_H

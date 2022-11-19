@@ -12,9 +12,9 @@ typedef struct Item {
     float hpMax;
     int shield;
     float dmg;
-    enum boolean ps;         //bouléen true=1 ou false=0
-    enum boolean ss;         //bouléen
-    enum boolean flight;     //bouléen
+    boolean ps;         //bouléen true=1 ou false=0
+    boolean ss;         //bouléen
+    boolean flight;     //bouléen
 } Item;
 
 

@@ -4,12 +4,13 @@
 #include "monster.h"
 #include "item.h"
 
-Monster *newMonster(char *name, float hpMax, boolean shoot, boolean ss, boolean flight)
+Monster *newMonster(char *name, float hpMax, float dmg, boolean shoot, boolean ss, boolean flight)
 {
     Monster *monster = malloc(sizeof(Monster));
     monster->name = malloc(sizeof(char) * 35);
     strcpy(monster->name, name);
     monster->hpMax = hpMax;
+    monster->dmg = dmg;
     monster->shoot = shoot;
     monster->ss = ss;
     monster->flight = flight;
@@ -78,7 +79,7 @@ void printMonster(Monster monster, FILE *f)
 }
 
 Monster *readMonster(FILE *f){
-    Monster *monster = newMonster("m", 0, false, false, false);
+    Monster *monster = newMonster("m", 0, -1, false, false, false);
     char binaire[5];
     char var[50];
     fgets(var, 50, f);

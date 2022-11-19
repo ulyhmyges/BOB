@@ -51,8 +51,8 @@ void addRoomFile(Room room, char *fichier){
  * @param id attribut d'une pièce
  * @param fichier chemin du fichier *.rtbob à modifier
  */
-void removeRoomFileById(int id, char *fichier){
-    RoomList *roomList = readRoomFile(fichier);
+void removeRoomFileById(int id, char *fichier, char *monsterfile){
+    RoomList *roomList = readRoomFile(fichier, monsterfile);
     for (int i = 0; i < roomList->size; i += 1) {
         if (roomList->list[i]->id == id){
             removeByRoom(roomList, roomList->list[i]);
@@ -67,8 +67,8 @@ void removeRoomFileById(int id, char *fichier){
  * @param index commence à partir de 0
  * @param fichier chemin du fichier *.rtbob à modifier
  */
-void removeRoomFileByIndex(int index, char *fichier){
-    RoomList *roomList = readRoomFile(fichier);
+void removeRoomFileByIndex(int index, char *fichier, char *monsterfile){
+    RoomList *roomList = readRoomFile(fichier, monsterfile);
     removeByIndex(roomList, index);
     writeRoomFile(*roomList, fichier);
 }
@@ -79,9 +79,9 @@ void removeRoomFileByIndex(int index, char *fichier){
  * @param id attribut de la pièce
  * @param fichier chemin du fichier *.rtbob
  */
-void showRoomFileById(int id, char *fichier){
+void showRoomFileById(int id, char *fichier, char *monsterfile){
     RoomList *roomList = NULL;
-    roomList = readRoomFile(fichier);
+    roomList = readRoomFile(fichier, monsterfile);
     int j = 0;
     for (int i = 0; i < roomList->size; i += 1){    // à la 1ère occurrence de l'id dans la liste, on sort de la boucle
         if (roomList->list[i]->id == id){
@@ -100,17 +100,17 @@ void showRoomFileById(int id, char *fichier){
  * @param fichier chemin du fichier *.rtbob à lire
  * @return RoomList* l'ensemble des pièces contenues dans le fichier 'fichier'
  */
-RoomList * readRoomFile(char *fichier){
+RoomList * readRoomFile(char *fichier, char *monsterfile){
     RoomList *roomList = newRoomList();
 
-    FILE *file = fopen(fichier, "r");
-    if (file != NULL)
+    FILE *f = fopen(fichier, "r");
+    if (f != NULL)
     {
-        fscanf(file, "{%d}\n", &roomList->size);
+        fscanf(f, "{%d}\n", &roomList->size);
         for (int i = 0; i < roomList->size; i += 1){
-            roomList->list[i] = readRoom(file);
+            roomList->list[i] = readRoom(f, monsterfile);
         }
-        fclose(file);
+        fclose(f);
         return roomList;
     }else{
         return NULL;
@@ -126,14 +126,14 @@ RoomList * readRoomFile(char *fichier){
  * @param f file in read state 
  * @return Room* la pièce
  */
-Room *readRoom(FILE *f)
+Room *readRoom(FILE *f, char *monsterfile)
 {
     // fonction auxiliaire à readRoomFile()
     int rows = 0;
     int columns = 0;
     int id = 0;
     fscanf(f, "[%d|%d]%d\n", &rows, &columns, &id);
-    Room *room = newRoom(rows, columns, 0);
+    Room *room = newRoom(rows, columns, "Room", 0, monsterfile);
     room->id = id;
     for (int i = 0; i < room->rows; i += 1)
     {
