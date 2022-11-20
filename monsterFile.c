@@ -43,12 +43,11 @@ int addMonsterFile(Monster *monster, char *fwd)
     FILE *f = fopen(fwd, "r+");
     if (f != NULL)
     {
-        MonsterList *monsterList = newMonsterList();
-        fscanf(f, "{%d}\n", &monsterList->size);
+        int monsterTotal = 0;
+        fscanf(f, "{%d}\n", &monsterTotal);
         printMonster(*monster, f);
-        monsterList->size += 1;
         fseek(f, 0, SEEK_SET);
-        fprintf(f, "{%d}\n", monsterList->size);
+        fprintf(f, "{%d}\n", monsterTotal + 1);
         fclose(f);
         return 1;
     }

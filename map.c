@@ -8,9 +8,9 @@ Map *newMap(int height, int width)
     map->height = height;
     map->width = width;
     map->room = 'r';
-    map->item = 'i';
-    map->spawn = 's';
-    map->bonus = 'b';
+    map->item = 'I';
+    map->spawn = 'S';
+    map->bonus = 'J';
     map->boss = 'B';
     map->grid = malloc(sizeof(char *) * map->height);
     for (int i = 0; i < map->height; i += 1)

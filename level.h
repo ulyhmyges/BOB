@@ -16,7 +16,7 @@ typedef struct Level
 {
     int id;
     Room **floor;
-    int height; // 7
+    int height; // 7 par défaut
     int width;  // 7
 
     Direction direction;

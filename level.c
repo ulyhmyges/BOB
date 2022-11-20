@@ -28,18 +28,18 @@ Room *createSpecialRoom(int rows, int columns, char kind, char *itemfile, char *
     {
     case 'B': // boss room
         r = newRoom(rows, columns, "Boss", 3, monsterfile);
-        r->map[r->rows / 2][r->columns / 2] = kind;
+        r->map[r->rows / 2][r->columns / 2] = kind;     //le boss (B) au milieu de la pièce
         break;
 
-    case 'I': // item room
+    case 'I': // item room et item room bonus
         r = newRoom(rows, columns, "Item", 0, monsterfile);
-        r->map[r->rows / 2][r->columns / 2] = kind;
+        r->map[r->rows / 2][r->columns / 2] = kind;     //l'item (I) au milieu de la pièce
         r->item = itemList->list[itemIndex];
         break;
 
     default:
         r = newRoom(rows, columns, "Spawner", 0, monsterfile);
-        r->map[r->rows / 2][r->columns / 2] = kind;
+        r->map[r->rows / 2][r->columns / 2] = kind;     //le player (P) au milieu de la pièce
     }
     return r;
 }
@@ -98,9 +98,9 @@ Level *newLevel(int id, int rows, int columns, char *roomfile, char *itemfile, c
     // place le spawner au centre de l'étage
     updateFloor(level, level->u, level->v, *level->spawner);
     updateMap(level->map, level->u, level->v, level->map->spawn);
-    // placement aléatoire des pièces
-    randFloor(level, roomfile, monsterfile);
-    addItemRoom(level, level->itemRoom);
+ 
+    randFloor(level, roomfile, monsterfile);       //placement aléatoire des pièces
+    addItemRoom(level, level->itemRoom);        //ajout de l'item room
     return level;
 }
 
@@ -162,18 +162,14 @@ void randFloor(Level *level, char *roomfile, char *monsterfile)
         }
         essai += 1;
     }
-    printf("u: %d ; v: %d\n", level->u, level->v);
     addBossRoom(level);
-    printf("u: %d ; v: %d\n", level->u, level->v);
-    putItemRoom(level, level->u, level->v, level->itemRoomBonus);
-    printf("u: %d ; v: %d\n", level->u, level->v);
+    putItemRoom(level, level->u, level->v, level->itemRoomBonus);       //ajout item room bonus
     strcpy(level->itemRoomBonus->type, "Bonus");
+    updateMap(level->map, level->u, level->v, level->map->bonus);
 }
 
 int addBossRoom(Level *level)
 {
-    int design = rand() % 5;
-    design += 1;
     if (level->u > 0 && level->map->grid[level->u - 1][level->v] == '0')
     {
         level->u -= 1;
@@ -230,26 +226,32 @@ int addItemRoom(Level *level, Room *room)
 
 int putItemRoom(Level *level, int i, int j, Room *room)
 {
+    level->u = i;
+    level->v = j;
     if (i > 0 && level->map->grid[i - 1][j] == '0')
     {
+        level->u -= 1;
         updateFloor(level, i - 1, j, *room);
         updateMap(level->map, i - 1, j, level->map->item);
         return 1;
     }
     if (j < level->width - 1 && level->map->grid[i][j + 1] == '0')
     {
+        level->v += 1;
         updateFloor(level, i, j + 1, *room);
         updateMap(level->map, i, j + 1, level->map->item);
         return 1;
     }
     if (i < level->height - 1 && level->map->grid[i + 1][j] == '0')
     {
+        level->u += 1;
         updateFloor(level, i + 1, j, *room);
         updateMap(level->map, i + 1, j, level->map->item);
         return 1;
     }
     if (j > 0 && level->map->grid[i][j - 1] == '0')
     {
+        level->v -= 1;
         updateFloor(level, i, j - 1, *room);
         updateMap(level->map, i, j - 1, level->map->item);
         return 1;

@@ -7,8 +7,8 @@
 
 typedef struct Room
 {
-    char *type;
     int id;
+    char *type;
     int rows;
     int columns;
     char **map;
