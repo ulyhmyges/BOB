@@ -11,6 +11,6 @@
 #define RUN_H
 #include "player.h"
 
-Player * selectPlayer();
+Player * selectPlayer(char *playerfile);
 
 #endif // RUN_H

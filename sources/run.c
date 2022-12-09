@@ -14,9 +14,9 @@
 #include "player.h"
 #include "playerFile.h"
 
-Player * selectPlayer()
+Player * selectPlayer(char *playerfile)
 {
-    puts("Welcome at BOB");
+    puts("Welcome at Bob's game");
     puts("Choose your player:");
     puts("-> Briatte");
     puts("-> Chevaillier");
@@ -24,13 +24,13 @@ Player * selectPlayer()
     char *name = malloc(sizeof(char) * 12);
     do
     {
-        puts("Tape the name: ");
+        printf("Tape the name of your player: ");
         scanf("%s", name);
         lowercase(name);
     } while (strcmp(name, "briatte") && strcmp(name, "chevaillier") && strcmp(name, "hennou"));
-    puts("start");
+    puts("start...");
     Player *player;
-    PlayerList *playerList = readPlayerFile("player.ptbob");
+    PlayerList *playerList = readPlayerFile(playerfile);
     switch (name[0]){
         case 'b':
             player = newPlayer("Briatte", 3, 0, 3.50, false, false, false, 1);

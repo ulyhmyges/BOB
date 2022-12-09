@@ -78,7 +78,7 @@ void createFloor(Level *level, char *monsterfile)
 
 Level *newLevel(int id, int rows, int columns, char *roomfile, char *itemfile, char *monsterfile)
 {
-    srand(time(NULL));
+    // srand(time(NULL));
     Level *level = malloc(sizeof(Level));
     level->id = id;
     level->height = 7;
@@ -271,30 +271,6 @@ int putItemRoom(Level *level, int i, int j, Room *room)
     return 0;
 }
 
-void northDoor(Level *level, int u, int v, char door)
-{
-    level->floor[u][v].map[0][level->floor[u][v].columns / 2] = door;
-    // room->map[0][room->columns / 2] = door;
-}
-
-void eastDoor(Level *level, int u, int v, char door)
-{
-    level->floor[u][v].map[level->floor[u][v].rows / 2][level->floor[u][v].columns - 1] = door;
-    // room->map[room->rows / 2][room->columns - 1] = door;
-}
-
-void southDoor(Level *level, int u, int v, char door)
-{
-    level->floor[u][v].map[level->floor[u][v].rows - 1][level->floor[u][v].columns / 2] = door;
-    // room->map[room->rows - 1][room->columns / 2] = door;
-}
-
-void westDoor(Level *level, int u, int v, char door)
-{
-    level->floor[u][v].map[level->floor[u][v].rows / 2][0] = door;
-    // room->map[room->rows / 2][0] = door;
-}
-
 void putAllDoors(Level *level)
 {
     for (int i = 0; i < level->height; i += 1)
@@ -321,7 +297,6 @@ void putCadinalDoors(Level *level, int i, int j)
         if (isKind(level, i, j + 1, 'I'))
         {
             eastDoor(level, i, j, '$');
-            printf("east door $$$$");
         }
         if (isKind(level, i, j + 1, 'B'))
         {
@@ -343,7 +318,6 @@ void putCadinalDoors(Level *level, int i, int j)
         if (isKind(level, i + 1, j, 'I'))
         {
             southDoor(level, i, j, '$');
-            printf("south door $$$$");
         }
         if (isKind(level, i + 1, j, 'B'))
         {
@@ -387,7 +361,6 @@ void putCadinalDoors(Level *level, int i, int j)
         if (isKind(level, i - 1, j, 'I'))
         {
             northDoor(level, i, j, '$');
-            printf("north door $$$");
         }
         if (isKind(level, i - 1, j, 'B'))
         {
@@ -398,6 +371,30 @@ void putCadinalDoors(Level *level, int i, int j)
     {
         northDoor(level, i, j, 'W');
     }
+}
+
+void northDoor(Level *level, int u, int v, char door)
+{
+    level->floor[u][v].map[0][level->floor[u][v].columns / 2] = door;
+    // room->map[0][room->columns / 2] = door;
+}
+
+void eastDoor(Level *level, int u, int v, char door)
+{
+    level->floor[u][v].map[level->floor[u][v].rows / 2][level->floor[u][v].columns - 1] = door;
+    // room->map[room->rows / 2][room->columns - 1] = door;
+}
+
+void southDoor(Level *level, int u, int v, char door)
+{
+    level->floor[u][v].map[level->floor[u][v].rows - 1][level->floor[u][v].columns / 2] = door;
+    // room->map[room->rows - 1][room->columns / 2] = door;
+}
+
+void westDoor(Level *level, int u, int v, char door)
+{
+    level->floor[u][v].map[level->floor[u][v].rows / 2][0] = door;
+    // room->map[room->rows / 2][0] = door;
 }
 
 int isType(Level *level, int u, int v, char *type)

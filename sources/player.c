@@ -80,8 +80,8 @@ void showPlayer(Player player){
 }
 
 void printPlayer(Player player, FILE *f){
-    fprintf(f, "---\n");
-    //fputs("---\n", f);
+    //fprintf(f, "---\n");
+    fputs("---\n", f);
     fprintf(f, "name=%s\n", player.name);
     fprintf(f, "achieve=%d\n", player.achieve);
     if (player.hpMax)
