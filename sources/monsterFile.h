@@ -11,11 +11,11 @@
 #define MONSTERFILE_H
 #include "monsterList.h"
 
-void writeMonsterFile(MonsterList monsterList, char *fwd);
-MonsterList * readMonsterFile(char *fwd);
-int addMonsterFile(Monster *monster, char *fwd);
-void removeMonsterFile(Monster *monster, char *fwd);
-void removeMonsterFileByName(char *name, char *fwd);
-void removeMonsterFileByIndex(int index, char *fwd);
+void writeMonsterFile(MonsterList monsterList, char *monsterfile);
+MonsterList * readMonsterFile(char *monsterfile);
+int addMonsterFile(Monster *monster, char *monsterfile);
+void removeMonsterFile(Monster *monster, char *monsterfile);
+void removeMonsterFileByName(char *name, char *monsterfile);
+void removeMonsterFileByIndex(int index, char *monsterfile);
 
 #endif // MONSTERFILE_H

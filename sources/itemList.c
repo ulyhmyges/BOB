@@ -76,9 +76,9 @@ int addItemList(Item *item, ItemList *itemList)
     }
 }
 
-ItemList *readItemList(char *fwd)
+ItemList *readItemList(char *itemfile)
 {
-    FILE *f = fopen(fwd, "r");
+    FILE *f = fopen(itemfile, "r");
     if (f != NULL)
     {
         ItemList *itemList = newItemList();
@@ -92,7 +92,7 @@ ItemList *readItemList(char *fwd)
     }
     else
     {
-        printf("Erreur à la lecture du fichier %s\n", fwd);
+        printf("Erreur à la lecture du fichier %s\n", itemfile);
         return NULL;
     }
 }

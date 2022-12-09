@@ -15,11 +15,11 @@
  * @brief crée et écris dans un fichier le contenu de la liste des items
  *
  * @param itemList objet complexe contenant la liste des items
- * @param fwd chemin du fichier à créer de type *.itbob
+ * @param itemfile chemin du fichier à créer de type *.itbob
  */
-void writeItemFile(ItemList itemList, char *fwd)
+void writeItemFile(ItemList itemList, char *itemfile)
 {
-    FILE *f = fopen(fwd, "w");
+    FILE *f = fopen(itemfile, "w");
     if (f != NULL)
     {
         printItemList(itemList, f);
@@ -27,7 +27,7 @@ void writeItemFile(ItemList itemList, char *fwd)
     }
     else
     {
-        printf("Erreur à l'écriture: %s (writeItemFile)\n", fwd);
+        printf("Erreur à l'écriture: %s (writeItemFile)\n", itemfile);
     }
 }
 
@@ -35,11 +35,11 @@ void writeItemFile(ItemList itemList, char *fwd)
  * @brief ajout d'un item à la fin du fichier
  *
  * @param item un objet personnage
- * @param fwd chemin du fichier à modifier de type *.itbob
+ * @param itemfile chemin du fichier à modifier de type *.itbob
  */
-void addItemFile(Item *item, char *fwd)
+void addItemFile(Item *item, char *itemfile)
 {
-    FILE *f = fopen(fwd, "r+");
+    FILE *f = fopen(itemfile, "r+");
     if (f != NULL)
     {
         int total;
@@ -55,48 +55,48 @@ void addItemFile(Item *item, char *fwd)
     }
 }
 
-void removeItemFile(Item *item, char *fwd)
+void removeItemFile(Item *item, char *itemfile)
 {
-    FILE *f = fopen(fwd, "r+");
+    FILE *f = fopen(itemfile, "r+");
     if (f != NULL)
     {
-        ItemList *itemList = readItemList(fwd);
+        ItemList *itemList = readItemList(itemfile);
         removeItemList(item, itemList);
-        writeItemFile(*itemList, fwd);
+        writeItemFile(*itemList, itemfile);
         freeItemList(itemList);
         fclose(f);
     }
 }
 
-void removeItemFileByName(char *name, char *fwd)
+void removeItemFileByName(char *name, char *itemfile)
 {
-    FILE *f = fopen(fwd, "r+");
+    FILE *f = fopen(itemfile, "r+");
     if (f != NULL)
     {
-        ItemList *itemList = readItemList(fwd);
+        ItemList *itemList = readItemList(itemfile);
         removeItemListByName(name, itemList);
-        writeItemFile(*itemList, fwd);
+        writeItemFile(*itemList, itemfile);
         freeItemList(itemList);
         fclose(f);
     }
 }
 
-void removeItemFileByIndex(int index, char *fwd)
+void removeItemFileByIndex(int index, char *itemfile)
 {
-    FILE *f = fopen(fwd, "r+");
+    FILE *f = fopen(itemfile, "r+");
     if (f != NULL)
     {
-        ItemList *itemList = readItemList(fwd);
+        ItemList *itemList = readItemList(itemfile);
         removeItemListByIndex(index, itemList);
-        writeItemFile(*itemList, fwd);
+        writeItemFile(*itemList, itemfile);
         freeItemList(itemList);
         fclose(f);
     }
 }
 
-ItemList *readItemFile(char *fwd)
+ItemList *readItemFile(char *itemfile)
 {
-    FILE *f = fopen(fwd, "r");
+    FILE *f = fopen(itemfile, "r");
     if (f != NULL)
     {
         ItemList *itemList = newItemList();
@@ -110,7 +110,7 @@ ItemList *readItemFile(char *fwd)
     }
     else
     {
-        printf("Erreur à la lecture du fichier %s\n", fwd);
+        printf("Erreur à la lecture du fichier %s\n", itemfile);
         return NULL;
     }
 }

@@ -11,9 +11,9 @@
 #include "monsterList.h"
 #include "monster.h"
 
-void writeMonsterFile(MonsterList monsterList, char *fwd)
+void writeMonsterFile(MonsterList monsterList, char *monsterfile)
 {
-    FILE *f = fopen(fwd, "w");
+    FILE *f = fopen(monsterfile, "w");
     if (f != NULL)
     {
         printMonsterList(monsterList, f);
@@ -21,13 +21,13 @@ void writeMonsterFile(MonsterList monsterList, char *fwd)
     }
     else
     {
-        printf("Erreur à l'écriture du fichier %s\n", fwd);
+        printf("Erreur à l'écriture du fichier %s\n", monsterfile);
     }
 }
 
-MonsterList *readMonsterFile(char *fwd)
+MonsterList *readMonsterFile(char *monsterfile)
 {
-    FILE *f = fopen(fwd, "r");
+    FILE *f = fopen(monsterfile, "r");
     if (f != NULL)
     {
         MonsterList *monsterList = newMonsterList();
@@ -41,14 +41,14 @@ MonsterList *readMonsterFile(char *fwd)
     }
     else
     {
-        printf("Erreur à la lecture du fichier %s\n", fwd);
+        printf("Erreur à la lecture du fichier %s\n", monsterfile);
         return NULL;
     }
 }
 
-int addMonsterFile(Monster *monster, char *fwd)
+int addMonsterFile(Monster *monster, char *monsterfile)
 {
-    FILE *f = fopen(fwd, "r+");
+    FILE *f = fopen(monsterfile, "r+");
     if (f != NULL)
     {
         int monsterTotal = 0;
@@ -61,10 +61,10 @@ int addMonsterFile(Monster *monster, char *fwd)
     }
     else
     {
-        printf("Erreur à l'ajout d'un monstre dans le fichier : %s\n", fwd);
+        printf("Erreur à l'ajout d'un monstre dans le fichier : %s\n", monsterfile);
         return 0;
     }
 }
-void removeMonsterFile(Monster *monster, char *fwd);
-void removeMonsterFileByName(char *name, char *fwd);
-void removeMonsterFileByIndex(int index, char *fwd);
+void removeMonsterFile(Monster *monster, char *monsterfile);
+void removeMonsterFileByName(char *name, char *monsterfile);
+void removeMonsterFileByIndex(int index, char *monsterfile);

@@ -11,12 +11,12 @@
 #define ITEMFILE_H
 #include "itemList.h"
 
-void writeItemFile(ItemList itemList, char *fwd);
-void addItemFile(Item *item, char *fwd);
-void removeItemFile(Item *item, char *fwd);
-void removeItemFileByName(char *name, char *fwd);
-void removeItemFileByIndex(int index, char *fwd);
-ItemList * readItemFile(char *fwd);
+void writeItemFile(ItemList itemList, char *itemfile);
+void addItemFile(Item *item, char *itemfile);
+void removeItemFile(Item *item, char *itemfile);
+void removeItemFileByName(char *name, char *itemfile);
+void removeItemFileByIndex(int index, char *itemfile);
+ItemList * readItemFile(char *itemfile);
 
 
 #endif // ITEMFILE_H

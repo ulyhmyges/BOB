@@ -26,10 +26,8 @@ typedef struct Level
     Room **floor;
     int height; // 7 par défaut
     int width;  // 7
-
     direction direction;
     Map *map;
-
     char character; // P
     int u;
     int v;

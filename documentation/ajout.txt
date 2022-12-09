@@ -1,0 +1,21 @@
+(SUITE DE LA PARTIE II : Analyse de l'application)
+
+Pour le joueur :
+
+Player *newPlayer(char *name, float hpMax, int shield, float dmg, boolean ps, boolean ss, boolean flight, int achieve);
+void freePlayer(Player *player);
+Player * readPlayer(FILE *f);
+void printPlayer(Player player, FILE *f);
+void showPlayer(Player player);
+
+
+Pour la selection du joueur :
+
+Player * selectPlayer(char *playerfile);
+
+
+Pour la sauvegarde de la partie du joueur :
+
+PlayerList * readPlayerFile(char *playerfile);
+void writePlayerFile(PlayerList playerList, char *playerfile);
+int addPlayerFile(Player *player, char *playerfile);
