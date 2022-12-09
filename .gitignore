@@ -1,4 +1,4 @@
-*.pdf
+//*.pdf
 main.c
 app
 .DS_Store
