@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "item.h"
+#include "lowercase.h"
 
 Item *newItem(char *name, float hpMax, int shield, float dmg, boolean ps, boolean ss, boolean flight)
 {
@@ -177,5 +178,48 @@ Item *readItem(FILE *f)
         fgets(var, 30, f);
     }
     fseek(f, -4, SEEK_CUR);
+    return item;
+}
+
+Item *askItem()
+{
+    Item *item = newItem("a", 0, 0, 0, false, false, false);
+    printf("name = ");
+    scanf("%s", item->name);
+    printf("hpMax = ");
+    scanf("%f", &item->hpMax));
+    printf("shield = ");
+    scanf("%i", &item->shield);
+    printf("dmg = ");
+    scanf("%f", &item->dmg);
+
+    char *boole = malloc(sizeof(char) * 5);
+    printf"ps = ");
+    do
+    {
+        printf("true or false? ");
+        scanf("%s", boole);
+        lowercase(boole);
+    } while (strcmp(boole, "true") && strcmp(boole, "false"));
+    strcmp(bool, "false") ? item->ps = true : item->ps = false;
+
+    printf("ss = ");
+    do
+    {
+        printf("true or false? ");
+        scanf("%s", boole);
+        lowercase(boole);
+    } while (strcmp(boole, "true") && strcmp(boole, "false"));
+    strcmp(bool, "false") ? item->ss = true : item->ss = false;
+
+    printf("flight = ");
+    do
+    {
+        printf("true or false? ");
+        scanf("%s", boole);
+        lowercase(boole);
+    } while (strcmp(boole, "true") && strcmp(boole, "false"));
+    strcmp(bool, "false") ? item->flight = true : item->flight = false;
+
     return item;
 }

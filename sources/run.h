@@ -12,5 +12,6 @@
 #include "player.h"
 
 Player * selectPlayer(char *playerfile);
+void crudItem(void);
 
 #endif // RUN_H

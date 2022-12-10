@@ -74,7 +74,7 @@ int main(int argc, char const *argv[])
     }
     printf("\nYou pressed '%c'!\n", c);
     */
-
+/*
     //selection du joueur
     Player *player = selectPlayer("./ressources/backup.ptbob");
 
@@ -86,5 +86,8 @@ int main(int argc, char const *argv[])
         playerList->size += 1;
     }
     writePlayerFile(*playerList, "./ressources/backup.ptbob");
+    */
+    crudItem();
+    
     return 0;
 }

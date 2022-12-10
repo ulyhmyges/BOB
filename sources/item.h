@@ -32,4 +32,5 @@ void freeItem(Item *item);
 void showItem(Item item);
 void printItem(Item item, FILE *f);
 Item * readItem(FILE *f);
+Item *askItem(void);
 #endif
