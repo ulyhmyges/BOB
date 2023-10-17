@@ -1,3 +1,3 @@
 # bob
-plagiat de binding of isaac..
-projet en langage C
+attempt to copy Binding of Isaac..
+project in C language

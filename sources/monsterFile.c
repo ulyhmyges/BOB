@@ -41,7 +41,7 @@ MonsterList *readMonsterFile(char *monsterfile)
     }
     else
     {
-        printf("Erreur à la lecture du fichier %s\n", monsterfile);
+        printf("readMonsterFile(): Erreur à la lecture du fichier %s\n", monsterfile);
         return NULL;
     }
 }

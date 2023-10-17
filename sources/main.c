@@ -59,7 +59,7 @@ int kbhit(void)
 
 int main(int argc, char const *argv[])
 {
-    Level *level = newLevel(1, 9, 15, "./ressources/file.rtbob", "./ressources/file.itbob", "./ressources/file.mtbob");
+    Level *level = newLevel(1, 9, 15, "/Users/ulyh/programmation/c/bbriatte/bob/binding_of_briatte/ressources/file.rtbob", "/Users/ulyh/programmation/c/bbriatte/bob/binding_of_briatte/ressources/file.itbob", "/Users/ulyh/programmation/c/bbriatte/bob/binding_of_briatte/ressources/file.mtbob");
 
     /*
     char c;

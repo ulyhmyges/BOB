@@ -64,16 +64,16 @@ void showItem(Item item)
         }
         else
         {
-            printf("dmg=%.1f\n", item.dmg);
+            printf("dmg=%.1f\n",item.dmg);
         }
     }
     if (item.ps)
     {
-        printf("ps=%s\n", "true");
+        printf("ps=%s\n","true");
     }
     if (item.ss)
     {
-        printf("ss=%s\n", "true");
+        printf("ss=%s\n","true");
     }
     if (item.flight)
     {
@@ -181,27 +181,31 @@ Item *readItem(FILE *f)
     return item;
 }
 
-Item *askItem()
+Item *askItem(void)
 {
     Item *item = newItem("a", 0, 0, 0, false, false, false);
     printf("name = ");
     scanf("%s", item->name);
     printf("hpMax = ");
-    scanf("%f", &item->hpMax));
+    scanf("%f", &item->hpMax);
     printf("shield = ");
     scanf("%i", &item->shield);
     printf("dmg = ");
     scanf("%f", &item->dmg);
 
     char *boole = malloc(sizeof(char) * 5);
-    printf"ps = ");
+
+    printf("ps = ");
     do
     {
         printf("true or false? ");
         scanf("%s", boole);
         lowercase(boole);
     } while (strcmp(boole, "true") && strcmp(boole, "false"));
-    strcmp(bool, "false") ? item->ps = true : item->ps = false;
+    item->ps = true;
+    if (strcmp(boole, "true")) {
+        item->ps = false;
+    }
 
     printf("ss = ");
     do
@@ -210,7 +214,10 @@ Item *askItem()
         scanf("%s", boole);
         lowercase(boole);
     } while (strcmp(boole, "true") && strcmp(boole, "false"));
-    strcmp(bool, "false") ? item->ss = true : item->ss = false;
+    item->ss = true;
+    if (strcmp(boole, "true")) {
+        item->ss = false;
+    }
 
     printf("flight = ");
     do
@@ -219,7 +226,10 @@ Item *askItem()
         scanf("%s", boole);
         lowercase(boole);
     } while (strcmp(boole, "true") && strcmp(boole, "false"));
-    strcmp(bool, "false") ? item->flight = true : item->flight = false;
+    item->flight = true;
+    if (strcmp(boole, "true")) {
+        item->flight = false;
+    }
 
     return item;
 }

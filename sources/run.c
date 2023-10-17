@@ -67,29 +67,31 @@ void crudItem()
     FILE *f = fopen(itemfile, "r+");
     if (f == NULL)
     {
-        printf("Erreur de fichier '%s'!\n", itemfile);
+        printf("File error: '%s'!\n", itemfile);
         exit(1);
     }
     do
     {
         puts("Choose a option:");
-        puts("-> Print");
+        puts("-> Show");
         puts("-> Add");
         puts("-> Update");
         puts("-> Delete");
         scanf("%s", input);
         lowercase(input);
-    } while (strcmp(input, "print") && strcmp(input, "add") && strcmp(input, "update") && strcmp(input, "delete"));
+    } while (strcmp(input, "show") && strcmp(input, "add") && strcmp(input, "update") && strcmp(input, "delete"));
     
     ItemList *itemList = readItemFile(itemfile);
+    // Item *item;
     switch (input[0])
     {
-    case 'p':
-        printItemList(itemList, f);
+    case 's':
+        showItemList(*itemList);
         break;
 
     case 'a':
-        Item *item = askItem();
+        // item = askItem();
+        printf("case a");
         break;
     }
     free(input);
