@@ -32,6 +32,21 @@ void writeItemFile(ItemList itemList, char *itemfile)
 }
 
 /**
+ * @brief Create a Item object and add it in the end of itemfile
+ * 
+ * @param itemfile path of the file itbob
+ */
+void createItem(char *itemfile)
+{
+    Item *item;
+    item = askItem(NULL);
+    showItem(*item);
+    addItemFile(item, itemfile);
+    showItemList(*readItemFile(itemfile));
+    freeItem(item);
+}
+
+/**
  * @brief ajout d'un item à la fin du fichier
  *
  * @param item un objet personnage
@@ -61,25 +76,25 @@ void removeItemFile(Item *item, char *itemfile)
     if (f != NULL)
     {
         ItemList *itemList = readItemList(itemfile);
-        removeItemList(item, itemList);
+        removeItem(item, itemList);
         writeItemFile(*itemList, itemfile);
         freeItemList(itemList);
         fclose(f);
     }
 }
 
-void removeItemFileByName(char *name, char *itemfile)
-{
-    FILE *f = fopen(itemfile, "r+");
-    if (f != NULL)
-    {
-        ItemList *itemList = readItemList(itemfile);
-        removeItemListByName(name, itemList);
-        writeItemFile(*itemList, itemfile);
-        freeItemList(itemList);
-        fclose(f);
-    }
-}
+// void removeItemFileByName(char *name, char *itemfile)
+// {
+//     FILE *f = fopen(itemfile, "r+");
+//     if (f != NULL)
+//     {
+//         ItemList *itemList = readItemList(itemfile);
+//         removeItemListByName(name, itemList);
+//         writeItemFile(*itemList, itemfile);
+//         freeItemList(itemList);
+//         fclose(f);
+//     }
+// }
 
 void removeItemFileByIndex(int index, char *itemfile)
 {

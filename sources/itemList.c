@@ -11,6 +11,7 @@
 #include <string.h>
 #include "itemList.h"
 #include "item.h"
+#include "itemFile.h"
 
 ItemList *newItemList(void)
 {
@@ -76,6 +77,12 @@ int addItemList(Item *item, ItemList *itemList)
     }
 }
 
+/**
+ * @brief retourne une liste des items contenus dans itemfile
+ *
+ * @param itemfile Path du fichier itbob
+ * @return ItemList* Liste d'items
+ */
 ItemList *readItemList(char *itemfile)
 {
     FILE *f = fopen(itemfile, "r");
@@ -92,9 +99,70 @@ ItemList *readItemList(char *itemfile)
     }
     else
     {
-        printf("Erreur à la lecture du fichier %s\n", itemfile);
+        printf("readItemList(): Erreur à la lecture du fichier %s\n", itemfile);
         return NULL;
     }
+}
+
+/**
+ * @brief Get the Item By Name from itemList
+ *
+ * @param name
+ * @param itemList Liste d'items
+ * @return Item*
+ */
+Item *getItemByName(ItemList *itemList)
+{
+    char *name = malloc(sizeof(char) * 21);
+    printf("Name of the item?: ");
+    scanf("%s", name);
+    int i;
+    for (i = 0; i < itemList->size; i += 1)
+    {
+        if (!strcmp(itemList->list[i]->name, name))
+        {
+            return itemList->list[i];
+        }
+    }
+    return NULL;
+}
+
+int updateItemByName(ItemList *itemList)
+{
+    Item *item;
+    item = getItemByName(itemList);
+    if (item == NULL)
+    {
+        printf("Item not found\n");
+        return 0;
+    }
+    showItem(*item);
+    item = askItem(item);
+    showItem(*item);
+    freeItem(item);
+    return 1;
+}
+
+/**
+ * @brief Remove item by name from itemList
+ *
+ * @param itemList Object complexe contenant la liste des items
+ * @return 1 if succeed 0 otherwise
+ */
+int removeItemByName(ItemList *itemList)
+{
+    Item *item;
+    item = getItemByName(itemList);
+    if (item == NULL)
+    {
+        printf("Item not found\n");
+        return 0;
+    }
+    showItem(*item);
+    removeItem(item, itemList);
+    printf("Item %s removed.\n", item->name);
+    freeItem(item);
+    return 1;
 }
 
 /**
@@ -104,42 +172,12 @@ ItemList *readItemList(char *itemfile)
  * @param itemList objet contenant la liste des objets personnage
  * @return int
  */
-int removeItemList(Item *item, ItemList *itemList)
+int removeItem(Item *item, ItemList *itemList)
 {
     int i;
     for (i = 0; i < itemList->size; i += 1)
     {
         if (itemList->list[i] == item)
-        {
-            freeItem(itemList->list[i]);
-            itemList->size -= 1;
-            break;
-        }
-    }
-    for (int j = i; j < itemList->size; j += 1)
-    {
-        itemList->list[j] = itemList->list[j + 1];
-    }
-    if (i <= itemList->size)
-    {
-        return 1;
-    }
-    return 0;
-}
-
-/**
- * @brief supprime un item de la liste selon l'attribut name
- *
- * @param name attribut d'un item
- * @param itemList objet complexe contenant la liste des items
- * @return int
- */
-int removeItemListByName(char *name, ItemList *itemList)
-{
-    int i;
-    for (i = 0; i < itemList->size; i += 1)
-    {
-        if (!strcmp(itemList->list[i]->name, name))
         {
             freeItem(itemList->list[i]);
             itemList->size -= 1;

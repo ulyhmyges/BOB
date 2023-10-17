@@ -16,7 +16,8 @@ void addItemFile(Item *item, char *itemfile);
 void removeItemFile(Item *item, char *itemfile);
 void removeItemFileByName(char *name, char *itemfile);
 void removeItemFileByIndex(int index, char *itemfile);
-ItemList * readItemFile(char *itemfile);
+ItemList* readItemFile(char *itemfile);
+void createItem(char *itemfile);
 
 
 #endif // ITEMFILE_H

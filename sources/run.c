@@ -56,13 +56,17 @@ Player *selectPlayer(char *playerfile)
     return player;
 }
 
+/**
+ * @brief permet le CRUD des items
+ *
+ */
 void crudItem()
 {
     puts("CRUD FOR ITEMS");
     char *input = malloc(sizeof(char) * 7);
     char *itemfile = malloc(sizeof(char) * 57);
     puts("Which file do you want to use?");
-    printf("Enter a file name for items: ");
+    printf("Enter the path for item file (itbob): ");
     scanf("%s", itemfile);
     FILE *f = fopen(itemfile, "r+");
     if (f == NULL)
@@ -70,30 +74,44 @@ void crudItem()
         printf("File error: '%s'!\n", itemfile);
         exit(1);
     }
+    fclose(f);
     do
     {
         puts("Choose a option:");
         puts("-> Show");
         puts("-> Add");
         puts("-> Update");
-        puts("-> Delete");
+        puts("-> Remove");
         scanf("%s", input);
         lowercase(input);
-    } while (strcmp(input, "show") && strcmp(input, "add") && strcmp(input, "update") && strcmp(input, "delete"));
-    
+    } while (strcmp(input, "show") && strcmp(input, "add") && strcmp(input, "update") && strcmp(input, "remove"));
+
     ItemList *itemList = readItemFile(itemfile);
-    // Item *item;
     switch (input[0])
     {
-    case 's':
+    case 's': // Show all items from itemfile
         showItemList(*itemList);
         break;
 
-    case 'a':
-        // item = askItem();
-        printf("case a");
+    case 'a': // Add an item
+        createItem(itemfile);
+        break;
+
+    case 'u': // Update an item
+        if (updateItemByName(itemList))
+        {
+            writeItemFile(*itemList, itemfile);
+        }
+        break;
+
+    case 'r': // Remove an item
+        if (removeItemByName(itemList))
+        {
+            writeItemFile(*itemList, itemfile);
+        }
         break;
     }
+    freeItemList(itemList);
     free(input);
     free(itemfile);
 }

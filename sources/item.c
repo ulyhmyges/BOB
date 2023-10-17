@@ -181,9 +181,11 @@ Item *readItem(FILE *f)
     return item;
 }
 
-Item *askItem(void)
+Item* askItem(Item* item)
 {
-    Item *item = newItem("a", 0, 0, 0, false, false, false);
+    if (item == NULL){
+        item = newItem("a", 0, 0, 0, false, false, false);
+    }
     printf("name = ");
     scanf("%s", item->name);
     printf("hpMax = ");
