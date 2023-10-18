@@ -9,12 +9,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "run.h"
-#include "lowercase.h"
 #include "player.h"
-#include "playerFile.h"
-#include "itemFile.h"
-#include "item.h"
+#include "playerList.h"
+#include "itemList.h"
 
 Player *selectPlayer(char *playerfile)
 {
