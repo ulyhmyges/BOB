@@ -2,7 +2,7 @@
 //main.c
 app
 .DS_Store
-.vscode
+.vscode/
 *.rtbob
 *.itbob
 *.mtbob
