@@ -1,4 +1,12 @@
+//*.pdf
+//main.c
+app
 .DS_Store
 .vscode/
+*.rtbob
+*.itbob
+*.mtbob
+*.ptbob
 bin/
 ressources/
+main
