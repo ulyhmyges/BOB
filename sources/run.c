@@ -10,16 +10,13 @@
 #include <string.h>
 #include <stdlib.h>
 #include "player.h"
-<<<<<<< HEAD
 #include "playerFile.h"
 #include "itemFile.h"
 #include "item.h"
 #include "monsterFile.h"
 #include "lowercase.h"
-=======
-#include "playerList.h"
-#include "itemList.h"
->>>>>>> 755a469 (include some *.h file)
+
+
 
 Player* selectPlayer(char *playerfile)
 {
