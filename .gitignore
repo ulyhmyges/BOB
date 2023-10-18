@@ -7,3 +7,6 @@ app
 *.itbob
 *.mtbob
 *.ptbob
+bin/
+ressources/
+main
