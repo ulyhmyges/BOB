@@ -14,8 +14,7 @@
 void writeMonsterFile(MonsterList monsterList, char *monsterfile);
 MonsterList * readMonsterFile(char *monsterfile);
 int addMonsterFile(Monster *monster, char *monsterfile);
-void removeMonsterFile(Monster *monster, char *monsterfile);
-void removeMonsterFileByName(char *name, char *monsterfile);
-void removeMonsterFileByIndex(int index, char *monsterfile);
+
+void createMonster(char* monsterfile);
 
 #endif // MONSTERFILE_H

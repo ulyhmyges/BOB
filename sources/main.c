@@ -25,6 +25,7 @@
 #include "run.h"
 #include "player.h"
 #include "playerFile.h"
+
 //
 #include <termios.h>
 #include <unistd.h>
@@ -59,7 +60,7 @@ int kbhit(void)
 
 int main(int argc, char const *argv[])
 {
-    Level *level = newLevel(1, 9, 15, "/Users/ulyh/programmation/c/bbriatte/bob/binding_of_briatte/ressources/file.rtbob", "/Users/ulyh/programmation/c/bbriatte/bob/binding_of_briatte/ressources/file.itbob", "/Users/ulyh/programmation/c/bbriatte/bob/binding_of_briatte/ressources/file.mtbob");
+    //Level *level = newLevel(1, 9, 15, "/Users/ulyh/programmation/c/bbriatte/bob/binding_of_briatte/ressources/file.rtbob", "/Users/ulyh/programmation/c/bbriatte/bob/binding_of_briatte/ressources/file.itbob", "/Users/ulyh/programmation/c/bbriatte/bob/binding_of_briatte/ressources/file.mtbob");
 
     /*
     char c;
@@ -74,20 +75,26 @@ int main(int argc, char const *argv[])
     }
     printf("\nYou pressed '%c'!\n", c);
     */
-/*
-    //selection du joueur
-    Player *player = selectPlayer("./ressources/backup.ptbob");
+    /*
+        //selection du joueur
+        Player *player = selectPlayer("./ressources/backup.ptbob");
 
-    //sauvegarde de la partie
-    PlayerList *playerList = readPlayerFile("./ressources/backup.ptbob");
-    if (playerList->size == 0)
-    {
-        playerList->list[playerList->size] = player;
-        playerList->size += 1;
-    }
-    writePlayerFile(*playerList, "./ressources/backup.ptbob");
-    */
-    crudItem();
-    
+        //sauvegarde de la partie
+        PlayerList *playerList = readPlayerFile("./ressources/backup.ptbob");
+        if (playerList->size == 0)
+        {
+            playerList->list[playerList->size] = player;
+            playerList->size += 1;
+        }
+        writePlayerFile(*playerList, "./ressources/backup.ptbob");
+        */
+
+    // TEST
+    // crudItem();
+    crudMonster();
+
+
+
+ 
     return 0;
 }

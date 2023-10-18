@@ -14,8 +14,8 @@
 void writeItemFile(ItemList itemList, char *itemfile);
 void addItemFile(Item *item, char *itemfile);
 void removeItemFile(Item *item, char *itemfile);
-void removeItemFileByName(char *name, char *itemfile);
-void removeItemFileByIndex(int index, char *itemfile);
+void removeItemByNameFile(char *name, char *itemfile);
+void removeItemByIndexFile(int index, char *itemfile);
 ItemList* readItemFile(char *itemfile);
 void createItem(char *itemfile);
 

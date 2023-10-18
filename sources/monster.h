@@ -26,4 +26,6 @@ void showMonster(Monster monster);
 void printMonster(Monster monster, FILE *f);
 Monster * readMonster(FILE *f);
 
+Monster* askMonster(Monster* monster);
+
 #endif // MONSTER_H

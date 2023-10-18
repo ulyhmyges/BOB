@@ -11,6 +11,7 @@
 #include <string.h>
 #include "monster.h"
 #include "item.h"
+#include "lowercase.h"
 
 Monster *newMonster(char *name, float hpMax, float dmg, boolean shoot, boolean ss, boolean flight)
 {
@@ -121,5 +122,69 @@ Monster *readMonster(FILE *f){
         fgets(var, 30, f);
     }
     fseek(f, -4, SEEK_CUR);
+    return monster;
+}
+
+
+Monster* askMonster(Monster* monster)
+{
+    if (monster == NULL){
+        monster = newMonster("m", 0, -1, false, false, false);
+    }
+
+    // name
+    printf("name = ");
+    if (fgets(monster->name, 34, stdin) == NULL){
+        printf("IF statement\n");
+        fgets(monster->name, 34, stdin);
+    }
+    
+    sscanf(monster->name, "%[^\n]", monster->name);
+
+    // hpMax
+    printf("hpMax = ");
+    scanf("%f", &monster->hpMax);
+
+    char *boole = malloc(sizeof(char) * 5);
+
+    // shoot
+    printf("shoot = ");
+    do
+    {
+        printf("true or false? ");
+        scanf("%s", boole);
+        lowercase(boole);
+    } while (strcmp(boole, "true") && strcmp(boole, "false"));
+    monster->shoot = true;
+    if (strcmp(boole, "true")) {
+        monster->shoot = false;
+    }
+
+    // ss
+    printf("ss = ");
+    do
+    {
+        printf("true or false? ");
+        scanf("%s", boole);
+        lowercase(boole);
+    } while (strcmp(boole, "true") && strcmp(boole, "false"));
+    monster->ss = true;
+    if (strcmp(boole, "true")) {
+        monster->ss = false;
+    }
+
+    // flight
+    printf("flight = ");
+    do
+    {
+        printf("true or false? ");
+        scanf("%s", boole);
+        lowercase(boole);
+    } while (strcmp(boole, "true") && strcmp(boole, "false"));
+    monster->flight = true;
+    if (strcmp(boole, "true")) {
+        monster->flight = false;
+    }
+
     return monster;
 }
