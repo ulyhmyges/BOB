@@ -51,8 +51,6 @@ int kbhit(void)
 
     if (ch != EOF)
     {
-        printf(" %c", ch);
-
         ungetc(ch, stdin);
         return 1;
     }
@@ -71,25 +69,26 @@ int main(int argc, char const *argv[])
     // showMap(*level->map);
 
     char c;
-    while(c != 'a')
+    while (1)
     {
+
+        system("clear");
+        system("echo -e '\e[032mGreen text'");
+        for (int i = 0; i < 14; i += 1)
+        {
+            for (int j = 0; j < 25; j += 1)
+            {
+                printf("\\ o / ");
+            }
+        }
         while (!kbhit())
         {
-            puts("tape a char");
         }
-        c = fgetc(stdin);
-        printf("print char: %d\n", c);
-        
-        c = fgetc(stdin);
-        printf("print char: %d\n", c);
-        printf("print char: %c\n", c);
-        printf("print char: %c\n", c);
-        printf("print char: %c\n", c);
-        printf("print char: %c\n", c);
-        printf("print char: %c\n", c);
-        printf("print char: %c\n", c);
-        printf("print char: %c\n", c);
-        printf("print char: %c\n", c);
+        c = getchar();
+
+        printf("char:%c\n", c);
+        fflush(stdin);
+        sleep(1);
     }
     printf("\nYou pressed '%c'!\n", c);
 

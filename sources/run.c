@@ -117,7 +117,7 @@ void crudItem()
 }
 
 /**
- * @brief CLI CRUD of monsters
+ * @brief CRUD of monsters
  * 
  */
 void crudMonster()
