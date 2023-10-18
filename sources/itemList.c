@@ -111,11 +111,19 @@ ItemList *readItemList(char *itemfile)
  * @param itemList Liste d'items
  * @return Item*
  */
-Item *getItemByName(ItemList *itemList)
+Item* getItemByName(ItemList *itemList)
 {
-    char *name = malloc(sizeof(char) * 21);
-    printf("Name of the item?: ");
-    scanf("%s", name);
+    char *name = malloc(sizeof(char) * 35);
+    puts("Name of the item?:"); 
+    
+    // Pourquoi erreur de lecture ?
+    if (fgets(name, 34, stdin) != NULL) {
+        printf("");
+    };
+      if (fgets(name, 34, stdin) != NULL) {
+        printf("Error reading input");
+    };
+    sscanf(name, "%[^\n]", name);
     int i;
     for (i = 0; i < itemList->size; i += 1)
     {
@@ -124,12 +132,13 @@ Item *getItemByName(ItemList *itemList)
             return itemList->list[i];
         }
     }
+    free(name);
     return NULL;
 }
 
 int updateItemByName(ItemList *itemList)
 {
-    Item *item;
+    Item* item;
     item = getItemByName(itemList);
     if (item == NULL)
     {
@@ -139,7 +148,7 @@ int updateItemByName(ItemList *itemList)
     showItem(*item);
     item = askItem(item);
     showItem(*item);
-    freeItem(item);
+    //freeItem(item);
     return 1;
 }
 

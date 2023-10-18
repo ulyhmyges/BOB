@@ -10,10 +10,12 @@
 #include <string.h>
 #include <stdlib.h>
 #include "player.h"
-#include "playerList.h"
-#include "itemList.h"
+#include "playerFile.h"
+#include "itemFile.h"
+#include "item.h"
+#include "monsterFile.h"
 
-Player *selectPlayer(char *playerfile)
+Player* selectPlayer(char *playerfile)
 {
     puts("Welcome at Bob's game");
     puts("Choose your player:");
@@ -111,4 +113,66 @@ void crudItem()
     freeItemList(itemList);
     free(input);
     free(itemfile);
+}
+
+/**
+ * @brief CRUD of monsters
+ * 
+ */
+void crudMonster()
+{
+    puts("CRUD FOR MONSTERS");
+    char* input = malloc(sizeof(char) * 7);
+    char* monsterfile = malloc(sizeof(char) * 77);
+    puts("Which file do you want to use?");
+    printf("Enter the path for monster file (mtbob): ");
+    scanf("%s", monsterfile);
+    // FILE *f = fopen(monsterfile, "r+");
+    // if (f == NULL)
+    // {
+    //     printf("File error: '%s'!\n", monsterfile);
+    //     exit(1);
+    // }
+    // fclose(f);
+    do
+    {
+        puts("Choose a option:");
+        puts("-> Show");
+        puts("-> Add");
+        puts("-> Update");
+        puts("-> Remove");
+        scanf("%s", input);
+        lowercase(input);
+    } while (strcmp(input, "show") && strcmp(input, "add") && strcmp(input, "update") && strcmp(input, "remove"));
+
+    MonsterList* monsterList = readMonsterFile(monsterfile);
+    printf("length: %d\n", monsterList->size);
+    printf("path: %s\n", monsterfile);
+    switch (input[0])
+    {
+    case 's': // Show all monsters from monsterList
+        showMonsterList(*monsterList);
+        break;
+
+    case 'a': // Add an monster
+        createMonster(monsterfile);
+        break;
+
+    case 'u': // Update an monster
+        if (updateMonsterByName(monsterList))
+        {
+            writeMonsterFile(*monsterList, monsterfile);
+        }
+        break;
+
+    case 'r': // Remove an monster
+        if (removeMonsterByName(monsterList))
+        {
+            writeMonsterFile(*monsterList, monsterfile);
+        }
+        break;
+    }
+    freeMonsterList(monsterList);
+    free(input);
+    free(monsterfile);
 }

@@ -13,5 +13,6 @@
 
 Player * selectPlayer(char *playerfile);
 void crudItem(void);
+void crudMonster(void);
 
 #endif // RUN_H

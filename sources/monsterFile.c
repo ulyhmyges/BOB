@@ -25,16 +25,17 @@ void writeMonsterFile(MonsterList monsterList, char *monsterfile)
     }
 }
 
-MonsterList *readMonsterFile(char *monsterfile)
+MonsterList* readMonsterFile(char *monsterfile)
 {
     FILE *f = fopen(monsterfile, "r");
     if (f != NULL)
     {
-        MonsterList *monsterList = newMonsterList();
+        MonsterList* monsterList = newMonsterList();
         fscanf(f, "{%d}\n", &monsterList->size);
         for (int i = 0; i < monsterList->size; i += 1)
         {
             monsterList->list[i] = readMonster(f);
+            printf("name---: %s\n", monsterList->list[i]->name);
         }
         fclose(f);
         return monsterList;
@@ -65,6 +66,20 @@ int addMonsterFile(Monster *monster, char *monsterfile)
         return 0;
     }
 }
-void removeMonsterFile(Monster *monster, char *monsterfile);
-void removeMonsterFileByName(char *name, char *monsterfile);
-void removeMonsterFileByIndex(int index, char *monsterfile);
+
+/**
+ * @brief Create a Monster object and add it in the end of monsterfile
+ * 
+ * @param monsterfile path of the file mtbob
+ */
+void createMonster(char* monsterfile)
+{
+    Monster *monster;
+    monster = askMonster(NULL);
+    showMonster(*monster);
+    addMonsterFile(monster, monsterfile);
+    MonsterList* monsterList = readMonsterFile(monsterfile);
+    showMonsterList(*monsterList);
+    freeMonsterList(monsterList);
+    //freeMonster(monster);
+}

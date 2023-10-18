@@ -26,4 +26,11 @@ int removeMonsterListByIndex(int index, MonsterList *monsterList);
 void showMonsterList(MonsterList monsterList);
 void printMonsterList(MonsterList monsterList, FILE *f);
 
+int removeMonsterByName(MonsterList* monsterList);
+int removeMonster(Monster* monster, MonsterList* monsterList);
+
+int updateMonsterByName(MonsterList* monsterList);
+Monster* getMonsterByName(MonsterList* monsterList);
+
+
 #endif // MONSTERLIST_H

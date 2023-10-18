@@ -96,7 +96,7 @@ void removeItemFile(Item *item, char *itemfile)
 //     }
 // }
 
-void removeItemFileByIndex(int index, char *itemfile)
+void removeItemByIndexFile(int index, char *itemfile)
 {
     FILE *f = fopen(itemfile, "r+");
     if (f != NULL)
