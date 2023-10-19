@@ -15,10 +15,11 @@ typedef struct Map {
     int width;
     char **grid;
     char room;      //r
-    char item;      //i
-    char bonus;     //b
+    char item;      //I
+    char bonus;     //J
     char boss;      //B
-    char spawn;     //s
+    char spawn;     //S
+    char wall;      //0
 } Map;
 
 Map * newMap(int height, int width);

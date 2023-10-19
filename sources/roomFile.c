@@ -134,14 +134,14 @@ RoomList * readRoomFile(char *roomfile, char *monsterfile){
  * @param f file in read state 
  * @return Room* la pièce
  */
-Room *readRoom(FILE *f, char *monsterfile)
+Room* readRoom(FILE *f, char *monsterfile)
 {
     // fonction auxiliaire à readRoomFile()
     int rows = 0;
     int columns = 0;
     int id = 0;
     fscanf(f, "[%d|%d]%d\n", &rows, &columns, &id);
-    Room *room = newRoom(rows, columns, "Room", 0, monsterfile);
+    Room* room = newRoom(rows, columns, "Room", 0, monsterfile); // room vide sans porte
     room->id = id;
     for (int i = 0; i < room->rows; i += 1)
     {
@@ -155,5 +155,6 @@ Room *readRoom(FILE *f, char *monsterfile)
             room->map[i][j] = fgetc(f);
         }
     }
+    
     return room;
 }

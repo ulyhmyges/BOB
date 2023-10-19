@@ -14,6 +14,7 @@
 #include "itemFile.h"
 #include "item.h"
 #include "monsterFile.h"
+#include "lowercase.h"
 
 Player* selectPlayer(char *playerfile)
 {
@@ -56,14 +57,14 @@ Player* selectPlayer(char *playerfile)
 }
 
 /**
- * @brief permet le CRUD des items
+ * @brief CLI CRUD des items
  *
  */
 void crudItem()
 {
     puts("CRUD FOR ITEMS");
     char *input = malloc(sizeof(char) * 7);
-    char *itemfile = malloc(sizeof(char) * 57);
+    char *itemfile = malloc(sizeof(char) * 77);
     puts("Which file do you want to use?");
     printf("Enter the path for item file (itbob): ");
     scanf("%s", itemfile);
@@ -116,7 +117,7 @@ void crudItem()
 }
 
 /**
- * @brief CRUD of monsters
+ * @brief CLI CRUD of monsters
  * 
  */
 void crudMonster()

@@ -29,9 +29,9 @@ Room *newRoom(int rows, int columns, char *type, int design, char *monsterfile)
     r->gap = 'G';
     r->spike = 'S';
     r->health = 'H';
-    r->item = malloc(sizeof(Item));
+    // r->item = malloc(sizeof(Item));
     r->item = newItem("Empty", 0, 0, 0, false, false, false);
-    createMap(r, design);
+    createMapRoom(r, design);
     createMonsterList(r, monsterfile);
     return r;
 }
@@ -83,7 +83,7 @@ void createMonsterList(Room *r, char *monsterfile)
  * @param r la pièce
  * @param design
  */
-void createMap(Room *r, int design)
+void createMapRoom(Room *r, int design)
 {
     r->map = malloc(sizeof(char *) * r->rows);
     for (int i = 0; i < r->rows; i += 1)
@@ -120,6 +120,7 @@ void createMap(Room *r, int design)
         break;
     }
 }
+
 /**
  * @brief dessine l'intérieur de la pièce selon le modèle suivant :
  * WWWWWWWDWWWWWWW

@@ -30,7 +30,7 @@ typedef struct Room
 } Room;
 
 Room *newRoom(int rows, int columns, char *type, int design, char *monsterfile);
-void createMap(Room *r, int design);
+void createMapRoom(Room *r, int design);
 void createMonsterList(Room *r, char *monsterfile);
 
 
