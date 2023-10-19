@@ -23,14 +23,14 @@ typedef enum direction
 typedef struct Level
 {
     int id;
-    Room **floor;
+    Room **floor; // une grille de rooms
     int height; // 7 par défaut
     int width;  // 7
     direction direction;
     Map *map;
     char character; // P
-    int u;
-    int v;
+    int u;  // coordonnée verticale du personnage 'P' à l'étage
+    int v;  // coordonnée horizontale du personnage 'P'
     Room *room;
     int rows;
     int columns;
@@ -50,8 +50,6 @@ int getU(Level *level);
 int getV(Level *level);
 void randFloor(Level *level, char *roomfile, char *monsterfile);
 void putAllDoors(Level *level);
-void putCadinalDoors(Level *level, int i, int j);
-int isType(Level *level, int u , int v, char *type);
 int isKind(Level *level, int u, int v, char kind);
 void northDoor(Level *level, int u, int v, char door);
 void eastDoor(Level *level, int u, int v, char door);
@@ -62,5 +60,13 @@ int addItemRoomBonus(Level *level);
 
 int addItemRoom(Level *level, Room *room);
 int putItemRoom(Level *level, int i, int j, Room *room);
+
+int isType(Level *level, int h, int w, char *type);
+char** copyMapRoom(Room room);
+void putCardinalDoors(Level* level, int h, int w);
+void putEastDoor(Level* level, int h, int w);
+void putSouthDoor(Level*  level, int h, int w);
+void putWestDoor(Level* level, int h, int w);
+void putNorthDoor(Level* level, int h, int w);
 
 #endif // FLOOR_H

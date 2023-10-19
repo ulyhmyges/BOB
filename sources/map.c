@@ -10,6 +10,13 @@
 #include <stdlib.h>
 #include "map.h"
 
+/**
+ * @brief construction d'une map vide de dimension height x width
+ * 
+ * @param height 
+ * @param width 
+ * @return Map* 
+ */
 Map *newMap(int height, int width)
 {
     Map *map = malloc(sizeof(Map));
@@ -20,6 +27,7 @@ Map *newMap(int height, int width)
     map->spawn = 'S';
     map->bonus = 'J';
     map->boss = 'B';
+    map->wall = '0';
     map->grid = malloc(sizeof(char *) * map->height);
     for (int i = 0; i < map->height; i += 1)
     {
@@ -27,7 +35,7 @@ Map *newMap(int height, int width)
     }
     for (int i = 0; i < map->height; i += 1){
         for (int j = 0; j < map->width; j += 1){
-            map->grid[i][j] = '0';
+            map->grid[i][j] = map->wall;
         }
     }
     return map;
@@ -47,13 +55,21 @@ void showMap(Map map){
     printf("\n--------map--------\n");
     for (int i = 0; i < map.height; i += 1){
         for (int j= 0; j < map.width; j += 1){
-            printf("%c", map.grid[i][j]);
+            printf("%c ", map.grid[i][j]);
         }
         printf("\n");
     }
     printf("--------map--------\n");
 }
 
+/**
+ * @brief update le type de la room à l'emplacement (i, j)
+ * 
+ * @param map 
+ * @param i 
+ * @param j 
+ * @param c 
+ */
 void updateMap(Map *map, int i, int j, char c){
     map->grid[i][j] = c;
 }

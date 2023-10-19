@@ -53,10 +53,10 @@ Room *createSpecialRoom(int rows, int columns, char kind, char *itemfile, char *
 }
 /**
  * @brief Procédure
- * création d'une grille représentant l'étage
+ * création de la grille vide représentant l'ensemble des rooms de l'étage (floor)
  * création de la map de l'étage
  *
- * @param level objet complexe représentant l'étage
+ * @param level
  */
 void createFloor(Level *level, char *monsterfile)
 {
@@ -72,20 +72,21 @@ void createFloor(Level *level, char *monsterfile)
             level->floor[i][j] = *newRoom(level->rows, level->columns, "Wall", 6, monsterfile);
         }
     }
-    // création de la map
-    level->map = newMap(7, 7); // car level->height = 7 et level->width = 7
+    // création de la map vide
+    level->map = newMap(level->height, level->width); // car level->height = 7 et level->width = 7
 }
 
 Level *newLevel(int id, int rows, int columns, char *roomfile, char *itemfile, char *monsterfile)
 {
     // srand(time(NULL));
     Level *level = malloc(sizeof(Level));
-    level->id = id;
+    level->id = id; // niveau de l'étage
     level->height = 7;
     level->width = 7;
-    level->rows = rows;
-    level->columns = columns;
-    // création de la grille de rooms de type 'Wall' représentant l'étage
+    level->rows = rows;       // for a room
+    level->columns = columns; // for a room
+
+    // création de la grille de rooms de type 'Wall' représentant l'étage + newMap()
     createFloor(level, monsterfile);
 
     // création special rooms
@@ -102,13 +103,16 @@ Level *newLevel(int id, int rows, int columns, char *roomfile, char *itemfile, c
     // place le spawner au centre de l'étage
     level->u = level->height / 2;
     level->v = level->width / 2;
+
+    // ajout de la room spawner
     updateFloor(level, level->u, level->v, *level->spawner);
     updateMap(level->map, level->u, level->v, level->map->spawn);
-    // pièce actuelle
+
+    // pièce actuelle du personnage 'P'
     level->room = level->spawner;
 
-    randFloor(level, roomfile, monsterfile); // placement aléatoire des pièces à partir du Spawner
-    addItemRoom(level, level->itemRoom);     // ajout de l'item room
+    randFloor(level, roomfile, monsterfile); // placement aléatoire des pièces à partir du Spawner + bossRoom + itemRoomBonus
+    addItemRoom(level, level->itemRoom);     // ajout de itemRoom
     putAllDoors(level);
     return level;
 }
@@ -122,9 +126,10 @@ void randFloor(Level *level, char *roomfile, char *monsterfile)
     while (count < 10)
     {
 
-        int index = 0;
-        level->u = level->height / 2;
-        level->v = level->width / 2;
+        int index = 0; // index de la roomList
+        // start with 'P' in the middle of floor
+        level->u = level->height / 2; // vertical coordinate
+        level->v = level->width / 2;  // horizontal coordinate
         int times = 0;
         while (count < 10 && times < 20)
         {
@@ -134,7 +139,7 @@ void randFloor(Level *level, char *roomfile, char *monsterfile)
             switch (level->direction)
             {
             case North:
-                if (level->u > 0 && level->map->grid[level->u - 1][level->v] == '0')
+                if (level->u > 0 && level->map->grid[level->u - 1][level->v] == level->map->wall)
                 {
                     level->u -= 1;
                     count += 1;
@@ -142,7 +147,7 @@ void randFloor(Level *level, char *roomfile, char *monsterfile)
                 }
 
             case East:
-                if (level->v < level->width - 1 && level->map->grid[level->u][level->v + 1] == '0')
+                if (level->v < level->width - 1 && level->map->grid[level->u][level->v + 1] == level->map->wall)
                 {
                     level->v += 1;
                     count += 1;
@@ -150,7 +155,7 @@ void randFloor(Level *level, char *roomfile, char *monsterfile)
                 }
 
             case South:
-                if (level->u < level->height - 1 && level->map->grid[level->u + 1][level->v] == '0')
+                if (level->u < level->height - 1 && level->map->grid[level->u + 1][level->v] == level->map->wall)
                 {
                     level->u += 1;
                     count += 1;
@@ -158,7 +163,7 @@ void randFloor(Level *level, char *roomfile, char *monsterfile)
                 }
 
             case West:
-                if (level->v > 0 && level->map->grid[level->u][level->v - 1] == '0')
+                if (level->v > 0 && level->map->grid[level->u][level->v - 1] == level->map->wall)
                 {
                     level->v -= 1;
                     count += 1;
@@ -166,9 +171,13 @@ void randFloor(Level *level, char *roomfile, char *monsterfile)
                 }
             }
 
+            // création aléatoire d'une room à partir des rooms du fichier roomfile
             Room *room = roomList->list[index];
+
+            // ajout de la room (et non le pointeur) dans la grille level->floor
             updateFloor(level, level->u, level->v, *room);
             updateMap(level->map, level->u, level->v, 'r');
+
             times += 1;
             index = rand() % roomList->size;
         }
@@ -279,103 +288,163 @@ void putAllDoors(Level *level)
         {
             if (!isType(level, i, j, "Wall"))
             {
-                putCadinalDoors(level, i, j);
+                putCardinalDoors(level, i, j);
             }
         }
     }
 }
 
-void putCadinalDoors(Level *level, int i, int j)
+void putCardinalDoors(Level *level, int h, int w)
 {
-    // east door
-    if (j < level->width - 1)
-    {
-        if (isKind(level, i, j + 1, 'r'))
-        {
-            eastDoor(level, i, j, 'D');
-        }
-        if (isKind(level, i, j + 1, 'I'))
-        {
-            eastDoor(level, i, j, '$');
-        }
-        if (isKind(level, i, j + 1, 'B'))
-        {
-            eastDoor(level, i, j, 'B');
-        }
-    }
-    else
-    {
-        eastDoor(level, i, j, 'W');
-    }
+    putEastDoor(level, h, w);
+    putSouthDoor(level, h, w);
+    putWestDoor(level, h, w);
+    putNorthDoor(level, h, w);
+}
 
-    // south door
-    if (i < level->height - 1)
+void putEastDoor(Level *level, int h, int w)
+{
+    if (w < level->width - 1)
     {
-        if (isKind(level, i + 1, j, 'r'))
+        if (isType(level, h, w + 1, "Room"))
         {
-            southDoor(level, i, j, 'D');
+            eastDoor(level, h, w, 'D');
         }
-        if (isKind(level, i + 1, j, 'I'))
+        if (isType(level, h, w + 1, "Item"))
         {
-            southDoor(level, i, j, '$');
+            eastDoor(level, h, w, '$');
         }
-        if (isKind(level, i + 1, j, 'B'))
+        if (isType(level, h, w + 1, "Bonus")) // room "Bonus" cachée
         {
-            southDoor(level, i, j, 'B');
+            eastDoor(level, h, w, 'W');
+        }
+        if (isType(level, h, w + 1, "Boss"))
+        {
+            eastDoor(level, h, w, 'B');
+        }
+        if (isType(level, h, w + 1, "Spawner"))
+        {
+            eastDoor(level, h, w, 'D');
+        }
+        if (isType(level, h, w + 1, "Wall"))
+        {
+            eastDoor(level, h, w, 'W');
         }
     }
-    else
+    else if (w == level->width - 1)
     {
-        southDoor(level, i, j, 'W');
+        eastDoor(level, h, w, 'W');
     }
+}
 
-    // west door
-    if (j > 0)
+void putSouthDoor(Level *level, int h, int w)
+{
+    if (h < level->height - 1)
     {
-        if (isKind(level, i, j - 1, 'r'))
+        if (isType(level, h + 1, w, "Room"))
         {
-            westDoor(level, i, j, 'D');
+            southDoor(level, h, w, 'D');
         }
-        if (isKind(level, i, j - 1, 'I'))
+        if (isType(level, h + 1, w, "Item"))
         {
-            westDoor(level, i, j, '$');
-            printf("west door $$$$");
+            southDoor(level, h, w, '$');
         }
-        if (isKind(level, i, j - 1, 'B'))
+        if (isType(level, h + 1, w, "Bonus")) // room "Bonus" cachée
         {
-            westDoor(level, i, j, 'B');
+            southDoor(level, h, w, 'W');
+        }
+        if (isType(level, h + 1, w, "Boss"))
+        {
+            southDoor(level, h, w, 'B');
+        }
+        if (isType(level, h + 1, w, "Spawner"))
+        {
+            southDoor(level, h, w, 'D');
+        }
+        if (isType(level, h + 1, w, "Wall"))
+        {
+            southDoor(level, h, w, 'W');
         }
     }
-    else
+    else if (h == level->height - 1)
     {
-        westDoor(level, i, j, 'W');
+        southDoor(level, h, w, 'W');
     }
+}
 
-    // north door
-    if (i > 0)
+void putWestDoor(Level *level, int h, int w)
+{
+    if (w > 0)
     {
-        if (isKind(level, i - 1, j, 'r'))
+        if (isType(level, h, w - 1, "Room"))
         {
-            northDoor(level, i, j, 'D');
+            westDoor(level, h, w, 'D');
         }
-        if (isKind(level, i - 1, j, 'I'))
+        if (isType(level, h, w - 1, "Item"))
         {
-            northDoor(level, i, j, '$');
+            westDoor(level, h, w, '$');
         }
-        if (isKind(level, i - 1, j, 'B'))
+        if (isType(level, h, w - 1, "Bonus")) // room "Bonus" cachée
         {
-            northDoor(level, i, j, 'B');
+            westDoor(level, h, w, 'W');
+        }
+        if (isType(level, h, w - 1, "Boss"))
+        {
+            westDoor(level, h, w, 'B');
+        }
+        if (isType(level, h, w - 1, "Spawner"))
+        {
+            westDoor(level, h, w, 'D');
+        }
+        if (isType(level, h, w - 1, "Wall"))
+        {
+            westDoor(level, h, w, 'W');
         }
     }
-    else
+    else if (w == 0)
     {
-        northDoor(level, i, j, 'W');
+        westDoor(level, h, w, 'W');
+    }
+}
+
+void putNorthDoor(Level *level, int h, int w)
+{
+    if (h > 0)
+    {
+        if (isType(level, h - 1, w, "Item"))
+        {
+            northDoor(level, h, w, '$');
+        }
+        if (isType(level, h - 1, w, "Room"))
+        {
+            northDoor(level, h, w, 'D');
+        }
+        if (isType(level, h - 1, w, "Bonus")) // room "Bonus" cachée
+        {
+            northDoor(level, h, w, 'W');
+        }
+        if (isType(level, h - 1, w, "Boss"))
+        {
+            northDoor(level, h, w, 'B');
+        }
+        if (isType(level, h - 1, w, "Spawner"))
+        {
+            northDoor(level, h, w, 'D');
+        }
+        if (isType(level, h - 1, w, "Wall"))
+        {
+            northDoor(level, h, w, 'W');
+        }
+    }
+    else if (h == 0)
+    {
+        northDoor(level, h, w, 'W');
     }
 }
 
 void northDoor(Level *level, int u, int v, char door)
 {
-    level->floor[u][v].map[0][level->floor[u][v].columns / 2] = door;
+    level->floor[u][v].map[0][level->floor[u][v].columns / 2] = door; // map de la room
     // room->map[0][room->columns / 2] = door;
 }
 
@@ -397,14 +466,22 @@ void westDoor(Level *level, int u, int v, char door)
     // room->map[room->rows / 2][0] = door;
 }
 
-int isType(Level *level, int u, int v, char *type)
-{
-    return !strcmp(level->floor[u][v].type, type);
-}
-
 int isKind(Level *level, int u, int v, char kind)
 {
     return level->map->grid[u][v] == kind;
+}
+/**
+ * @brief booléen sur le type de la room
+ *
+ * @param level
+ * @param h vertical coordinate
+ * @param w horizontal coordinate
+ * @param type (Wall, Item, Spawner, Boss, Room ou Bonus)
+ * @return int 1 if true, 0 otherwise
+ */
+int isType(Level *level, int h, int w, char *type)
+{
+    return !strcmp(level->floor[h][w].type, type);
 }
 
 int getU(Level *level)
@@ -419,6 +496,25 @@ int getV(Level *level)
 void updateFloor(Level *level, int i, int j, Room r)
 {
     level->floor[i][j] = r;
+    level->floor[i][j].map = copyMapRoom(r);
+}
+
+char **copyMapRoom(Room room)
+{
+    char **map;
+    map = malloc(sizeof(char *) * room.rows);
+    for (int i = 0; i < room.rows; i += 1)
+    {
+        map[i] = malloc(sizeof(char) * room.columns);
+    }
+    for (int i = 0; i < room.rows; i += 1)
+    {
+        for (int j = 0; j < room.columns; j += 1)
+        {
+            map[i][j] = room.map[i][j];
+        }
+    }
+    return map;
 }
 
 void freeLevel(Level *level)
@@ -439,6 +535,7 @@ void freeLevel(Level *level)
 
 void showFloor(Level *level)
 {
+    char *str;
     for (int i = 0; i < level->height; i += 1)
     {
         for (int j = 0; j < level->width; j += 1)
@@ -446,6 +543,7 @@ void showFloor(Level *level)
             printf("\n%d-%d ++++++++++++++++\n", i, j);
             showRoom(level->floor[i][j]);
         }
+
         printf("------------\n");
     }
 }

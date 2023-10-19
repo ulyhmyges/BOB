@@ -12,7 +12,7 @@
 #include "item.h"
 #include "lowercase.h"
 
-Item *newItem(char *name, float hpMax, int shield, float dmg, boolean ps, boolean ss, boolean flight)
+Item* newItem(char *name, float hpMax, int shield, float dmg, boolean ps, boolean ss, boolean flight)
 {
     Item *item = malloc(sizeof(Item));
     item->name = malloc(sizeof(char) * 35);
