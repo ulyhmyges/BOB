@@ -354,11 +354,19 @@ void showRoom(Room r)
 {
     for (int i = 0; i < r.rows; i += 1)
     {
+
         for (int j = 0; j < r.columns; j += 1)
         {
-            printf("%c", r.map[i][j]);
+            if (j == 0)
+            {
+                printf("%*s %c    ", 70, "", r.map[i][j]);
+            }
+            else
+            {
+                printf("%c    ", r.map[i][j]);
+            }
         }
-        printf("\n");
+        printf("\n\n");
     }
 }
 void printRoom(Room room, FILE *f)

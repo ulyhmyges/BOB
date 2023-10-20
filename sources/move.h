@@ -9,6 +9,8 @@
 #ifndef MOVE_H
 
 #define MOVE_H
+#include "level.h"
+
 
 typedef enum MOVE {
     UP = 'z',
@@ -16,5 +18,9 @@ typedef enum MOVE {
     DOWN = 's',
     LEFT = 'q',
 } MOVE;
+
+void showCurrentRoom(Level* level);
+void game(Level* level);
+int kbhit(void);
 
 #endif // MOVE_H

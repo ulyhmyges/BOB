@@ -20,6 +20,17 @@ typedef enum direction
     West
 } direction;
 
+typedef struct Point {
+    int h;
+    int w;
+} Point;
+
+typedef struct Position {
+    int u; // coordonnée verticale du personnage 'P' à l'étage
+    int v; // coordonnée horizontale du personnage 'P'
+    Point p;
+} Position;
+
 typedef struct Level
 {
     int id;
@@ -29,9 +40,10 @@ typedef struct Level
     direction direction;
     Map *map;
     char character; // P
-    int u;  // coordonnée verticale du personnage 'P' à l'étage
-    int v;  // coordonnée horizontale du personnage 'P'
-    Room *room;
+    // int u;  
+    // int v;  
+    Position coord;
+    Room *currentRoom;
     int rows;
     int columns;
     Room *spawner;
@@ -46,8 +58,6 @@ Level *newLevel(int id, int rows, int columns, char *roomfile, char *itemfile, c
 void freeLevel(Level *level);
 void updateFloor(Level *level, int i, int j, Room r);
 void showFloor(Level *level);
-int getU(Level *level);
-int getV(Level *level);
 void randFloor(Level *level, char *roomfile, char *monsterfile);
 void putAllDoors(Level *level);
 int isKind(Level *level, int u, int v, char kind);
@@ -56,7 +66,7 @@ void eastDoor(Level *level, int u, int v, char door);
 void southDoor(Level *level, int u, int v, char door);
 void westDoor(Level *level, int u, int v, char door);
 int addBossRoom(Level *level);
-int addItemRoomBonus(Level *level);
+
 
 int addItemRoom(Level *level, Room *room);
 int putItemRoom(Level *level, int i, int j, Room *room);

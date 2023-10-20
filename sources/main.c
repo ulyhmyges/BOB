@@ -25,72 +25,21 @@
 #include "run.h"
 #include "player.h"
 #include "playerFile.h"
+#include "move.h"
 
 //
-#include <termios.h>
-#include <unistd.h>
-#include <fcntl.h>
 
-int kbhit(void)
-{
-    struct termios oldt, newt;
-    int ch;
-    int oldf;
-
-    tcgetattr(STDIN_FILENO, &oldt);
-    newt = oldt;
-    newt.c_lflag &= ~(ICANON | ECHO);
-    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-    oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
-    fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
-
-    ch = getchar();
-
-    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-    fcntl(STDIN_FILENO, F_SETFL, oldf);
-
-    if (ch != EOF)
-    {
-        ungetc(ch, stdin);
-        return 1;
-    }
-
-    return 0;
-}
 
 int main(int argc, char const *argv[])
 {
-    Level *level = newLevel(1, 9, 15,
+    Level* level = newLevel(1, 9, 15,
                             "/Users/ulyh/programmation/c/bbriatte/bob/binding_of_briatte/ressources/file.rtbob",
                             "/Users/ulyh/programmation/c/bbriatte/bob/binding_of_briatte/ressources/file.itbob",
                             "/Users/ulyh/programmation/c/bbriatte/bob/binding_of_briatte/ressources/file.mtbob");
 
     // showFloor(level);
     // showMap(*level->map);
-
-    char c;
-    while (1)
-    {
-
-        system("clear");
-        system("echo -e '\e[032mGreen text'");
-        for (int i = 0; i < 14; i += 1)
-        {
-            for (int j = 0; j < 25; j += 1)
-            {
-                printf("\\ o / ");
-            }
-        }
-        while (!kbhit())
-        {
-        }
-        c = getchar();
-
-        printf("char:%c\n", c);
-        fflush(stdin);
-        sleep(1);
-    }
-    printf("\nYou pressed '%c'!\n", c);
+    printf("main:%d, %d\n", level->coord.u, level->coord.v);
 
     // // selection du joueur
     // Player *player = selectPlayer("./ressources/backup.ptbob");
