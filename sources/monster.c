@@ -135,7 +135,6 @@ Monster* askMonster(Monster* monster)
     // name
     printf("name = ");
     if (fgets(monster->name, 34, stdin) == NULL){
-        printf("IF statement\n");
         fgets(monster->name, 34, stdin);
     }
     

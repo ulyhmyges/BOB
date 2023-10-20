@@ -35,6 +35,7 @@ MonsterList* readMonsterFile(char *monsterfile)
         for (int i = 0; i < monsterList->size; i += 1)
         {
             monsterList->list[i] = readMonster(f);
+            printf("name---: %s\n", monsterList->list[i]->name);
         }
         fclose(f);
         return monsterList;
