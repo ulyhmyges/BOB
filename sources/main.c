@@ -36,22 +36,9 @@ int main(int argc, char const *argv[])
                             "/Users/ulyh/programmation/c/bbriatte/bob/binding_of_briatte/ressources/file.itbob",
                             "/Users/ulyh/programmation/c/bbriatte/bob/binding_of_briatte/ressources/file.mtbob");
 
-    char c;
-    while (1)
-    {
-
-        system("clear");
-        system("echo '\e[032m'");
-        showCurrentRoom(level);
-
-        while (!kbhit())
-        {
-        }
-        c = getchar();
-
-        // printf("char: %c\n", c);
-        fflush(stdin);
-    }
+    game(level);
+    // showMap(*level->map);
+   
 
     // // selection du joueur
     // Player *player = selectPlayer("./ressources/backup.ptbob");

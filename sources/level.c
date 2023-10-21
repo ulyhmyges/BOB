@@ -95,9 +95,6 @@ Level *newLevel(int id, int rows, int columns, char *roomfile, char *itemfile, c
     level->itemRoom = createSpecialRoom(level->rows, level->columns, 'I', itemfile, monsterfile);
     level->itemRoomBonus = createSpecialRoom(level->rows, level->columns, 'I', itemfile, monsterfile);
 
-    // TEST
-    printf("p: %d,%d\n", level->coord.p.h, level->coord.p.w);
-
     level->character = 'P';
 
     // direction par défaut
@@ -106,6 +103,10 @@ Level *newLevel(int id, int rows, int columns, char *roomfile, char *itemfile, c
     // place le spawner au centre de l'étage
     level->coord.u = level->height / 2;
     level->coord.v = level->width / 2;
+
+    // position centrale du personnage dans la pièce
+    level->coord.p.h = level->rows / 2;
+    level->coord.p.w = level->columns / 2;
 
     // ajout de la room spawner
     updateFloor(level, level->coord.u, level->coord.v, level->spawner); // u,v = 3, 3
@@ -117,15 +118,21 @@ Level *newLevel(int id, int rows, int columns, char *roomfile, char *itemfile, c
     level->currentRoom = level->spawner;
 
     randFloor(level, roomfile, monsterfile); // placement aléatoire des pièces à partir du Spawner + bossRoom + itemRoomBonus
-    printf("%d, %d, type: %s\n", level->currentRoom->spot.u, level->currentRoom->spot.v, level->currentRoom->type);
 
     // ajout de itemRoom (I)
-    addItemRoom(level, level->itemRoom); 
+    addItemRoom(level, level->itemRoom);
     putAllDoors(level);
 
     // start to Spawner room
     level->coord.u = level->spawner->spot.u;
     level->coord.v = level->spawner->spot.v;
+
+    // récupère la bonne configuration des rooms après le placement des portes
+    *level->spawner = level->floor[level->coord.u][level->coord.v];
+    *level->bossRoom = level->floor[level->bossRoom->spot.u][level->bossRoom->spot.v];
+    *level->itemRoom = level->floor[level->itemRoom->spot.u][level->itemRoom->spot.v];
+    *level->itemRoomBonus = level->floor[level->itemRoomBonus->spot.u][level->itemRoomBonus->spot.v];
+
     return level;
 }
 
@@ -139,7 +146,7 @@ void randFloor(Level *level, char *roomfile, char *monsterfile)
     {
 
         int index = 0; // index de la roomList
-        // start with 'P' in the middle of floor
+        // start with 'S' in the middle of floor
         level->coord.u = level->height / 2; // vertical coordinate
         level->coord.v = level->width / 2;  // horizontal coordinate
         int times = 0;
@@ -503,7 +510,7 @@ int isType(Level *level, int h, int w, char *type)
     return !strcmp(level->floor[h][w].type, type);
 }
 
-void updateFloor(Level *level, int i, int j, Room* r)
+void updateFloor(Level *level, int i, int j, Room *r)
 {
     // location of the room (u, v)
     r->spot.u = i;

@@ -360,11 +360,11 @@ void showRoom(Room r)
         {
             if (j == 0)
             {
-                printf("%*s %c    ", 65, "", r.map[i][j]);
+                printf("%*s %c   ", 65, "", r.map[i][j]);
             }
             else
             {
-                printf("%c    ", r.map[i][j]);
+                printf("%c   ", r.map[i][j]);
             }
         }
         printf("\n\n");

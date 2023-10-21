@@ -22,5 +22,8 @@ typedef enum MOVE {
 void showCurrentRoom(Level* level);
 void game(Level* level);
 int kbhit(void);
+void movePerson(Level *level, char key);
+void updateCurrentRoom(Level *level, int h, int w);
+void changeRoom(Level *level);
 
 #endif // MOVE_H
