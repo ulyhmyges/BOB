@@ -74,6 +74,8 @@ void createMonsterList(Room *r, char *monsterfile)
             r->monsters->list[i]->dmg *= 2;
         }
         break;
+    // default:
+        // do nothing (not a champion)
     }
 }
 
@@ -354,12 +356,11 @@ void showRoom(Room r)
 {
     for (int i = 0; i < r.rows; i += 1)
     {
-
         for (int j = 0; j < r.columns; j += 1)
         {
             if (j == 0)
             {
-                printf("%*s %c    ", 70, "", r.map[i][j]);
+                printf("%*s %c    ", 65, "", r.map[i][j]);
             }
             else
             {

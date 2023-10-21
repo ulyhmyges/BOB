@@ -13,10 +13,19 @@
 #include "item.h"
 #include "monsterFile.h"
 
+/**
+ * @brief Location of the room on floor[][]
+ * 
+ */
+typedef struct Location {
+    int u;
+    int v;
+} Location;
+
 typedef struct Room
 {
     int id;
-    char *type;
+    char *type; // Room, Boss, Bonus, Item, Wall
     int rows;
     int columns;
     char **map;
@@ -27,6 +36,7 @@ typedef struct Room
     char gap;    // Un trou infranchissable par le personnage et les monstres
     char spike;  // Pic franchissable par le personnage et les monstres mais en prenant des dégâts
     char health; // Objet généré aléatoirement (vie ou bouclier)
+    Location spot;
 } Room;
 
 Room *newRoom(int rows, int columns, char *type, int design, char *monsterfile);

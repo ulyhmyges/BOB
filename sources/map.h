@@ -25,6 +25,5 @@ typedef struct Map {
 Map * newMap(int height, int width);
 void freeMap(Map *map);
 void showMap(Map map);
-void updateMap(Map *map, int i, int j, char c);
 
 #endif // MAP_H

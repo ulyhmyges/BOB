@@ -31,6 +31,13 @@ void freeMonsterList(MonsterList *monsterList)
     free(monsterList);
 }
 
+/**
+ * @brief add a monster to the list
+ * 
+ * @param monster 
+ * @param monsterList 
+ * @return int 
+ */
 int addMonsterList(Monster *monster, MonsterList *monsterList)
 {
     if (monsterList->size < monsterList->capacity)

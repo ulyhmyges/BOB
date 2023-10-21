@@ -29,17 +29,29 @@
 
 //
 
-
 int main(int argc, char const *argv[])
 {
-    Level* level = newLevel(1, 9, 15,
+    Level *level = newLevel(1, 9, 15,
                             "/Users/ulyh/programmation/c/bbriatte/bob/binding_of_briatte/ressources/file.rtbob",
                             "/Users/ulyh/programmation/c/bbriatte/bob/binding_of_briatte/ressources/file.itbob",
                             "/Users/ulyh/programmation/c/bbriatte/bob/binding_of_briatte/ressources/file.mtbob");
 
-    // showFloor(level);
-    // showMap(*level->map);
-    printf("main:%d, %d\n", level->coord.u, level->coord.v);
+    char c;
+    while (1)
+    {
+
+        system("clear");
+        system("echo '\e[032m'");
+        showCurrentRoom(level);
+
+        while (!kbhit())
+        {
+        }
+        c = getchar();
+
+        // printf("char: %c\n", c);
+        fflush(stdin);
+    }
 
     // // selection du joueur
     // Player *player = selectPlayer("./ressources/backup.ptbob");

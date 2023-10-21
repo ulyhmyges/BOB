@@ -26,8 +26,8 @@ typedef struct Point {
 } Point;
 
 typedef struct Position {
-    int u; // coordonnée verticale du personnage 'P' à l'étage
-    int v; // coordonnée horizontale du personnage 'P'
+    int u; // vertical coordinates du personnage 'P' à l'étage
+    int v; // horizontal coordinates du personnage 'P'
     Point p;
 } Position;
 
@@ -56,7 +56,7 @@ Room *createSpecialRoom(int rows, int columns, char kind, char *itemfile, char *
 void createFloor(Level *level, char *monsterfile);
 Level *newLevel(int id, int rows, int columns, char *roomfile, char *itemfile, char *monsterfile);
 void freeLevel(Level *level);
-void updateFloor(Level *level, int i, int j, Room r);
+void updateFloor(Level *level, int i, int j, Room* r);
 void showFloor(Level *level);
 void randFloor(Level *level, char *roomfile, char *monsterfile);
 void putAllDoors(Level *level);
@@ -78,5 +78,7 @@ void putEastDoor(Level* level, int h, int w);
 void putSouthDoor(Level*  level, int h, int w);
 void putWestDoor(Level* level, int h, int w);
 void putNorthDoor(Level* level, int h, int w);
+
+void updateMapLevel(Level* level, int i, int j, char kind);
 
 #endif // FLOOR_H
