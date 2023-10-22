@@ -9,5 +9,5 @@ app
 *.ptbob
 bin/
 ressources/
-main
-main.c
+sources/main
+sources/main.c
