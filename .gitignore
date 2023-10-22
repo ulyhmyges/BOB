@@ -10,3 +10,4 @@ app
 bin/
 ressources/
 main
+main.c
