@@ -41,52 +41,58 @@ int kbhit(void)
 
     return 0;
 }
-// tput cols => 204
-// tput lines => 52
-void showCurrentRoom(Level *level)
-{
-    for (int i = 0; i < 15; i += 1)
-    {
-        printf("\n");
-    }
 
-    showRoom(level->floor[level->coord.u][level->coord.v]);
-    printf("h: %d, w: %d\n", level->coord.p.h, level->coord.p.w);
+int isItem(Level *level, int h, int w)
+{
+    return level->currentRoom->map[h][w] == 'I';
+}
+int isDoor(Level *level, int h, int w)
+{
+    return level->currentRoom->map[h][w] == 'D';
+}
+int isBoss(Level *level, int h, int w)
+{
+    return level->currentRoom->map[h][w] == 'B';
+}
+int isHealth(Level *level, int h, int w)
+{
+    return level->currentRoom->map[h][w] == 'H';
+}
+/**
+ * @brief Pic franchissable par le personnage et les monstres mais en prenant des dégâts
+ */
+int isSpike(Level *level, int h, int w)
+{
+    return level->currentRoom->map[h][w] == 'S';
+}
+/**
+ * @brief Un trou infranchissable par le personnage et les monstres
+ */
+int isGap(Level *level, int h, int w)
+{
+    return level->currentRoom->map[h][w] == 'G';
 }
 
-void updateCurrentRoom(Level *level, int h, int w)
+/**
+ * @brief Un rocher infranchissable par le personnage et les monstres
+ */
+int isRock(Level *level, int h, int w)
 {
-    if (h > level->rows - 1 || h < 0 || w < 0 || w > level->columns - 1)
-    {
-        return;
-    }
-    if (level->currentRoom->map[level->coord.p.h][level->coord.p.w] == 'P')
-    {
-        level->currentRoom->map[level->coord.p.h][level->coord.p.w] = ' ';
-    }
-
-    // next position of the character 'P'
-    level->coord.p.h = h;
-    level->coord.p.w = w;
-    if (level->currentRoom->map[level->coord.p.h][level->coord.p.w] == ' ')
-    {
-        level->currentRoom->map[level->coord.p.h][level->coord.p.w] = level->character;
-    }
-    level->floor[level->coord.u][level->coord.v] = *level->currentRoom;
+    return level->currentRoom->map[h][w] == 'R';
 }
 
-// no wall
-int isSafe(Level *level, int h, int w)
+int isWall(Level *level, int h, int w)
 {
-    if (isWall(level, h, w))
-    {
-        return 0;
-    }
-    return 1;
+    return level->currentRoom->map[h][w] == 'W';
+}
+
+int isBlank(Level *level, int h, int w)
+{
+    return level->currentRoom->map[h][w] == ' ';
 }
 
 
-void changeRoom(Level *level)
+void reachCardinalPoint(Level *level)
 {
     if (level->coord.p.h == level->rows / 2)
     {
@@ -122,12 +128,47 @@ void changeRoom(Level *level)
     }
     // update currentRoom
     *level->currentRoom = level->floor[level->coord.u][level->coord.v];
+}
 
-    // 'P' passe au travers des obstacles sauf 'W'
-    if (level->currentRoom->map[level->coord.p.h][level->coord.p.w] == ' ')
+// tput cols => 204
+// tput lines => 52
+void showCurrentRoom(Level *level)
+{
+    for (int i = 0; i < 15; i += 1)
     {
-        level->currentRoom->map[level->coord.p.h][level->coord.p.w] = level->character;
+        printf("\n");
     }
+
+    showRoom(level->floor[level->coord.u][level->coord.v]);
+    printf("h: %d, w: %d\n", level->coord.p.h, level->coord.p.w);
+}
+
+void goToNextPoint(Level *level, int h, int w)
+{
+    if (h > level->rows - 1 || h < 0 || w < 0 || w > level->columns - 1)
+    {
+        return;
+    }
+    
+    // current point
+    if (level->currentRoom->map[level->coord.p.h][level->coord.p.w] == 'P')
+    {
+        level->currentRoom->map[level->coord.p.h][level->coord.p.w] = ' ';
+    }
+
+    // next position of the character 'P'
+    level->coord.p.h = h;
+    level->coord.p.w = w;
+}
+
+// no wall
+int isSafe(Level *level, int h, int w)
+{
+    if (isWall(level, h, w))
+    {
+        return 0;
+    }
+    return 1;
 }
 
 void movePerson(Level *level, char key)
@@ -137,35 +178,44 @@ void movePerson(Level *level, char key)
     case 'z':
         if (isSafe(level, level->coord.p.h - 1, level->coord.p.w))
         {
-            updateCurrentRoom(level, level->coord.p.h - 1, level->coord.p.w);
+            goToNextPoint(level, level->coord.p.h - 1, level->coord.p.w);
         }
         break;
 
     case 'd':
         if (isSafe(level, level->coord.p.h, level->coord.p.w + 1))
         {
-            updateCurrentRoom(level, level->coord.p.h, level->coord.p.w + 1);
+            goToNextPoint(level, level->coord.p.h, level->coord.p.w + 1);
         }
         break;
 
     case 's':
         if (isSafe(level, level->coord.p.h + 1, level->coord.p.w))
         {
-            updateCurrentRoom(level, level->coord.p.h + 1, level->coord.p.w);
+            goToNextPoint(level, level->coord.p.h + 1, level->coord.p.w);
         }
         break;
 
     case 'q':
         if (isSafe(level, level->coord.p.h, level->coord.p.w - 1))
         {
-            updateCurrentRoom(level, level->coord.p.h, level->coord.p.w - 1);
+            goToNextPoint(level, level->coord.p.h, level->coord.p.w - 1);
         }
         break;
 
     default:
         break;
     }
-    changeRoom(level);
+
+    // update floor
+    level->floor[level->coord.u][level->coord.v] = *level->currentRoom;
+    reachCardinalPoint(level);
+
+    // mark 'P' if next point is blank
+    if (isBlank(level, level->coord.p.h, level->coord.p.w))
+    {
+        level->currentRoom->map[level->coord.p.h][level->coord.p.w] = level->character;
+    }
 }
 
 void game(Level *level)
@@ -173,7 +223,6 @@ void game(Level *level)
     char c;
     while (1)
     {
-
         system("clear");
         system("echo '\e[032m'");
         showCurrentRoom(level);
@@ -185,40 +234,4 @@ void game(Level *level)
         fflush(stdin);
         // sleep(3);
     }
-}
-
-int isItem(Level* level, int h, int w){
-    return level->currentRoom->map[h][w] == 'I';
-}
-int isDoor(Level* level, int h, int w){
-    return level->currentRoom->map[h][w] == 'D';
-}
-int isBoss(Level* level, int h, int w){
-    return level->currentRoom->map[h][w] == 'B';
-}
-int isHealth(Level* level, int h, int w){
-    return level->currentRoom->map[h][w] == 'H';
-}
-/**
- * @brief Pic franchissable par le personnage et les monstres mais en prenant des dégâts
- */
-int isSpike(Level* level, int h, int w){
-    return level->currentRoom->map[h][w] == 'S';
-}
-/**
- * @brief Un trou infranchissable par le personnage et les monstres
- */
-int isGap(Level* level, int h, int w){
-    return level->currentRoom->map[h][w] == 'G';
-}
-
-/**
- * @brief Un rocher infranchissable par le personnage et les monstres
- */
-int isRock(Level* level, int h, int w){
-    return level->currentRoom->map[h][w] == 'R';
-}
-
-int isWall(Level* level, int h, int w){
-    return level->currentRoom->map[h][w] == 'W';
 }
