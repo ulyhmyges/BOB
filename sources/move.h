@@ -26,4 +26,13 @@ void movePerson(Level *level, char key);
 void updateCurrentRoom(Level *level, int h, int w);
 void changeRoom(Level *level);
 
+int isWall(Level* level, int h, int w);
+int isGap(Level* level, int h, int w);
+int isSpike(Level* level, int h, int w);
+int isHealth(Level* level, int h, int w);
+int isRock(Level* level, int h, int w);
+int isBoss(Level* level, int h, int w);
+int isDoor(Level* level, int h, int w);
+int isItem(Level* level, int h, int w);
+
 #endif // MOVE_H

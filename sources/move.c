@@ -78,12 +78,13 @@ void updateCurrentRoom(Level *level, int h, int w)
 // no wall
 int isSafe(Level *level, int h, int w)
 {
-    if (level->currentRoom->map[h][w] == 'W')
+    if (isWall(level, h, w))
     {
         return 0;
     }
     return 1;
 }
+
 
 void changeRoom(Level *level)
 {
@@ -184,4 +185,40 @@ void game(Level *level)
         fflush(stdin);
         // sleep(3);
     }
+}
+
+int isItem(Level* level, int h, int w){
+    return level->currentRoom->map[h][w] == 'I';
+}
+int isDoor(Level* level, int h, int w){
+    return level->currentRoom->map[h][w] == 'D';
+}
+int isBoss(Level* level, int h, int w){
+    return level->currentRoom->map[h][w] == 'B';
+}
+int isHealth(Level* level, int h, int w){
+    return level->currentRoom->map[h][w] == 'H';
+}
+/**
+ * @brief Pic franchissable par le personnage et les monstres mais en prenant des dégâts
+ */
+int isSpike(Level* level, int h, int w){
+    return level->currentRoom->map[h][w] == 'S';
+}
+/**
+ * @brief Un trou infranchissable par le personnage et les monstres
+ */
+int isGap(Level* level, int h, int w){
+    return level->currentRoom->map[h][w] == 'G';
+}
+
+/**
+ * @brief Un rocher infranchissable par le personnage et les monstres
+ */
+int isRock(Level* level, int h, int w){
+    return level->currentRoom->map[h][w] == 'R';
+}
+
+int isWall(Level* level, int h, int w){
+    return level->currentRoom->map[h][w] == 'W';
 }
