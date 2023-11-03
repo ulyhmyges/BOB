@@ -171,7 +171,7 @@ void goToNextPoint(Level *level, int h, int w)
 // no wall, no gap
 int isSafe(Level *level, int h, int w)
 {
-    if (isWall(level, h, w) || isGap(level, h, w))
+    if (isWall(level, h, w) || isGap(level, h, w) || isRock(level, h, w))
     {
         return 0;
     }
