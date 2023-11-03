@@ -106,7 +106,7 @@ void showRoomFileById(int id, char *fichier, char *monsterfile){
  * @brief ouvre le fichier, récupère l'ensemble des pièces sous forme d'un pointeur RoomList et ferme le fichier
  * 
  * @param fichier chemin du fichier *.rtbob à lire
- * @return RoomList* l'ensemble des pièces contenues dans le fichier 'fichier'
+ * @return RoomList* l'ensemble des pièces contenues dans le fichier 'roomfile'
  */
 RoomList * readRoomFile(char *roomfile, char *monsterfile){
     RoomList *roomList = newRoomList();

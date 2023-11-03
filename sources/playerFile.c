@@ -12,6 +12,7 @@
 PlayerList *readPlayerFile(char *playerfile)
 {
     FILE *f = fopen(playerfile, "r");
+
     if (f != NULL)
     {
         PlayerList *playerList = readPlayerList(f);
@@ -39,9 +40,18 @@ void writePlayerFile(PlayerList playerList, char *playerfile)
     }
 }
 
-int addPlayerFile(Player *player, char *playerfile){
+/**
+ * @brief Add a player to the file playerfile
+ *
+ * @param player
+ * @param playerfile path to the file
+ * @return 1 if succeed
+ */
+int addPlayerFile(Player *player, char *playerfile)
+{
     FILE *f = fopen(playerfile, "r+");
-    if (f != NULL){
+    if (f != NULL)
+    {
         int playerTotal = 0;
         fscanf(f, "{%d}\n", &playerTotal);
         printPlayer(*player, f);
@@ -49,7 +59,9 @@ int addPlayerFile(Player *player, char *playerfile){
         fprintf(f, "{%d}\n", playerTotal + 1);
         fclose(f);
         return 1;
-    }else{
+    }
+    else
+    {
         printf("Erreur à l'écriture/lecture du fichier %s\n", playerfile);
         return 0;
     }

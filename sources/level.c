@@ -76,15 +76,21 @@ void createFloor(Level *level, char *monsterfile)
     level->map = newMap(level->height, level->width); // car level->height = 7 et level->width = 7
 }
 
-Level *newLevel(int id, int rows, int columns, char *roomfile, char *itemfile, char *monsterfile)
+Level *newLevel(int id, int rows, int columns, char *roomfile, char *itemfile, char *monsterfile, Player* player)
 {
-    // srand(time(NULL));
-    Level *level = malloc(sizeof(Level));
+    srand(time(NULL));
+    Level* level = malloc(sizeof(Level));
     level->id = id; // niveau de l'étage
     level->height = 7;
     level->width = 7;
     level->rows = rows;       // for a room
     level->columns = columns; // for a room
+    level->pathRoomfile = malloc(sizeof(char) * 99);
+    strcpy(level->pathRoomfile, roomfile);
+    level->pathItemfile = malloc(sizeof(char) * 99);
+    strcpy(level->pathItemfile, itemfile);
+    level->pathMonsterfile = malloc(sizeof(char) * 99);
+    strcpy(level->pathMonsterfile, monsterfile);
 
     // création de la grille de rooms de type 'Wall' représentant l'étage + newMap()
     createFloor(level, monsterfile);
@@ -95,31 +101,54 @@ Level *newLevel(int id, int rows, int columns, char *roomfile, char *itemfile, c
     level->itemRoom = createSpecialRoom(level->rows, level->columns, 'I', itemfile, monsterfile);
     level->itemRoomBonus = createSpecialRoom(level->rows, level->columns, 'I', itemfile, monsterfile);
 
+    // représentation du personnage dans la pièce
     level->character = 'P';
+
+    // add a player
+    level->player = player;
 
     // direction par défaut
     level->direction = North;
 
     // place le spawner au centre de l'étage
-    level->u = level->height / 2;
-    level->v = level->width / 2;
+    level->coord.u = level->height / 2;
+    level->coord.v = level->width / 2;
+
+    // position centrale du personnage dans la pièce
+    level->coord.p.h = level->rows / 2;
+    level->coord.p.w = level->columns / 2;
 
     // ajout de la room spawner
-    updateFloor(level, level->u, level->v, *level->spawner);
-    updateMap(level->map, level->u, level->v, level->map->spawn);
+    updateFloor(level, level->coord.u, level->coord.v, level->spawner); // u,v = 3, 3
+    updateMapLevel(level, level->coord.u, level->coord.v, level->map->spawn);
+    level->spawner->spot.u = level->coord.u;
+    level->spawner->spot.v = level->coord.v;
 
     // pièce actuelle du personnage 'P'
-    level->room = level->spawner;
+    level->currentRoom = level->spawner;
 
     randFloor(level, roomfile, monsterfile); // placement aléatoire des pièces à partir du Spawner + bossRoom + itemRoomBonus
-    addItemRoom(level, level->itemRoom);     // ajout de itemRoom
+
+    // ajout de itemRoom (I)
+    addItemRoom(level, level->itemRoom);
     putAllDoors(level);
+
+    // start to Spawner room
+    level->coord.u = level->spawner->spot.u;
+    level->coord.v = level->spawner->spot.v;
+
+    // récupère la bonne configuration des rooms après le placement des portes
+    *level->spawner = level->floor[level->coord.u][level->coord.v];
+    *level->bossRoom = level->floor[level->bossRoom->spot.u][level->bossRoom->spot.v];
+    *level->itemRoom = level->floor[level->itemRoom->spot.u][level->itemRoom->spot.v];
+    *level->itemRoomBonus = level->floor[level->itemRoomBonus->spot.u][level->itemRoomBonus->spot.v];
+
     return level;
 }
 
 void randFloor(Level *level, char *roomfile, char *monsterfile)
 {
-
+    // create a list of rooms occupied by monsters ( < 7 for each room )
     RoomList *roomList = readRoomFile(roomfile, monsterfile);
 
     int count = 0;
@@ -127,9 +156,9 @@ void randFloor(Level *level, char *roomfile, char *monsterfile)
     {
 
         int index = 0; // index de la roomList
-        // start with 'P' in the middle of floor
-        level->u = level->height / 2; // vertical coordinate
-        level->v = level->width / 2;  // horizontal coordinate
+        // start with 'S' in the middle of floor
+        level->coord.u = level->height / 2; // vertical coordinate
+        level->coord.v = level->width / 2;  // horizontal coordinate
         int times = 0;
         while (count < 10 && times < 20)
         {
@@ -139,33 +168,33 @@ void randFloor(Level *level, char *roomfile, char *monsterfile)
             switch (level->direction)
             {
             case North:
-                if (level->u > 0 && level->map->grid[level->u - 1][level->v] == level->map->wall)
+                if (level->coord.u > 0 && level->map->grid[level->coord.u - 1][level->coord.v] == level->map->wall)
                 {
-                    level->u -= 1;
+                    level->coord.u -= 1;
                     count += 1;
                     break;
                 }
 
             case East:
-                if (level->v < level->width - 1 && level->map->grid[level->u][level->v + 1] == level->map->wall)
+                if (level->coord.v < level->width - 1 && level->map->grid[level->coord.u][level->coord.v + 1] == level->map->wall)
                 {
-                    level->v += 1;
+                    level->coord.v += 1;
                     count += 1;
                     break;
                 }
 
             case South:
-                if (level->u < level->height - 1 && level->map->grid[level->u + 1][level->v] == level->map->wall)
+                if (level->coord.u < level->height - 1 && level->map->grid[level->coord.u + 1][level->coord.v] == level->map->wall)
                 {
-                    level->u += 1;
+                    level->coord.u += 1;
                     count += 1;
                     break;
                 }
 
             case West:
-                if (level->v > 0 && level->map->grid[level->u][level->v - 1] == level->map->wall)
+                if (level->coord.v > 0 && level->map->grid[level->coord.u][level->coord.v - 1] == level->map->wall)
                 {
-                    level->v -= 1;
+                    level->coord.v -= 1;
                     count += 1;
                     break;
                 }
@@ -175,59 +204,61 @@ void randFloor(Level *level, char *roomfile, char *monsterfile)
             Room *room = roomList->list[index];
 
             // ajout de la room (et non le pointeur) dans la grille level->floor
-            updateFloor(level, level->u, level->v, *room);
-            updateMap(level->map, level->u, level->v, 'r');
+            updateFloor(level, level->coord.u, level->coord.v, room);
+            updateMapLevel(level, level->coord.u, level->coord.v, 'r');
 
             times += 1;
             index = rand() % roomList->size;
         }
     }
     addBossRoom(level);
-    putItemRoom(level, level->u, level->v, level->itemRoomBonus); // ajout item room bonus
+    // add Bonus item room (J) next to Boss room
+    putItemRoom(level, level->coord.u, level->coord.v, level->itemRoomBonus);
     strcpy(level->itemRoomBonus->type, "Bonus");
-    updateMap(level->map, level->u, level->v, level->map->bonus);
+    updateMapLevel(level, level->coord.u, level->coord.v, level->map->bonus);
 }
 
 int addBossRoom(Level *level)
 {
-    if (level->u > 0 && level->map->grid[level->u - 1][level->v] == '0')
+    if (level->coord.u > 0 && level->map->grid[level->coord.u - 1][level->coord.v] == '0')
     {
-        level->u -= 1;
-        updateFloor(level, level->u, level->v, *level->bossRoom);
-        updateMap(level->map, level->u, level->v, level->map->boss);
+        level->coord.u -= 1;
+        updateFloor(level, level->coord.u, level->coord.v, level->bossRoom);
+        updateMapLevel(level, level->coord.u, level->coord.v, level->map->boss);
         return 1;
     }
-    if (level->v < level->width - 1 && level->map->grid[level->u][level->v + 1] == '0')
+    if (level->coord.v < level->width - 1 && level->map->grid[level->coord.u][level->coord.v + 1] == '0')
     {
-        level->v += 1;
-        updateFloor(level, level->u, level->v, *level->bossRoom);
-        updateMap(level->map, level->u, level->v, level->map->boss);
+        level->coord.v += 1;
+        updateFloor(level, level->coord.u, level->coord.v, level->bossRoom);
+        updateMapLevel(level, level->coord.u, level->coord.v, level->map->boss);
         return 1;
     }
-    if (level->u < level->height - 1 && level->map->grid[level->u + 1][level->v] == '0')
+    if (level->coord.u < level->height - 1 && level->map->grid[level->coord.u + 1][level->coord.v] == '0')
     {
-        level->u += 1;
-        updateFloor(level, level->u, level->v, *level->bossRoom);
-        updateMap(level->map, level->u, level->v, level->map->boss);
+        level->coord.u += 1;
+        updateFloor(level, level->coord.u, level->coord.v, level->bossRoom);
+        updateMapLevel(level, level->coord.u, level->coord.v, level->map->boss);
         return 1;
     }
-    if (level->v > 0 && level->map->grid[level->u][level->v - 1] == '0')
+    if (level->coord.v > 0 && level->map->grid[level->coord.u][level->coord.v - 1] == '0')
     {
-        level->v -= 1;
-        updateFloor(level, level->u, level->v, *level->bossRoom);
-        updateMap(level->map, level->u, level->v, level->map->boss);
+        level->coord.v -= 1;
+        updateFloor(level, level->coord.u, level->coord.v, level->bossRoom);
+        updateMapLevel(level, level->coord.u, level->coord.v, level->map->boss);
         return 1;
     }
     return 0;
 }
 
-int addItemRoomBonus(Level *level)
-{
-    // à faire
-    return 0;
-}
-
-int addItemRoom(Level *level, Room *room)
+/**
+ * @brief add one itemRoom next to a room
+ *
+ * @param level
+ * @param itemRoom
+ * @return int
+ */
+int addItemRoom(Level *level, Room *itemRoom)
 {
     for (int i = 0; i < level->height; i += 1)
     {
@@ -235,7 +266,7 @@ int addItemRoom(Level *level, Room *room)
         {
             if (level->map->grid[i][j] == 'r')
             {
-                if (putItemRoom(level, i, j, room))
+                if (putItemRoom(level, i, j, itemRoom))
                 {
                     return 1;
                 }
@@ -245,36 +276,41 @@ int addItemRoom(Level *level, Room *room)
     return 0;
 }
 
-int putItemRoom(Level *level, int i, int j, Room *room)
+// assistant to addItemRoom()
+int putItemRoom(Level *level, int i, int j, Room *itemRoom)
 {
-    level->u = i;
-    level->v = j;
+    if (strcmp(itemRoom->type, "Item") && strcmp(itemRoom->type, "Bonus"))
+    {
+        return 0;
+    }
+    level->coord.u = i;
+    level->coord.v = j;
     if (i > 0 && level->map->grid[i - 1][j] == '0')
     {
-        level->u -= 1;
-        updateFloor(level, i - 1, j, *room);
-        updateMap(level->map, i - 1, j, level->map->item);
+        level->coord.u -= 1;
+        updateFloor(level, i - 1, j, itemRoom);
+        updateMapLevel(level, i - 1, j, level->map->item);
         return 1;
     }
     if (j < level->width - 1 && level->map->grid[i][j + 1] == '0')
     {
-        level->v += 1;
-        updateFloor(level, i, j + 1, *room);
-        updateMap(level->map, i, j + 1, level->map->item);
+        level->coord.v += 1;
+        updateFloor(level, i, j + 1, itemRoom);
+        updateMapLevel(level, i, j + 1, level->map->item);
         return 1;
     }
     if (i < level->height - 1 && level->map->grid[i + 1][j] == '0')
     {
-        level->u += 1;
-        updateFloor(level, i + 1, j, *room);
-        updateMap(level->map, i + 1, j, level->map->item);
+        level->coord.u += 1;
+        updateFloor(level, i + 1, j, itemRoom);
+        updateMapLevel(level, i + 1, j, level->map->item);
         return 1;
     }
     if (j > 0 && level->map->grid[i][j - 1] == '0')
     {
-        level->v -= 1;
-        updateFloor(level, i, j - 1, *room);
-        updateMap(level->map, i, j - 1, level->map->item);
+        level->coord.v -= 1;
+        updateFloor(level, i, j - 1, itemRoom);
+        updateMapLevel(level, i, j - 1, level->map->item);
         return 1;
     }
     return 0;
@@ -484,19 +520,15 @@ int isType(Level *level, int h, int w, char *type)
     return !strcmp(level->floor[h][w].type, type);
 }
 
-int getU(Level *level)
+void updateFloor(Level *level, int i, int j, Room *r)
 {
-    return level->u;
-}
-int getV(Level *level)
-{
-    return level->v;
-}
+    // location of the room (u, v)
+    r->spot.u = i;
+    r->spot.v = j;
 
-void updateFloor(Level *level, int i, int j, Room r)
-{
-    level->floor[i][j] = r;
-    level->floor[i][j].map = copyMapRoom(r);
+    // add Room r to the grid floor
+    level->floor[i][j] = *r;
+    level->floor[i][j].map = copyMapRoom(*r);
 }
 
 char **copyMapRoom(Room room)
@@ -519,11 +551,14 @@ char **copyMapRoom(Room room)
 
 void freeLevel(Level *level)
 {
+    free(level->pathRoomfile);
+    free(level->pathItemfile);
+    free(level->pathMonsterfile);
     freeRoom(level->bossRoom);
     freeRoom(level->itemRoomBonus);
     freeRoom(level->itemRoom);
     freeRoom(level->spawner);
-    freeRoom(level->room);
+    freeRoom(level->currentRoom);
     freeMap(level->map);
     for (int i = 0; i < level->height; i += 1)
     {
@@ -546,4 +581,17 @@ void showFloor(Level *level)
 
         printf("------------\n");
     }
+}
+
+/**
+ * @brief update la carte de l'étage à l'emplacement (i, j)
+ *
+ * @param map
+ * @param i
+ * @param j
+ * @param kind (r, S, I, J, B, 0) = (Room, Spawner, Item, Bonus, Boss, Wall)
+ */
+void updateMapLevel(Level *level, int i, int j, char kind)
+{
+    level->map->grid[i][j] = kind;
 }

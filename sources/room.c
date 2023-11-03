@@ -37,7 +37,7 @@ Room *newRoom(int rows, int columns, char *type, int design, char *monsterfile)
 }
 
 /**
- * @brief Création aléatoire de monstres dans la pièce entre 0 et 6
+ * @brief Création aléatoire de monstres entre 0 et 6 dans la pièce
  *
  * @param r la pièce
  * @param monsterfile chemin du fichier *.mtbob
@@ -63,7 +63,7 @@ void createMonsterList(Room *r, char *monsterfile)
         addMonsterList(monsterList->list[index], r->monsters);
     }
 
-    // 10% de chance d'être champion pour un monstre
+    // Un monstre a 10% de chance d'être champion
     int random = rand() % 10;
     switch (random)
     {
@@ -74,6 +74,8 @@ void createMonsterList(Room *r, char *monsterfile)
             r->monsters->list[i]->dmg *= 2;
         }
         break;
+    // default:
+        // do nothing (not a champion)
     }
 }
 
@@ -356,9 +358,16 @@ void showRoom(Room r)
     {
         for (int j = 0; j < r.columns; j += 1)
         {
-            printf("%c", r.map[i][j]);
+            if (j == 0)
+            {
+                printf("%*s %c   ", 65, "", r.map[i][j]);
+            }
+            else
+            {
+                printf("%c   ", r.map[i][j]);
+            }
         }
-        printf("\n");
+        printf("\n\n");
     }
 }
 void printRoom(Room room, FILE *f)

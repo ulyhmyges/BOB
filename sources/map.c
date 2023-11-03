@@ -61,15 +61,3 @@ void showMap(Map map){
     }
     printf("--------map--------\n");
 }
-
-/**
- * @brief update le type de la room à l'emplacement (i, j)
- * 
- * @param map 
- * @param i 
- * @param j 
- * @param c 
- */
-void updateMap(Map *map, int i, int j, char c){
-    map->grid[i][j] = c;
-}

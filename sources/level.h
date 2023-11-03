@@ -11,6 +11,7 @@
 #define FLOOR_H
 #include "room.h"
 #include "map.h"
+#include "player.h"
 
 typedef enum direction
 {
@@ -20,6 +21,17 @@ typedef enum direction
     West
 } direction;
 
+typedef struct Point {
+    int h;
+    int w;
+} Point;
+
+typedef struct Position {
+    int u; // vertical coordinates du personnage 'P' à l'étage
+    int v; // horizontal coordinates du personnage 'P'
+    Point p;
+} Position;
+
 typedef struct Level
 {
     int id;
@@ -27,27 +39,30 @@ typedef struct Level
     int height; // 7 par défaut
     int width;  // 7
     direction direction;
-    Map *map;
+    Map* map;
     char character; // P
-    int u;  // coordonnée verticale du personnage 'P' à l'étage
-    int v;  // coordonnée horizontale du personnage 'P'
-    Room *room;
+    // int u;  
+    // int v;  
+    Position coord;
+    Room* currentRoom;
     int rows;
     int columns;
     Room *spawner;
     Room *itemRoom;
     Room *itemRoomBonus;
     Room *bossRoom;
+    Player* player;
+    char* pathItemfile;
+    char* pathRoomfile;
+    char* pathMonsterfile;
 } Level;
 
 Room *createSpecialRoom(int rows, int columns, char kind, char *itemfile, char *monsterfile);
 void createFloor(Level *level, char *monsterfile);
-Level *newLevel(int id, int rows, int columns, char *roomfile, char *itemfile, char *monsterfile);
+Level *newLevel(int id, int rows, int columns, char *roomfile, char *itemfile, char *monsterfile, Player* player);
 void freeLevel(Level *level);
-void updateFloor(Level *level, int i, int j, Room r);
+void updateFloor(Level *level, int i, int j, Room* r);
 void showFloor(Level *level);
-int getU(Level *level);
-int getV(Level *level);
 void randFloor(Level *level, char *roomfile, char *monsterfile);
 void putAllDoors(Level *level);
 int isKind(Level *level, int u, int v, char kind);
@@ -56,7 +71,7 @@ void eastDoor(Level *level, int u, int v, char door);
 void southDoor(Level *level, int u, int v, char door);
 void westDoor(Level *level, int u, int v, char door);
 int addBossRoom(Level *level);
-int addItemRoomBonus(Level *level);
+
 
 int addItemRoom(Level *level, Room *room);
 int putItemRoom(Level *level, int i, int j, Room *room);
@@ -68,5 +83,7 @@ void putEastDoor(Level* level, int h, int w);
 void putSouthDoor(Level*  level, int h, int w);
 void putWestDoor(Level* level, int h, int w);
 void putNorthDoor(Level* level, int h, int w);
+
+void updateMapLevel(Level* level, int i, int j, char kind);
 
 #endif // FLOOR_H

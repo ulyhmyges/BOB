@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "itemFile.h"
 #include "itemList.h"
 
@@ -75,7 +76,7 @@ void removeItemFile(Item *item, char *itemfile)
     FILE *f = fopen(itemfile, "r+");
     if (f != NULL)
     {
-        ItemList *itemList = readItemList(itemfile);
+        ItemList *itemList = readItemFile(itemfile);
         removeItem(item, itemList);
         writeItemFile(*itemList, itemfile);
         freeItemList(itemList);
@@ -101,7 +102,7 @@ void removeItemByIndexFile(int index, char *itemfile)
     FILE *f = fopen(itemfile, "r+");
     if (f != NULL)
     {
-        ItemList *itemList = readItemList(itemfile);
+        ItemList *itemList = readItemFile(itemfile);
         removeItemListByIndex(index, itemList);
         writeItemFile(*itemList, itemfile);
         freeItemList(itemList);
@@ -128,4 +129,13 @@ ItemList *readItemFile(char *itemfile)
         printf("Erreur à la lecture du fichier %s\n", itemfile);
         return NULL;
     }
+}
+
+Item* randomItem(char* itemfile){
+    ItemList* itemList = readItemFile(itemfile);
+    Item* i = itemList->list[rand() % itemList->size];
+    Item* item = newItem(i->name, i->hpMax, i->shield, i->dmg, i->ps, i->ss, i->flight);
+  
+    freeItemList(itemList);
+    return item;
 }

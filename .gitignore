@@ -1,5 +1,4 @@
 //*.pdf
-//main.c
 app
 .DS_Store
 .vscode/
@@ -9,4 +8,5 @@ app
 *.ptbob
 bin/
 ressources/
-main
+sources/main
+sources/main.c

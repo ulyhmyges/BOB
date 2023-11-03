@@ -31,11 +31,24 @@ void freeMonsterList(MonsterList *monsterList)
     free(monsterList);
 }
 
+/**
+ * @brief add a new monster to the list based on value of monster
+ *
+ * @param monster
+ * @param monsterList
+ * @return int
+ */
 int addMonsterList(Monster *monster, MonsterList *monsterList)
 {
     if (monsterList->size < monsterList->capacity)
     {
-        monsterList->list[monsterList->size] = monster;
+        monsterList->list[monsterList->size] = newMonster(
+            monster->name,
+            monster->hpMax,
+            monster->dmg,
+            monster->shoot,
+            monster->ss,
+            monster->flight);
         monsterList->size += 1;
         return 1;
     }
@@ -99,7 +112,7 @@ int removeMonsterListByName(char *name, MonsterList *monsterList)
  */
 int removeMonsterByName(MonsterList *monsterList)
 {
-    Monster* monster;
+    Monster *monster;
     monster = getMonsterByName(monsterList);
     if (monster == NULL)
     {
@@ -108,7 +121,8 @@ int removeMonsterByName(MonsterList *monsterList)
     }
     showMonster(*monster);
     printf("Monster %s removed.\n", monster->name);
-    if (removeMonster(monster, monsterList)){
+    if (removeMonster(monster, monsterList))
+    {
         return 1;
     };
     return 0;
@@ -121,7 +135,7 @@ int removeMonsterByName(MonsterList *monsterList)
  * @param monsterList List od items
  * @return Monster*
  */
-Monster* getMonsterByName(MonsterList* monsterList)
+Monster *getMonsterByName(MonsterList *monsterList)
 {
     char *name = malloc(sizeof(char) * 21);
     printf("Name of the monster?: ");
@@ -143,13 +157,13 @@ Monster* getMonsterByName(MonsterList* monsterList)
 
 /**
  * @brief update a Monster object by its name from monsterList
- * 
+ *
  * @param monsterList List of Monster objects
  * @return int 1 if succeed 0 otherwise
  */
-int updateMonsterByName(MonsterList* monsterList)
+int updateMonsterByName(MonsterList *monsterList)
 {
-    Monster* monster;
+    Monster *monster;
     monster = getMonsterByName(monsterList);
     if (monster == NULL)
     {
@@ -159,7 +173,7 @@ int updateMonsterByName(MonsterList* monsterList)
     showMonster(*monster);
     monster = askMonster(monster);
     showMonster(*monster);
-    //freeMonster(monster);
+    // freeMonster(monster);
     return 1;
 }
 
@@ -170,7 +184,7 @@ int updateMonsterByName(MonsterList* monsterList)
  * @param monsterList List contains items of characters
  * @return int 1 if succeed
  */
-int removeMonster(Monster* monster, MonsterList* monsterList)
+int removeMonster(Monster *monster, MonsterList *monsterList)
 {
     int i;
     for (i = 0; i < monsterList->size; i += 1)
@@ -192,9 +206,6 @@ int removeMonster(Monster* monster, MonsterList* monsterList)
     }
     return 0;
 }
-
-
-
 
 int removeMonsterListByIndex(int index, MonsterList *monsterList)
 {
@@ -220,9 +231,11 @@ void showMonsterList(MonsterList monsterList)
     }
 }
 
-void printMonsterList(MonsterList monsterList, FILE *f){
+void printMonsterList(MonsterList monsterList, FILE *f)
+{
     fprintf(f, "{%d}\n", monsterList.size);
-    for (int i = 0; i <monsterList.size; i += 1){
+    for (int i = 0; i < monsterList.size; i += 1)
+    {
         printMonster(*monsterList.list[i], f);
     }
 }
