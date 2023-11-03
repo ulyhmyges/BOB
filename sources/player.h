@@ -30,5 +30,6 @@ void freePlayer(Player *player);
 Player * readPlayer(FILE *f);
 void printPlayer(Player player, FILE *f);
 void showPlayer(Player player);
+void statPlayer(Player* player);
 
 #endif // PLAYER_H

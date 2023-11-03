@@ -11,6 +11,7 @@
 #define FLOOR_H
 #include "room.h"
 #include "map.h"
+#include "player.h"
 
 typedef enum direction
 {
@@ -50,11 +51,12 @@ typedef struct Level
     Room *itemRoom;
     Room *itemRoomBonus;
     Room *bossRoom;
+    Player* player;
 } Level;
 
 Room *createSpecialRoom(int rows, int columns, char kind, char *itemfile, char *monsterfile);
 void createFloor(Level *level, char *monsterfile);
-Level *newLevel(int id, int rows, int columns, char *roomfile, char *itemfile, char *monsterfile);
+Level *newLevel(int id, int rows, int columns, char *roomfile, char *itemfile, char *monsterfile, Player* player);
 void freeLevel(Level *level);
 void updateFloor(Level *level, int i, int j, Room* r);
 void showFloor(Level *level);

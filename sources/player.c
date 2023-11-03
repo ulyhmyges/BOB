@@ -35,7 +35,28 @@ void freePlayer(Player *player)
     free(player);
 }
 
-void showPlayer(Player player){
+void statPlayer(Player *player)
+{
+    printf("\n%s\n", player->name);
+    printf("hp: %.1f\n", player->hpMax);
+    printf("shield: %d\n", player->shield);
+    printf("dmg: %.2f\n", player->dmg);
+    if (player->ps)
+    {
+        printf("ps: true\n");
+    }
+    if (player->ss)
+    {
+        printf("ss: true\n");
+    }
+    if (player->flight)
+    {
+        printf("flight: true\n");
+    }
+}
+
+void showPlayer(Player player)
+{
     printf("---\n");
     printf("name=%s\n", player.name);
     printf("achieve=%d\n", player.achieve);
@@ -79,8 +100,9 @@ void showPlayer(Player player){
     }
 }
 
-void printPlayer(Player player, FILE *f){
-    //fprintf(f, "---\n");
+void printPlayer(Player player, FILE *f)
+{
+    // fprintf(f, "---\n");
     fputs("---\n", f);
     fprintf(f, "name=%s\n", player.name);
     fprintf(f, "achieve=%d\n", player.achieve);

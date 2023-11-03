@@ -30,7 +30,10 @@ int isItem(Level* level, int h, int w);
 int isBlank(Level* level, int h, int w);
 
 void showCurrentRoom(Level* level);
+
+// start a game
 void game(Level* level);
+
 int kbhit(void);
 void movePerson(Level *level, char key);
 void goToNextPoint(Level *level, int h, int w);

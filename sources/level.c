@@ -76,10 +76,10 @@ void createFloor(Level *level, char *monsterfile)
     level->map = newMap(level->height, level->width); // car level->height = 7 et level->width = 7
 }
 
-Level *newLevel(int id, int rows, int columns, char *roomfile, char *itemfile, char *monsterfile)
+Level *newLevel(int id, int rows, int columns, char *roomfile, char *itemfile, char *monsterfile, Player* player)
 {
     // srand(time(NULL));
-    Level *level = malloc(sizeof(Level));
+    Level* level = malloc(sizeof(Level));
     level->id = id; // niveau de l'étage
     level->height = 7;
     level->width = 7;
@@ -95,7 +95,11 @@ Level *newLevel(int id, int rows, int columns, char *roomfile, char *itemfile, c
     level->itemRoom = createSpecialRoom(level->rows, level->columns, 'I', itemfile, monsterfile);
     level->itemRoomBonus = createSpecialRoom(level->rows, level->columns, 'I', itemfile, monsterfile);
 
+    // représentation du personnage dans la pièce
     level->character = 'P';
+
+    //
+    level->player = player;
 
     // direction par défaut
     level->direction = North;

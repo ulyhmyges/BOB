@@ -39,6 +39,13 @@ void writePlayerFile(PlayerList playerList, char *playerfile)
     }
 }
 
+/**
+ * @brief Add a player to the file playerfile
+ * 
+ * @param player 
+ * @param playerfile path to the file
+ * @return 1 if succeed
+ */
 int addPlayerFile(Player *player, char *playerfile){
     FILE *f = fopen(playerfile, "r+");
     if (f != NULL){

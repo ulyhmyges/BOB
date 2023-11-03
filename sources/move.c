@@ -175,6 +175,9 @@ int isSafe(Level *level, int h, int w)
     {
         return 0;
     }
+    if (isHealth(level, h, w)){
+
+    }
     return 1;
 }
 
@@ -217,6 +220,7 @@ void movePerson(Level *level, char key)
     // update floor with the value of currentRoom
     level->floor[level->coord.u][level->coord.v] = *level->currentRoom;
 
+    // when changing room update all coordinates 
     reachCardinalPoint(level);
 
     // mark 'P' if next point is blank
@@ -234,6 +238,7 @@ void game(Level *level)
         system("clear");
         system("echo '\e[032m'");
         showCurrentRoom(level);
+        statPlayer(level->player);
         while (!kbhit())
         {
         }
