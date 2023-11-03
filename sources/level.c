@@ -142,7 +142,7 @@ Level *newLevel(int id, int rows, int columns, char *roomfile, char *itemfile, c
 
 void randFloor(Level *level, char *roomfile, char *monsterfile)
 {
-
+    // create a list of rooms occupied by monsters ( < 7 for each room )
     RoomList *roomList = readRoomFile(roomfile, monsterfile);
 
     int count = 0;
