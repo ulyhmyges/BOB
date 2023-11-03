@@ -85,6 +85,12 @@ Level *newLevel(int id, int rows, int columns, char *roomfile, char *itemfile, c
     level->width = 7;
     level->rows = rows;       // for a room
     level->columns = columns; // for a room
+    level->pathRoomfile = malloc(sizeof(char) * 99);
+    strcpy(level->pathRoomfile, roomfile);
+    level->pathItemfile = malloc(sizeof(char) * 99);
+    strcpy(level->pathItemfile, itemfile);
+    level->pathMonsterfile = malloc(sizeof(char) * 99);
+    strcpy(level->pathMonsterfile, monsterfile);
 
     // création de la grille de rooms de type 'Wall' représentant l'étage + newMap()
     createFloor(level, monsterfile);
@@ -98,7 +104,7 @@ Level *newLevel(int id, int rows, int columns, char *roomfile, char *itemfile, c
     // représentation du personnage dans la pièce
     level->character = 'P';
 
-    //
+    // add a player
     level->player = player;
 
     // direction par défaut
@@ -545,6 +551,9 @@ char **copyMapRoom(Room room)
 
 void freeLevel(Level *level)
 {
+    free(level->pathRoomfile);
+    free(level->pathItemfile);
+    free(level->pathMonsterfile);
     freeRoom(level->bossRoom);
     freeRoom(level->itemRoomBonus);
     freeRoom(level->itemRoom);

@@ -20,4 +20,6 @@ ItemList* readItemFile(char *itemfile);
 void createItem(char *itemfile);
 
 
+Item* randomItem(char* itemfile);
+
 #endif // ITEMFILE_H

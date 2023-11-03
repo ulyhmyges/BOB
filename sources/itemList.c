@@ -78,33 +78,6 @@ int addItemList(Item *item, ItemList *itemList)
 }
 
 /**
- * @brief retourne une liste des items contenus dans itemfile
- *
- * @param itemfile Path du fichier itbob
- * @return ItemList* Liste d'items
- */
-ItemList *readItemList(char *itemfile)
-{
-    FILE *f = fopen(itemfile, "r");
-    if (f != NULL)
-    {
-        ItemList *itemList = newItemList();
-        fscanf(f, "{%d}\n", &itemList->size);
-        for (int i = 0; i < itemList->size; i += 1)
-        {
-            itemList->list[i] = readItem(f);
-        }
-        fclose(f);
-        return itemList;
-    }
-    else
-    {
-        printf("readItemList(): Erreur à la lecture du fichier %s\n", itemfile);
-        return NULL;
-    }
-}
-
-/**
  * @brief Get the Item By Name from itemList
  *
  * @param name

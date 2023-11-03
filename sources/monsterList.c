@@ -46,7 +46,7 @@ int addMonsterList(Monster *monster, MonsterList *monsterList)
             monster->name,
             monster->hpMax,
             monster->dmg,
-            monster->ps,
+            monster->shoot,
             monster->ss,
             monster->flight);
         monsterList->size += 1;

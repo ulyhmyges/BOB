@@ -8,6 +8,8 @@
 
 #include "room.h"
 #include "level.h"
+#include "itemFile.h"
+
 #include <unistd.h>
 #include <stdlib.h>
 
@@ -91,13 +93,12 @@ int isBlank(Level *level, int h, int w)
     return level->currentRoom->map[h][w] == ' ';
 }
 
-
 /**
  * @brief if the character 'P' change room:
- *          - update coordinates of the current room 
+ *          - update coordinates of the current room
  *          - update coordinates of the character in this new room
- * 
- * @param level 
+ *
+ * @param level
  */
 void reachCardinalPoint(Level *level)
 {
@@ -156,7 +157,7 @@ void goToNextPoint(Level *level, int h, int w)
     {
         return;
     }
-    
+
     // current point
     if (level->currentRoom->map[level->coord.p.h][level->coord.p.w] == 'P')
     {
@@ -174,9 +175,6 @@ int isSafe(Level *level, int h, int w)
     if (isWall(level, h, w) || isGap(level, h, w) || isRock(level, h, w))
     {
         return 0;
-    }
-    if (isHealth(level, h, w)){
-
     }
     return 1;
 }
@@ -220,10 +218,17 @@ void movePerson(Level *level, char key)
     // update floor with the value of currentRoom
     level->floor[level->coord.u][level->coord.v] = *level->currentRoom;
 
-    // when changing room update all coordinates 
+    // when changing room update all coordinates
     reachCardinalPoint(level);
 
-    // mark 'P' if next point is blank
+    // upgrade if the next point of the player is 'I'
+    if (isItem(level, level->coord.p.h, level->coord.p.w))
+    {
+        upgradePlayer(level->player, randomItem(level->pathItemfile));
+        level->currentRoom->map[level->coord.p.h][level->coord.p.w] = level->character;
+    }
+
+    // mark 'P' if next point is empty or item
     if (isBlank(level, level->coord.p.h, level->coord.p.w))
     {
         level->currentRoom->map[level->coord.p.h][level->coord.p.w] = level->character;
@@ -238,13 +243,15 @@ void game(Level *level)
         system("clear");
         system("echo '\e[032m'");
         showCurrentRoom(level);
-        statPlayer(level->player);
+        statsPlayer(level->player);
+        
         while (!kbhit())
         {
         }
         c = getchar();
         movePerson(level, c);
-        fflush(stdin);
+        
+        //fflush(stdin);
         // sleep(3);
     }
 }

@@ -52,6 +52,9 @@ typedef struct Level
     Room *itemRoomBonus;
     Room *bossRoom;
     Player* player;
+    char* pathItemfile;
+    char* pathRoomfile;
+    char* pathMonsterfile;
 } Level;
 
 Room *createSpecialRoom(int rows, int columns, char kind, char *itemfile, char *monsterfile);

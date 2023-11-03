@@ -10,6 +10,7 @@
 
 #define PLAYER_H
 #include "item.h"
+#include "itemList.h"
 
 typedef struct Player
 {
@@ -22,7 +23,7 @@ typedef struct Player
     boolean flight;
     int achieve;        // niveau à réussir: 1, 2 ou 3
     boolean invincible; // true par défaut
-    Item *item; // aucun par défaut
+    ItemList* itemList; // vide par défaut
 } Player;
 
 Player *newPlayer(char *name, float hpMax, int shield, float dmg, boolean ps, boolean ss, boolean flight, int achieve);
@@ -30,6 +31,8 @@ void freePlayer(Player *player);
 Player * readPlayer(FILE *f);
 void printPlayer(Player player, FILE *f);
 void showPlayer(Player player);
-void statPlayer(Player* player);
+void statsPlayer(Player* player);
+
+void upgradePlayer(Player* player, Item* item);
 
 #endif // PLAYER_H

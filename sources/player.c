@@ -10,6 +10,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "player.h"
+#include "itemList.h"
 
 Player *newPlayer(char *name, float hpMax, int shield, float dmg, boolean ps, boolean ss, boolean flight, int achieve)
 {
@@ -24,18 +25,44 @@ Player *newPlayer(char *name, float hpMax, int shield, float dmg, boolean ps, bo
     player->flight = flight;
     player->achieve = achieve;
     player->invincible = true;
-    player->item = newItem("Empty", 0, 0, 0, false, false, false);
+    player->itemList = newItemList();
     return player;
 }
 
 void freePlayer(Player *player)
 {
-    freeItem(player->item);
+    freeItemList(player->itemList);
     free(player->name);
     free(player);
 }
 
-void statPlayer(Player *player)
+/**
+ * @brief Ajoute les bénéfices de l'item au player
+ *
+ * @param player
+ * @param item
+ */
+void upgradePlayer(Player *player, Item *item)
+{
+    player->hpMax += item->hpMax;
+    player->shield += item->shield;
+    player->dmg += item->dmg;
+    if (item->ps)
+    {
+        player->ps = true;
+    }
+    if (item->ss)
+    {
+        player->ss = true;
+    }
+    if (item->flight)
+    {
+        player->flight = true;
+    }
+    addItemList(item, player->itemList);
+}
+
+void statsPlayer(Player *player)
 {
     printf("\n%s\n", player->name);
     printf("hp: %.1f\n", player->hpMax);
@@ -52,6 +79,12 @@ void statPlayer(Player *player)
     if (player->flight)
     {
         printf("flight: true\n");
+    }
+    printf("Items collected: %d\n", player->itemList->size);
+    int tmpSize = player->itemList->size;
+    if (tmpSize)
+    {
+        printf("Last item: %s\n", player->itemList->list[tmpSize - 1]->name);
     }
 }
 
