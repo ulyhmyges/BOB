@@ -92,6 +92,13 @@ int isBlank(Level *level, int h, int w)
 }
 
 
+/**
+ * @brief if the character 'P' change room:
+ *          - update coordinates of the current room 
+ *          - update coordinates of the character in this new room
+ * 
+ * @param level 
+ */
 void reachCardinalPoint(Level *level)
 {
     if (level->coord.p.h == level->rows / 2)
@@ -161,10 +168,10 @@ void goToNextPoint(Level *level, int h, int w)
     level->coord.p.w = w;
 }
 
-// no wall
+// no wall, no gap
 int isSafe(Level *level, int h, int w)
 {
-    if (isWall(level, h, w))
+    if (isWall(level, h, w) || isGap(level, h, w))
     {
         return 0;
     }
@@ -207,8 +214,9 @@ void movePerson(Level *level, char key)
         break;
     }
 
-    // update floor
+    // update floor with the value of currentRoom
     level->floor[level->coord.u][level->coord.v] = *level->currentRoom;
+
     reachCardinalPoint(level);
 
     // mark 'P' if next point is blank
