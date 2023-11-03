@@ -26,6 +26,17 @@ Item* newItem(char *name, float hpMax, int shield, float dmg, boolean ps, boolea
     return item;
 }
 
+Item* lifeOrShield(){
+    int alea = rand() % 2;
+    Item* item;
+    if (alea){
+        item = newItem("Life", 1.0, 0, 0, false, false, false);
+    } else {
+        item = newItem("Shield", 0.0, 1, 0, false, false, false);
+    }
+    return item;
+}
+
 void freeItem(Item *item)
 {
     free(item->name);

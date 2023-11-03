@@ -225,11 +225,18 @@ void movePerson(Level *level, char key)
     if (isItem(level, level->coord.p.h, level->coord.p.w))
     {
         upgradePlayer(level->player, randomItem(level->pathItemfile));
-        level->currentRoom->map[level->coord.p.h][level->coord.p.w] = level->character;
     }
 
-    // mark 'P' if next point is empty or item
-    if (isBlank(level, level->coord.p.h, level->coord.p.w))
+    // gain one life or one shield if the next point of the player is 'H'
+    if (isHealth(level, level->coord.p.h, level->coord.p.w))
+    {
+        upgradePlayer(level->player, lifeOrShield());
+    }
+
+    // mark 'P' if next point is empty or item or health
+    if (isBlank(level, level->coord.p.h, level->coord.p.w) 
+        || isItem(level, level->coord.p.h, level->coord.p.w)
+        || isHealth(level, level->coord.p.h, level->coord.p.w))
     {
         level->currentRoom->map[level->coord.p.h][level->coord.p.w] = level->character;
     }
@@ -244,14 +251,14 @@ void game(Level *level)
         system("echo '\e[032m'");
         showCurrentRoom(level);
         statsPlayer(level->player);
-        
+
         while (!kbhit())
         {
         }
         c = getchar();
         movePerson(level, c);
-        
-        //fflush(stdin);
-        // sleep(3);
+
+        // fflush(stdin);
+        //  sleep(3);
     }
 }

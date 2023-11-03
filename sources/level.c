@@ -78,7 +78,7 @@ void createFloor(Level *level, char *monsterfile)
 
 Level *newLevel(int id, int rows, int columns, char *roomfile, char *itemfile, char *monsterfile, Player* player)
 {
-    // srand(time(NULL));
+    srand(time(NULL));
     Level* level = malloc(sizeof(Level));
     level->id = id; // niveau de l'étage
     level->height = 7;
