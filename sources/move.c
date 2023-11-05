@@ -91,6 +91,16 @@ int isBlank(Level *level, int h, int w)
     return level->currentRoom->map[h][w] == ' ';
 }
 
+boolean isPerson(Level *level, int h, int w)
+{
+    return level->currentRoom->map[h][w] == 'P';
+}
+
+boolean isMonster(Level *level, int h, int w)
+{
+    return level->currentRoom->map[h][w] == 'M';
+}
+
 /**
  * @brief if the character 'P' change room:
  *          - update coordinates of the current room
@@ -172,10 +182,10 @@ void goToNextPoint(Level *level, int h, int w)
     level->coord.p.w = w;
 }
 
-// no wall, no gap, no rock
+// no wall, no gap, no rock, no character, no monster
 int isSafe(Level *level, int h, int w)
 {
-    if (isWall(level, h, w) || isGap(level, h, w) || isRock(level, h, w))
+    if (isWall(level, h, w) || isGap(level, h, w) || isRock(level, h, w) || isPerson(level, h, w) || isMonster(level, h, w))
     {
         return 0;
     }
@@ -259,7 +269,7 @@ void movePerson(Level *level, char key)
  * @param index
  * @return direction (North, East, South, West)
  */
-direction directionToTakeMonster(Level *level, Monster* m)
+direction directionToTakeMonster(Level *level, Monster *m)
 {
     direction way;
     int dh = level->coord.p.h - m->p.h;
@@ -298,7 +308,7 @@ direction directionToTakeMonster(Level *level, Monster* m)
     return way;
 }
 
-boolean directionTakenMonster(Level *level, Monster* m, direction cardinal)
+boolean directionTakenMonster(Level *level, Monster *m, direction cardinal)
 {
     boolean takeDirection = false;
 
@@ -338,7 +348,7 @@ boolean directionTakenMonster(Level *level, Monster* m, direction cardinal)
     return takeDirection;
 }
 
-void movedMonster(Level *level, Monster* m)
+void movedMonster(Level *level, Monster *m)
 {
     // current point
     if (level->currentRoom->map[m->p.h][m->p.w] == 'M')
@@ -367,9 +377,11 @@ void movedMonster(Level *level, Monster* m)
     }
 }
 
-void restlessMonsters(Level* level){
-    MonsterList* monsters = level->currentRoom->monsters;
-    for (int i = 0; i < monsters->size; i += 1) {
+void restlessMonsters(Level *level)
+{
+    MonsterList *monsters = level->currentRoom->monsters;
+    for (int i = 0; i < monsters->size; i += 1)
+    {
         movedMonster(level, monsters->list[i]);
     }
 }
@@ -389,7 +401,7 @@ void game(Level *level)
         }
         c = getchar();
         movePerson(level, c);
-        // fflush(stdin);
+        fflush(stdin);
         //  sleep(3);
     }
 }

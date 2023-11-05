@@ -10,7 +10,6 @@
 
 #define MOVE_H
 #include "level.h"
-#include "item.h"
 #include "itemFile.h"
 
 int isWall(Level* level, int h, int w);
@@ -22,6 +21,8 @@ int isBoss(Level* level, int h, int w);
 int isDoor(Level* level, int h, int w);
 int isItem(Level* level, int h, int w);
 int isBlank(Level* level, int h, int w);
+boolean isPerson(Level* level, int h, int w);
+boolean isMonster(Level* level, int h, int w);
 
 void showCurrentRoom(Level* level);
 
