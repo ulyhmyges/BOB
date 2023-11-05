@@ -10,6 +10,7 @@
 
 #define MONSTER_H
 #include "item.h"
+#include "map.h"
 
 typedef struct Monster {
     char *name;
@@ -18,6 +19,7 @@ typedef struct Monster {
     boolean shoot;      //true: tir ou false: monstre se dirige vers vous
     boolean ss;         //tir traverse les rochers
     boolean flight;     //vol au dessus : rocher, trou, pic
+    Point p;
 } Monster;
 
 Monster * newMonster(char *name, float hpMax, float dmg, boolean shoot, boolean ss, boolean flight);

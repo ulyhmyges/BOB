@@ -21,11 +21,6 @@ typedef enum direction
     West
 } direction;
 
-typedef struct Point {
-    int h;
-    int w;
-} Point;
-
 typedef struct Position {
     int u; // vertical coordinates du personnage 'P' à l'étage
     int v; // horizontal coordinates du personnage 'P'

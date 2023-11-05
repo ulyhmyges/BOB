@@ -10,6 +10,11 @@
 
 #define MAP_H
 
+typedef struct Point {
+    int h;
+    int w;
+} Point;
+
 typedef struct Map {
     int height;
     int width;
