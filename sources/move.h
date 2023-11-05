@@ -10,14 +10,8 @@
 
 #define MOVE_H
 #include "level.h"
-
-
-typedef enum MOVE {
-    UP = 'z',
-    RIGHT = 'd',
-    DOWN = 's',
-    LEFT = 'q',
-} MOVE;
+#include "item.h"
+#include "itemFile.h"
 
 int isWall(Level* level, int h, int w);
 int isGap(Level* level, int h, int w);
@@ -38,5 +32,10 @@ int kbhit(void);
 void movePerson(Level *level, char key);
 void goToNextPoint(Level *level, int h, int w);
 void reachCardinalPoint(Level* level);
+
+direction directionToTakeMonster(Level* level, Monster* m);
+boolean directionTakenMonster(Level *level, Monster* m, direction cardinal);
+void movedMonster(Level* level, Monster* m);
+void restlessMonsters(Level* level);
 
 #endif // MOVE_H
