@@ -155,6 +155,17 @@ Room* readRoom(FILE *f, char *monsterfile)
             room->map[i][j] = fgetc(f);
         }
     }
+
+    // random positions of monsters in the room
+    for (int i = 0; i < room->monsters->size; i += 1){
+        Monster* m = room->monsters->list[i];
+        m->p.h = 0;
+        m->p.w = 0;
+        while (room->map[m->p.h][m->p.w] != ' ') {
+            m->p.h = rand() % room->rows;
+            m->p.w = rand() % room->columns;
+        }
+    }
     
     return room;
 }

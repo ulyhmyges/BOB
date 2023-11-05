@@ -10,6 +10,7 @@
 
 #define ROOMFILE_H
 #include "roomList.h"
+#include "stdlib.h"
 
 void writeRoomFile(RoomList roomList, char *file);
 RoomList * readRoomFile(char *roomfile, char *monsterfile);
