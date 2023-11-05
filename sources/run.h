@@ -11,7 +11,6 @@
 #define RUN_H
 #include "player.h"
 
-Player * selectPlayer(char *playerfile);
 void crudItem(void);
 void crudMonster(void);
 

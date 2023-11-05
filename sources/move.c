@@ -9,6 +9,7 @@
 #include "room.h"
 #include "level.h"
 #include "itemFile.h"
+#include "player.h"
 
 #include <unistd.h>
 #include <stdlib.h>
@@ -163,13 +164,18 @@ void goToNextPoint(Level *level, int h, int w)
     {
         level->currentRoom->map[level->coord.p.h][level->coord.p.w] = ' ';
     }
+    if (isSpike(level, level->coord.p.h, level->coord.p.w))
+    {
+        // loose 0.5 hp if the point of the player is 'S'
+        ouch(level->player, 0.5);
+    }
 
     // next position of the character 'P'
     level->coord.p.h = h;
     level->coord.p.w = w;
 }
 
-// no wall, no gap
+// no wall, no gap, no rock
 int isSafe(Level *level, int h, int w)
 {
     if (isWall(level, h, w) || isGap(level, h, w) || isRock(level, h, w))
@@ -234,10 +240,14 @@ void movePerson(Level *level, char key)
     }
 
     // mark 'P' if next point is empty or item or health
-    if (isBlank(level, level->coord.p.h, level->coord.p.w) 
-        || isItem(level, level->coord.p.h, level->coord.p.w)
-        || isHealth(level, level->coord.p.h, level->coord.p.w))
+    if (isBlank(level, level->coord.p.h, level->coord.p.w) || isItem(level, level->coord.p.h, level->coord.p.w) || isHealth(level, level->coord.p.h, level->coord.p.w))
     {
+        if (level->player->state == inPain)
+        {
+            usleep(400000); // 0.4 sec
+            level->player->state = inShape;
+        }
+
         level->currentRoom->map[level->coord.p.h][level->coord.p.w] = level->character;
     }
 }

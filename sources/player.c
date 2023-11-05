@@ -26,6 +26,7 @@ Player *newPlayer(char *name, float hpMax, int shield, float dmg, boolean ps, bo
     player->achieve = achieve;
     player->invincible = true;
     player->itemList = newItemList();
+    player->state = inShape;
     return player;
 }
 
@@ -60,6 +61,25 @@ void upgradePlayer(Player *player, Item *item)
         player->flight = true;
     }
     addItemList(item, player->itemList);
+}
+
+
+/**
+ * @brief character is in pain because of damage
+ * 
+ * @param level 
+ * @param dmg 
+ * @return float 
+ */
+float ouch(Player* player, float dmg){
+    if (player->hpMax >= dmg){
+        player->hpMax -= dmg;
+        player->state = inPain;
+    } else {
+        player->hpMax = 0;
+        player->state = dead;
+    }
+    return player->hpMax;
 }
 
 void statsPlayer(Player *player)

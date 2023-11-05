@@ -12,6 +12,12 @@
 #include "item.h"
 #include "itemList.h"
 
+typedef enum Health {
+    dead,
+    inShape,
+    inPain
+} Health;
+
 typedef struct Player
 {
     char *name;
@@ -24,6 +30,7 @@ typedef struct Player
     int achieve;        // niveau à réussir: 1, 2 ou 3
     boolean invincible; // true par défaut
     ItemList* itemList; // vide par défaut
+    Health state;
 } Player;
 
 Player *newPlayer(char *name, float hpMax, int shield, float dmg, boolean ps, boolean ss, boolean flight, int achieve);
@@ -34,5 +41,6 @@ void showPlayer(Player player);
 void statsPlayer(Player* player);
 
 void upgradePlayer(Player* player, Item* item);
+float ouch(Player* player, float dmg);
 
 #endif // PLAYER_H
