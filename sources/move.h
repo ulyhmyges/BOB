@@ -3,7 +3,7 @@
 **
 **  Made by : HT
 **
-**  Description : attempt to start the bob's game
+**  Description : functions about movement of character and monsters
 */
 
 #ifndef MOVE_H
@@ -21,6 +21,7 @@ int isBoss(Level* level, int h, int w);
 int isDoor(Level* level, int h, int w);
 int isItem(Level* level, int h, int w);
 int isBlank(Level* level, int h, int w);
+int isSafe(Level *level, int h, int w);
 boolean isPerson(Level* level, int h, int w);
 boolean isMonster(Level* level, int h, int w);
 
@@ -33,10 +34,5 @@ int kbhit(void);
 void movePerson(Level *level, char key);
 void goToNextPoint(Level *level, int h, int w);
 void reachCardinalPoint(Level* level);
-
-direction directionToTakeMonster(Level* level, Monster* m);
-boolean directionTakenMonster(Level *level, Monster* m, direction cardinal);
-void movedMonster(Level* level, Monster* m);
-void restlessMonsters(Level* level);
 
 #endif // MOVE_H

@@ -3,10 +3,11 @@
 **
 **  Made by : HT
 **
-**  Description : attempt to start the bob's game
+**  Description : 
 */
 
 #include "move.h"
+#include "fight.h"
 
 #include <unistd.h>
 #include <stdlib.h>
@@ -260,130 +261,6 @@ void movePerson(Level *level, char key)
 
     // monsters moved in the direction of the character 'P'
     restlessMonsters(level);
-}
-
-/**
- * @brief Direction taken by monster to reach 'P'
- *
- * @param level
- * @param index
- * @return direction (North, East, South, West)
- */
-direction directionToTakeMonster(Level *level, Monster *m)
-{
-    direction way;
-    int dh = level->coord.p.h - m->p.h;
-    int dw = level->coord.p.w - m->p.w;
-
-    if (dh == 0)
-    {
-        if (dw > 0)
-        {
-            way = East;
-        }
-        else
-        {
-            way = West;
-        }
-    }
-    else if (dw == 0)
-    {
-        if (dh < 0)
-        {
-            way = North;
-        }
-        else
-        {
-            way = South;
-        }
-    }
-    else if (dh > 0)
-    {
-        way = South;
-    }
-    else
-    {
-        way = North;
-    }
-    return way;
-}
-
-boolean directionTakenMonster(Level *level, Monster *m, direction cardinal)
-{
-    boolean takeDirection = false;
-
-    switch (cardinal)
-    {
-    case North:
-        if (isSafe(level, m->p.h - 1, m->p.w))
-        {
-            m->p.h -= 1;
-            takeDirection = true;
-        }
-        break;
-
-    case East:
-        if (isSafe(level, m->p.h, m->p.w + 1))
-        {
-            m->p.w += 1;
-            takeDirection = true;
-        }
-        break;
-
-    case South:
-        if (isSafe(level, m->p.h + 1, m->p.w))
-        {
-            m->p.h += 1;
-            takeDirection = true;
-        }
-        break;
-    case West:
-        if (isSafe(level, m->p.h, m->p.w - 1))
-        {
-            m->p.w -= 1;
-            takeDirection = true;
-        }
-        break;
-    }
-    return takeDirection;
-}
-
-void movedMonster(Level *level, Monster *m)
-{
-    // current point
-    if (level->currentRoom->map[m->p.h][m->p.w] == 'M')
-    {
-        level->currentRoom->map[m->p.h][m->p.w] = ' ';
-    }
-    if (isSpike(level, m->p.h, m->p.w))
-    {
-        // loose 0.5 hp if the point of the player is 'S'
-        ouch(level->player, 0.5);
-    }
-
-    // monster moved to cardinal direction
-    direction way = directionToTakeMonster(level, m);
-    boolean takeDirection = directionTakenMonster(level, m, way);
-    while (!takeDirection)
-    {
-        way = (way + 1) % 4;
-        takeDirection = directionTakenMonster(level, m, way);
-    }
-
-    // mark 'M' if next point is empty
-    if (isBlank(level, m->p.h, m->p.w))
-    {
-        level->currentRoom->map[m->p.h][m->p.w] = 'M';
-    }
-}
-
-void restlessMonsters(Level *level)
-{
-    MonsterList *monsters = level->currentRoom->monsters;
-    for (int i = 0; i < monsters->size; i += 1)
-    {
-        movedMonster(level, monsters->list[i]);
-    }
 }
 
 void game(Level *level)
