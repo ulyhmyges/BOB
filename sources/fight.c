@@ -8,6 +8,74 @@
 // a monster can attack character body to body or shoot
 //  - dmg: one shield else one hp
 
+void dmgMonster(Level *level, int h, int w)
+{
+    MonsterList *monsters = level->currentRoom->monsters;
+    for (int i = 0; i < monsters->size; i += 1)
+    {
+        if ((monsters->list[i]->p.h == h) && (monsters->list[i]->p.w == w))
+        {
+            printf("touché-----------------------------------------h: %d, w: %d ----", monsters->list[i]->p.h, monsters->list[i]->p.w);
+        }
+    }
+}
+
+boolean isClear(Level *level, int h, int w)
+{
+    return !(
+        isWall(level, h, w) || isRock(level, h, w) || isMonster(level, h, w));
+}
+
+void shoot(Level *level, char letter)
+{
+    int n = 1;
+    int h = level->coord.p.h;
+    int w = level->coord.p.w;
+    switch (letter)
+    {
+    case 'o':
+        printf("P position (h,w): (%d,%d)", h, w);
+
+        while ((h - n) > 0)
+        {
+            if (isClear(level, h - n, w))
+            {
+                if (!isGap(level, h - n, w))
+                {
+                    level->currentRoom->map[h - n][w] = '|';
+                }
+            }
+            else
+            {
+                if (isMonster(level, h - n, w))
+                {
+                    dmgMonster(level, h - n, w);
+                }
+                break;
+            }
+            n += 1;
+        }
+
+        for (int j = 1; j < n; j += 1)
+        {
+            printf("j: %d", j);
+            if (!isGap(level, h - j, w))
+            {
+                level->currentRoom->map[h - j][w] = ' ';
+            }
+        }
+
+        break;
+
+    case 'k':
+        break;
+    case 'l':
+        break;
+    case 'm':
+        break;
+    }
+}
+
 /**
  * @brief Direction taken by monster to reach 'P'
  *
@@ -168,4 +236,14 @@ void dmgPlayer(Level *level)
     {
         ouch(level->player, 1);
     }
+}
+
+boolean canShoot(Monster *m)
+{
+    return (m->shoot || m->ss);
+}
+
+boolean isSpectral(Monster *m)
+{
+    return m->ss;
 }

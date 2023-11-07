@@ -22,4 +22,12 @@ void sideAttack(Level* level, Monster* m);
 void dmgPlayer(Level* level);
 boolean isSideBySide(Level *level, Monster *m);
 
+boolean canShoot(Monster* m);
+boolean isSpectral(Monster* m);
+
+// for the player
+boolean isClear(Level* level, int h, int w);
+void dmgMonster(Level* level, int h, int w);
+void shoot(Level *level, char letter);
+
 #endif

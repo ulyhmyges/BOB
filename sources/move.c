@@ -3,7 +3,7 @@
 **
 **  Made by : HT
 **
-**  Description : 
+**  Description :
 */
 
 #include "move.h"
@@ -277,7 +277,14 @@ void game(Level *level)
         {
         }
         c = getchar();
-        movePerson(level, c);
+        if (c == 'o')
+        {
+            shoot(level, c);
+        }
+        else
+        {
+            movePerson(level, c);
+        }
         fflush(stdin);
         //  sleep(3);
     }
