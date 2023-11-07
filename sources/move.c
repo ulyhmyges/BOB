@@ -202,6 +202,7 @@ int isSafe(Level *level, int h, int w)
 
 void movePerson(Level *level, char key)
 {
+   
     switch (key)
     {
     case 'z':
@@ -290,6 +291,7 @@ void game(Level *level)
         c = getchar();
 
         // player can shoot with o
+
         if (canShoot(level))
         {
             shoot(level, c);

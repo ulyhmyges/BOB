@@ -60,6 +60,8 @@ void updateFloor(Level *level, int i, int j, Room* r);
 void showFloor(Level *level);
 void randFloor(Level *level, char *roomfile, char *monsterfile);
 void putAllDoors(Level *level);
+void saveCardinalDoors(Level* level);
+
 int isKind(Level *level, int u, int v, char kind);
 void northDoor(Level *level, int u, int v, char door);
 void eastDoor(Level *level, int u, int v, char door);
@@ -71,7 +73,7 @@ int addBossRoom(Level *level);
 int addItemRoom(Level *level, Room *room);
 int putItemRoom(Level *level, int i, int j, Room *room);
 
-int isType(Level *level, int h, int w, char *type);
+int isType(Level *level, int u, int v, char *type);
 char** copyMapRoom(Room room);
 void putCardinalDoors(Level* level, int h, int w);
 void putEastDoor(Level* level, int h, int w);

@@ -539,12 +539,14 @@ void movedMonster(Level *level, Monster *m)
 
 void restlessMonsters(Level *level)
 {
-
-    MonsterList *monsters = level->currentRoom->monsters;
-    for (int i = 0; i < monsters->size; i += 1)
+    if (isType(level, level->coord.u, level->coord.v, "Room"))
     {
-        movedMonster(level, monsters->list[i]);
-        sideAttack(level, monsters->list[i]);
+        MonsterList *monsters = level->currentRoom->monsters;
+        for (int i = 0; i < monsters->size; i += 1)
+        {
+            movedMonster(level, monsters->list[i]);
+            sideAttack(level, monsters->list[i]);
+        }
     }
 }
 

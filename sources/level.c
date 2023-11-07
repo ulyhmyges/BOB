@@ -76,10 +76,10 @@ void createFloor(Level *level, char *monsterfile)
     level->map = newMap(level->height, level->width); // car level->height = 7 et level->width = 7
 }
 
-Level *newLevel(int id, int rows, int columns, char *roomfile, char *itemfile, char *monsterfile, Player* player)
+Level *newLevel(int id, int rows, int columns, char *roomfile, char *itemfile, char *monsterfile, Player *player)
 {
     srand(time(NULL));
-    Level* level = malloc(sizeof(Level));
+    Level *level = malloc(sizeof(Level));
     level->id = id; // niveau de l'étage
     level->height = 7;
     level->width = 7;
@@ -131,7 +131,10 @@ Level *newLevel(int id, int rows, int columns, char *roomfile, char *itemfile, c
 
     // ajout de itemRoom (I)
     addItemRoom(level, level->itemRoom);
+
+    // put cardinal doors for all kind of room
     putAllDoors(level);
+    saveCardinalDoors(level);
 
     // start to Spawner room
     level->coord.u = level->spawner->spot.u;
@@ -314,6 +317,30 @@ int putItemRoom(Level *level, int i, int j, Room *itemRoom)
         return 1;
     }
     return 0;
+}
+
+void lockDoors(Level *level)
+{
+    if (isType(level, level->coord.u, level->coord.v, "Room"))
+    {
+        if (level->currentRoom->monsters->size)
+        {
+        }
+    }
+}
+
+void saveCardinalDoors(Level *level)
+{
+    for (int i = 0; i < level->height; i += 1){
+        for (int j = 0; j < level->width; j += 1){
+            if (isType(level, i, j, "Room") || isType(level, i, j, "Boss")){
+                level->floor[i][j].upDoor = level->floor[i][j].map[0][level->columns / 2];
+                level->floor[i][j].leftDoor = level->floor[i][j].map[level->rows / 2][0];
+                level->floor[i][j].downDoor = level->floor[i][j].map[level->rows - 1][level->columns / 2];
+                level->floor[i][j].rightDoor = level->floor[i][j].map[level->rows / 2][level->columns - 1];
+            }
+        }
+    }
 }
 
 void putAllDoors(Level *level)
@@ -515,9 +542,9 @@ int isKind(Level *level, int u, int v, char kind)
  * @param type (Wall, Item, Spawner, Boss, Room ou Bonus)
  * @return int 1 if true, 0 otherwise
  */
-int isType(Level *level, int h, int w, char *type)
+int isType(Level *level, int u, int v, char *type)
 {
-    return !strcmp(level->floor[h][w].type, type);
+    return !strcmp(level->floor[u][v].type, type);
 }
 
 void updateFloor(Level *level, int i, int j, Room *r)

@@ -36,6 +36,11 @@ typedef struct Room
     char gap;    // Un trou infranchissable par le personnage et les monstres
     char spike;  // Pic franchissable par le personnage et les monstres mais en prenant des dégâts
     char health; // Objet généré aléatoirement (vie ou bouclier)
+
+    char upDoor;   
+    char leftDoor;    
+    char downDoor; 
+    char rightDoor; 
     Location spot;
 } Room;
 
