@@ -151,12 +151,19 @@ void reachCardinalPoint(Level *level)
 // tput lines => 52
 void showCurrentRoom(Level *level)
 {
+    // clear screen
+    system("clear");
+
+    // color of the sceen
+    system("echo '\e[032m'");
+
     for (int i = 0; i < 15; i += 1)
     {
         printf("\n");
     }
 
-    showRoom(level->floor[level->coord.u][level->coord.v]);
+    // showRoom(level->floor[level->coord.u][level->coord.v]);
+    showRoom(*level->currentRoom);
     printf("h: %d, w: %d\n", level->coord.p.h, level->coord.p.w);
 }
 
@@ -252,11 +259,17 @@ void movePerson(Level *level, char key)
     {
         if (level->player->state == inPain)
         {
-            usleep(400000); // 0.4 sec
+            level->currentRoom->map[level->coord.p.h][level->coord.p.w] = 'b';
+            showCurrentRoom(level);
+            clock_t start = clock();
+            while (clock() < start + 400000)
+            {
+            }
             level->player->state = inShape;
         }
 
         level->currentRoom->map[level->coord.p.h][level->coord.p.w] = level->character;
+        showCurrentRoom(level);
     }
 
     // monsters moved in the direction of the character 'P'
@@ -268,8 +281,6 @@ void game(Level *level)
     char c;
     while (1)
     {
-        system("clear");
-        system("echo '\e[032m'");
         showCurrentRoom(level);
         statsPlayer(level->player);
 
@@ -277,14 +288,11 @@ void game(Level *level)
         {
         }
         c = getchar();
-        if (c == 'o')
-        {
-            shoot(level, c);
-        }
-        else
-        {
-            movePerson(level, c);
-        }
+
+        // player can shoot with o
+        shoot(level, c);
+        movePerson(level, c);
+
         fflush(stdin);
         //  sleep(3);
     }

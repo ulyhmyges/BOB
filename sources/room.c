@@ -70,11 +70,12 @@ void createMonsterList(Room *r, char *monsterfile)
     case 9:
         for (int i = 0; i < r->monsters->size; i += 1)
         {
+            r->monsters->list[i]->champion = true;
             r->monsters->list[i]->hpMax *= 2;
             r->monsters->list[i]->dmg *= 2;
         }
         break;
-    // default:
+        // default:
         // do nothing (not a champion)
     }
 }

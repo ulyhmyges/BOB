@@ -23,6 +23,7 @@ Monster *newMonster(char *name, float hpMax, float dmg, boolean shoot, boolean s
     monster->shoot = shoot;
     monster->ss = ss;
     monster->flight = flight;
+    monster->champion = false;
     return monster;
 }
 
@@ -186,4 +187,13 @@ Monster* askMonster(Monster* monster)
     }
 
     return monster;
+}
+
+float touched(Monster* monster, float dmg){
+    if (monster->hpMax >= dmg){
+        monster->hpMax -= dmg;
+    } else {
+        monster->hpMax = 0;
+    }
+    return monster->hpMax;
 }

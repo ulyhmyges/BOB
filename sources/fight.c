@@ -13,9 +13,21 @@ void dmgMonster(Level *level, int h, int w)
     MonsterList *monsters = level->currentRoom->monsters;
     for (int i = 0; i < monsters->size; i += 1)
     {
+        printf("monster: %d, %d,----", monsters->list[i]->p.h, monsters->list[i]->p.w);
         if ((monsters->list[i]->p.h == h) && (monsters->list[i]->p.w == w))
         {
-            printf("touché-----------------------------------------h: %d, w: %d ----", monsters->list[i]->p.h, monsters->list[i]->p.w);
+            printf("hpMax= %.1f---champion?: %d---", monsters->list[i]->hpMax, monsters->list[i]->champion);
+
+            if (touched(monsters->list[i], level->player->dmg) == 0)
+            {
+                printf("hpMax= %.1f---", monsters->list[i]->hpMax);
+                level->currentRoom->map[monsters->list[i]->p.h][monsters->list[i]->p.w] = ' ';
+                removeMonsterByIndex(i, monsters);
+            }
+            else
+            {
+                printf("hpMax= %.1f---champion: %d---", monsters->list[i]->hpMax, monsters->list[i]->champion);
+            }
         }
     }
 }
@@ -43,6 +55,11 @@ void shoot(Level *level, char letter)
                 if (!isGap(level, h - n, w))
                 {
                     level->currentRoom->map[h - n][w] = '|';
+                    showCurrentRoom(level);
+                    clock_t start = clock();
+                    while (clock() < start + 100000)
+                    {
+                    }
                 }
             }
             else
@@ -58,10 +75,14 @@ void shoot(Level *level, char letter)
 
         for (int j = 1; j < n; j += 1)
         {
-            printf("j: %d", j);
             if (!isGap(level, h - j, w))
             {
                 level->currentRoom->map[h - j][w] = ' ';
+                showCurrentRoom(level);
+                clock_t start = clock();
+                while (clock() < start + 100000)
+                {
+                }
             }
         }
 

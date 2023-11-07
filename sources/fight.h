@@ -11,6 +11,8 @@
 #include "level.h"
 #include "move.h"
 #include "string.h"
+#include <unistd.h>
+#include <time.h>
 
 
 direction directionToTakeMonster(Level* level, Monster* m);

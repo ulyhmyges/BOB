@@ -20,9 +20,9 @@ typedef struct MonsterList {
 MonsterList * newMonsterList(void);
 void freeMonsterList(MonsterList *monsterList);
 int addMonsterList(Monster *monster, MonsterList *monsterList);
-int removeMonsterList(Monster *monster, MonsterList *monsterList);
+
 int removeMonsterListByName(char *name, MonsterList *monsterList);
-int removeMonsterListByIndex(int index, MonsterList *monsterList);
+int removeMonsterByIndex(int index, MonsterList *monsterList);
 void showMonsterList(MonsterList monsterList);
 void printMonsterList(MonsterList monsterList, FILE *f);
 
