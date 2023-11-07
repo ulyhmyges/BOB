@@ -13,20 +13,12 @@ void dmgMonster(Level *level, int h, int w)
     MonsterList *monsters = level->currentRoom->monsters;
     for (int i = 0; i < monsters->size; i += 1)
     {
-        printf("monster: %d, %d,----", monsters->list[i]->p.h, monsters->list[i]->p.w);
         if ((monsters->list[i]->p.h == h) && (monsters->list[i]->p.w == w))
         {
-            printf("hpMax= %.1f---champion?: %d---", monsters->list[i]->hpMax, monsters->list[i]->champion);
-
             if (touched(monsters->list[i], level->player->dmg) == 0)
             {
-                printf("hpMax= %.1f---", monsters->list[i]->hpMax);
                 level->currentRoom->map[monsters->list[i]->p.h][monsters->list[i]->p.w] = ' ';
                 removeMonsterByIndex(i, monsters);
-            }
-            else
-            {
-                printf("hpMax= %.1f---champion: %d---", monsters->list[i]->hpMax, monsters->list[i]->champion);
             }
         }
     }
@@ -38,176 +30,395 @@ boolean isClear(Level *level, int h, int w)
         isWall(level, h, w) || isRock(level, h, w) || isMonster(level, h, w));
 }
 
-void shoot(Level *level, char letter)
+boolean noObstacle(Level *level, int h, int w)
+{
+    return !(
+        isWall(level, h, w) || isRock(level, h, w));
+}
+
+void upSS(Level *level, int h, int w)
 {
     int n = 1;
+    while ((h - n) > 0)
+    {
+        // not wall, not rock
+        if (isClear(level, h - n, w))
+        {
+            if (!isGap(level, h - n, w) && !isSpike(level, h - n, w))
+            {
+                level->currentRoom->map[h - n][w] = '+';
+                showCurrentRoom(level);
+                clock_t start = clock();
+                while (clock() < start + 30000)
+                {
+                }
+            }
+        }
+        else
+        {
+            if (isMonster(level, h - n, w))
+            {
+                dmgMonster(level, h - n, w);
+            }
+        }
+        n += 1;
+    }
+
+    for (int j = 1; j < n; j += 1)
+    {
+        if (!isGap(level, h - j, w) && !isMonster(level, h - j, w) && !isSpike(level, h - j, w))
+        {
+            level->currentRoom->map[h - j][w] = ' ';
+        }
+        showCurrentRoom(level);
+        clock_t start = clock();
+        while (clock() < start + 20000)
+        {
+        }
+    }
+}
+
+void upShoot(Level *level, int h, int w)
+{
+    int n = 1;
+    while ((h - n) > 0)
+    {
+        // not wall, not rock and not monster
+        if (isClear(level, h - n, w))
+        {
+            if (!isGap(level, h - n, w) && !isSpike(level, h - n, w))
+            {
+                level->currentRoom->map[h - n][w] = '|';
+                showCurrentRoom(level);
+                clock_t start = clock();
+                while (clock() < start + 30000)
+                {
+                }
+            }
+        }
+        else
+        {
+            if (isMonster(level, h - n, w))
+            {
+                dmgMonster(level, h - n, w);
+            }
+            break;
+        }
+        n += 1;
+    }
+
+    for (int j = 1; j < n; j += 1)
+    {
+        if (!isGap(level, h - j, w) && !isSpike(level, h - j, w))
+        {
+            level->currentRoom->map[h - j][w] = ' ';
+        }
+        showCurrentRoom(level);
+        clock_t start = clock();
+        while (clock() < start + 20000)
+        {
+        }
+    }
+}
+
+void leftSS(Level *level, int h, int w)
+{
+    int n = 1;
+    while ((w - n) > 0)
+    {
+        // not wall, not rock and not monster
+        if (isClear(level, h, w - n))
+        {
+            if (!isGap(level, h, w - n) && !isSpike(level, h, w - n))
+            {
+                level->currentRoom->map[h][w - n] = '+';
+                showCurrentRoom(level);
+                clock_t start = clock();
+                while (clock() < start + 30000)
+                {
+                }
+            }
+        }
+        else
+        {
+            if (isMonster(level, h, w - n))
+            {
+                dmgMonster(level, h, w - n);
+            }
+        }
+        n += 1;
+    }
+
+    for (int j = 1; j < n; j += 1)
+    {
+        if (!isGap(level, h, w - j) && !isMonster(level, h, w - j) && !isSpike(level, h, w - j))
+        {
+            level->currentRoom->map[h][w - j] = ' ';
+        }
+        showCurrentRoom(level);
+        clock_t start = clock();
+        while (clock() < start + 20000)
+        {
+        }
+    }
+}
+
+void leftShoot(Level *level, int h, int w)
+{
+    int n = 1;
+    while ((w - n) > 0)
+    {
+        // non wall, no rock, no monster
+        if (isClear(level, h, w - n))
+        {
+            if (!isGap(level, h, w - n) && !isSpike(level, h, w - n))
+            {
+                level->currentRoom->map[h][w - n] = '-';
+                showCurrentRoom(level);
+                clock_t start = clock();
+                while (clock() < start + 30000)
+                {
+                }
+            }
+        }
+        else
+        {
+            if (isMonster(level, h, w - n))
+            {
+                dmgMonster(level, h, w - n);
+            }
+            break;
+        }
+        n += 1;
+    }
+
+    for (int j = 1; j < n; j += 1)
+    {
+        if (!isGap(level, h, w - j) && !isSpike(level, h, w - j))
+        {
+            level->currentRoom->map[h][w - j] = ' ';
+        }
+        showCurrentRoom(level);
+        clock_t start = clock();
+        while (clock() < start + 20000)
+        {
+        }
+    }
+}
+
+void downSS(Level *level, int h, int w)
+{
+    int n = 1;
+    while ((h + n) < level->rows - 1)
+    {
+        // not wall, not rock and not monster
+        if (isClear(level, h + n, w))
+        {
+            if (!isGap(level, h + n, w) && !isSpike(level, h + n, w))
+            {
+                level->currentRoom->map[h + n][w] = '+';
+            }
+            showCurrentRoom(level);
+            clock_t start = clock();
+            while (clock() < start + 30000)
+            {
+            }
+        }
+        else
+        {
+            if (isMonster(level, h + n, w))
+            {
+                dmgMonster(level, h + n, w);
+            }
+        }
+        n += 1;
+    }
+
+    for (int j = 1; j < n; j += 1)
+    {
+        if (!isGap(level, h - j, w) && !isMonster(level, h + j, w) && !isSpike(level, h + j, w))
+        {
+            level->currentRoom->map[h + j][w] = ' ';
+        }
+        showCurrentRoom(level);
+        clock_t start = clock();
+        while (clock() < start + 20000)
+        {
+        }
+    }
+}
+
+void downShoot(Level *level, int h, int w)
+{
+    int n = 1;
+    while ((h + n) < level->rows - 1)
+    {
+        if (isClear(level, h + n, w))
+        {
+            if (!isGap(level, h + n, w) && !isSpike(level, h + n, w))
+            {
+                level->currentRoom->map[h + n][w] = '|';
+                showCurrentRoom(level);
+                clock_t start = clock();
+                while (clock() < start + 30000)
+                {
+                }
+            }
+        }
+        else
+        {
+            if (isMonster(level, h + n, w))
+            {
+                dmgMonster(level, h + n, w);
+            }
+            break;
+        }
+        n += 1;
+    }
+
+    for (int j = 1; j < n; j += 1)
+    {
+        if (!isGap(level, h - j, w) && !isSpike(level, h - j, w))
+        {
+            level->currentRoom->map[h + j][w] = ' ';
+        }
+        showCurrentRoom(level);
+        clock_t start = clock();
+        while (clock() < start + 20000)
+        {
+        }
+    }
+}
+
+void rightSS(Level *level, int h, int w)
+{
+    int n = 1;
+    while ((w + n) < level->columns - 1)
+    {
+        // not wall, not rock and not monster
+        if (isClear(level, h, w + n))
+        {
+            if (!isGap(level, h, w + n) && !isSpike(level, h, w + n))
+            {
+                level->currentRoom->map[h][w + n] = '+';
+                showCurrentRoom(level);
+                clock_t start = clock();
+                while (clock() < start + 30000)
+                {
+                }
+            }
+        }
+        else
+        {
+            if (isMonster(level, h, w + n))
+            {
+                dmgMonster(level, h, w + n);
+            }
+        }
+        n += 1;
+    }
+
+    for (int j = 1; j < n; j += 1)
+    {
+        if (!isGap(level, h, w + j) && !isMonster(level, h, w + j) && !isSpike(level, h, w + j))
+        {
+            level->currentRoom->map[h][w + j] = ' ';
+        }
+        showCurrentRoom(level);
+        clock_t start = clock();
+        while (clock() < start + 20000)
+        {
+        }
+    }
+}
+
+void rightShoot(Level *level, int h, int w)
+{
+    int n = 1;
+    while ((w + n) < level->columns - 1)
+    {
+        if (isClear(level, h, w + n))
+        {
+            if (!isGap(level, h, w + n) && !isSpike(level, h, w + n))
+            {
+                level->currentRoom->map[h][w + n] = '-';
+                showCurrentRoom(level);
+                clock_t start = clock();
+                while (clock() < start + 30000)
+                {
+                }
+            }
+        }
+        else
+        {
+            if (isMonster(level, h, w + n))
+            {
+                dmgMonster(level, h, w + n);
+            }
+            break;
+        }
+        n += 1;
+    }
+
+    for (int j = 1; j < n; j += 1)
+    {
+        if (!isGap(level, h, w + j) && isSpike(level, h, w + j))
+        {
+            level->currentRoom->map[h][w + j] = ' ';
+        }
+        showCurrentRoom(level);
+        clock_t start = clock();
+        while (clock() < start + 20000)
+        {
+        }
+    }
+}
+
+void shoot(Level *level, char letter)
+{
     int h = level->coord.p.h;
     int w = level->coord.p.w;
-    switch (letter)
+    if (isSpectral(level))
     {
-
-    // up shoot
-    case 'o':
-        while ((h - n) > 0)
+        switch (letter)
         {
-            if (isClear(level, h - n, w))
-            {
-                if (!isGap(level, h - n, w))
-                {
-                    level->currentRoom->map[h - n][w] = '|';
-                    showCurrentRoom(level);
-                    clock_t start = clock();
-                    while (clock() < start + 30000)
-                    {
-                    }
-                }
-            }
-            else
-            {
-                if (isMonster(level, h - n, w))
-                {
-                    dmgMonster(level, h - n, w);
-                }
-                break;
-            }
-            n += 1;
-        }
+        case 'o':
+            upSS(level, h, w);
+            break;
 
-        for (int j = 1; j < n; j += 1)
-        {
-            if (!isGap(level, h - j, w))
-            {
-                level->currentRoom->map[h - j][w] = ' ';
-                showCurrentRoom(level);
-                clock_t start = clock();
-                while (clock() < start + 20000)
-                {
-                }
-            }
-        }
+        case 'k':
+            leftSS(level, h, w);
+            break;
 
-        break;
+        case 'l':
+            downSS(level, h, w);
+            break;
 
-    // left shoot
-    case 'k':
-        while ((w - n) > 0)
-        {
-            if (isClear(level, h, w - n))
-            {
-                if (!isGap(level, h, w - n))
-                {
-                    level->currentRoom->map[h][w - n] = '-';
-                    showCurrentRoom(level);
-                    clock_t start = clock();
-                    while (clock() < start + 30000)
-                    {
-                    }
-                }
-            }
-            else
-            {
-                if (isMonster(level, h, w - n))
-                {
-                    dmgMonster(level, h, w - n);
-                }
-                break;
-            }
-            n += 1;
+        case 'm':
+            rightSS(level, h, w);
+            break;
         }
+    }
+    else
+    {
+        switch (letter)
+        {
+        case 'o':
+            upShoot(level, h, w);
+            break;
 
-        for (int j = 1; j < n; j += 1)
-        {
-            if (!isGap(level, h, w - j))
-            {
-                level->currentRoom->map[h][w - j] = ' ';
-                showCurrentRoom(level);
-                clock_t start = clock();
-                while (clock() < start + 20000)
-                {
-                }
-            }
-        }
-        break;
+        case 'k':
+            leftShoot(level, h, w);
+            break;
 
-    // down shoot
-    case 'l':
-        while ((h + n) < level->rows - 1)
-        {
-            if (isClear(level, h + n, w))
-            {
-                if (!isGap(level, h + n, w))
-                {
-                    level->currentRoom->map[h + n][w] = '|';
-                    showCurrentRoom(level);
-                    clock_t start = clock();
-                    while (clock() < start + 30000)
-                    {
-                    }
-                }
-            }
-            else
-            {
-                if (isMonster(level, h + n, w))
-                {
-                    dmgMonster(level, h + n, w);
-                }
-                break;
-            }
-            n += 1;
-        }
+        case 'l':
+            downShoot(level, h, w);
+            break;
 
-        for (int j = 1; j < n; j += 1)
-        {
-            if (!isGap(level, h - j, w))
-            {
-                level->currentRoom->map[h + j][w] = ' ';
-                showCurrentRoom(level);
-                clock_t start = clock();
-                while (clock() < start + 20000)
-                {
-                }
-            }
+        case 'm':
+            rightShoot(level, h, w);
+            break;
         }
-        break;
-    case 'm':
-        while ((w + n) < level->columns - 1)
-        {
-            if (isClear(level, h, w + n))
-            {
-                if (!isGap(level, h, w + n))
-                {
-                    level->currentRoom->map[h][w + n] = '-';
-                    showCurrentRoom(level);
-                    clock_t start = clock();
-                    while (clock() < start + 30000)
-                    {
-                    }
-                }
-            }
-            else
-            {
-                if (isMonster(level, h, w + n))
-                {
-                    dmgMonster(level, h, w + n);
-                }
-                break;
-            }
-            n += 1;
-        }
-
-        for (int j = 1; j < n; j += 1)
-        {
-            if (!isGap(level, h, w + j))
-            {
-                level->currentRoom->map[h][w + j] = ' ';
-                showCurrentRoom(level);
-                clock_t start = clock();
-                while (clock() < start + 20000)
-                {
-                }
-            }
-        }
-        break;
     }
 }
 
@@ -373,12 +584,12 @@ void dmgPlayer(Level *level)
     }
 }
 
-boolean canShoot(Monster *m)
+boolean canShoot(Level *level)
 {
-    return (m->shoot || m->ss);
+    return (level->player->ps || level->player->ss);
 }
 
-boolean isSpectral(Monster *m)
+boolean isSpectral(Level *level)
 {
-    return m->ss;
+    return level->player->ss;
 }

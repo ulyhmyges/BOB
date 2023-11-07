@@ -290,7 +290,10 @@ void game(Level *level)
         c = getchar();
 
         // player can shoot with o
-        shoot(level, c);
+        if (canShoot(level))
+        {
+            shoot(level, c);
+        }
         movePerson(level, c);
 
         fflush(stdin);
