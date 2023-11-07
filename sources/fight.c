@@ -44,7 +44,7 @@ void upSS(Level *level, int h, int w)
         // not wall, not rock
         if (isClear(level, h - n, w))
         {
-            if (!isGap(level, h - n, w) && !isSpike(level, h - n, w))
+            if (level->currentRoom->map[h - n][w] == ' ')
             {
                 level->currentRoom->map[h - n][w] = '+';
                 showCurrentRoom(level);
@@ -66,7 +66,7 @@ void upSS(Level *level, int h, int w)
 
     for (int j = 1; j < n; j += 1)
     {
-        if (!isGap(level, h - j, w) && !isMonster(level, h - j, w) && !isSpike(level, h - j, w))
+        if (level->currentRoom->map[h - j][w] == '+')
         {
             level->currentRoom->map[h - j][w] = ' ';
         }
@@ -86,7 +86,7 @@ void upShoot(Level *level, int h, int w)
         // not wall, not rock and not monster
         if (isClear(level, h - n, w))
         {
-            if (!isGap(level, h - n, w) && !isSpike(level, h - n, w))
+            if (level->currentRoom->map[h - n][w] == ' ')
             {
                 level->currentRoom->map[h - n][w] = '|';
                 showCurrentRoom(level);
@@ -109,7 +109,7 @@ void upShoot(Level *level, int h, int w)
 
     for (int j = 1; j < n; j += 1)
     {
-        if (!isGap(level, h - j, w) && !isSpike(level, h - j, w))
+        if (level->currentRoom->map[h - j][w] == '|')
         {
             level->currentRoom->map[h - j][w] = ' ';
         }
@@ -129,7 +129,7 @@ void leftSS(Level *level, int h, int w)
         // not wall, not rock and not monster
         if (isClear(level, h, w - n))
         {
-            if (!isGap(level, h, w - n) && !isSpike(level, h, w - n))
+            if (level->currentRoom->map[h][w - n] == ' ')
             {
                 level->currentRoom->map[h][w - n] = '+';
                 showCurrentRoom(level);
@@ -151,7 +151,7 @@ void leftSS(Level *level, int h, int w)
 
     for (int j = 1; j < n; j += 1)
     {
-        if (!isGap(level, h, w - j) && !isMonster(level, h, w - j) && !isSpike(level, h, w - j))
+        if (level->currentRoom->map[h][w - j] == '+')
         {
             level->currentRoom->map[h][w - j] = ' ';
         }
@@ -171,7 +171,7 @@ void leftShoot(Level *level, int h, int w)
         // non wall, no rock, no monster
         if (isClear(level, h, w - n))
         {
-            if (!isGap(level, h, w - n) && !isSpike(level, h, w - n))
+            if (level->currentRoom->map[h][w - n] == ' ')
             {
                 level->currentRoom->map[h][w - n] = '-';
                 showCurrentRoom(level);
@@ -194,7 +194,7 @@ void leftShoot(Level *level, int h, int w)
 
     for (int j = 1; j < n; j += 1)
     {
-        if (!isGap(level, h, w - j) && !isSpike(level, h, w - j))
+        if (level->currentRoom->map[h][w - j] == '-')
         {
             level->currentRoom->map[h][w - j] = ' ';
         }
@@ -214,7 +214,7 @@ void downSS(Level *level, int h, int w)
         // not wall, not rock and not monster
         if (isClear(level, h + n, w))
         {
-            if (!isGap(level, h + n, w) && !isSpike(level, h + n, w))
+            if (level->currentRoom->map[h + n][w] == ' ')
             {
                 level->currentRoom->map[h + n][w] = '+';
             }
@@ -236,7 +236,7 @@ void downSS(Level *level, int h, int w)
 
     for (int j = 1; j < n; j += 1)
     {
-        if (!isGap(level, h - j, w) && !isMonster(level, h + j, w) && !isSpike(level, h + j, w))
+        if (level->currentRoom->map[h + j][w] == '+')
         {
             level->currentRoom->map[h + j][w] = ' ';
         }
@@ -255,7 +255,7 @@ void downShoot(Level *level, int h, int w)
     {
         if (isClear(level, h + n, w))
         {
-            if (!isGap(level, h + n, w) && !isSpike(level, h + n, w))
+            if (level->currentRoom->map[h + n][w] == ' ')
             {
                 level->currentRoom->map[h + n][w] = '|';
                 showCurrentRoom(level);
@@ -278,7 +278,7 @@ void downShoot(Level *level, int h, int w)
 
     for (int j = 1; j < n; j += 1)
     {
-        if (!isGap(level, h - j, w) && !isSpike(level, h - j, w))
+        if (level->currentRoom->map[h + j][w] == '|')
         {
             level->currentRoom->map[h + j][w] = ' ';
         }
@@ -298,7 +298,7 @@ void rightSS(Level *level, int h, int w)
         // not wall, not rock and not monster
         if (isClear(level, h, w + n))
         {
-            if (!isGap(level, h, w + n) && !isSpike(level, h, w + n))
+            if (level->currentRoom->map[h][w + n] == ' ')
             {
                 level->currentRoom->map[h][w + n] = '+';
                 showCurrentRoom(level);
@@ -320,7 +320,7 @@ void rightSS(Level *level, int h, int w)
 
     for (int j = 1; j < n; j += 1)
     {
-        if (!isGap(level, h, w + j) && !isMonster(level, h, w + j) && !isSpike(level, h, w + j))
+        if (level->currentRoom->map[h][w + j] == '+')
         {
             level->currentRoom->map[h][w + j] = ' ';
         }
@@ -339,7 +339,7 @@ void rightShoot(Level *level, int h, int w)
     {
         if (isClear(level, h, w + n))
         {
-            if (!isGap(level, h, w + n) && !isSpike(level, h, w + n))
+            if (level->currentRoom->map[h][w + n] == ' ')
             {
                 level->currentRoom->map[h][w + n] = '-';
                 showCurrentRoom(level);
@@ -362,7 +362,7 @@ void rightShoot(Level *level, int h, int w)
 
     for (int j = 1; j < n; j += 1)
     {
-        if (!isGap(level, h, w + j) && isSpike(level, h, w + j))
+        if (level->currentRoom->map[h][w + j] == '-')
         {
             level->currentRoom->map[h][w + j] = ' ';
         }
@@ -542,10 +542,24 @@ void restlessMonsters(Level *level)
     if (isType(level, level->coord.u, level->coord.v, "Room"))
     {
         MonsterList *monsters = level->currentRoom->monsters;
-        for (int i = 0; i < monsters->size; i += 1)
+        if (monsters->size)
         {
-            movedMonster(level, monsters->list[i]);
-            sideAttack(level, monsters->list[i]);
+            northDoor(level, level->coord.u, level->coord.v, 'W');
+            eastDoor(level, level->coord.u, level->coord.v, 'W');
+            westDoor(level, level->coord.u, level->coord.v, 'W');
+            southDoor(level, level->coord.u, level->coord.v, 'W');
+            for (int i = 0; i < monsters->size; i += 1)
+            {
+                movedMonster(level, monsters->list[i]);
+                sideAttack(level, monsters->list[i]);
+            }
+        }
+        else
+        {
+            northDoor(level, level->coord.u, level->coord.v, level->currentRoom->upDoor);
+            eastDoor(level, level->coord.u, level->coord.v, level->currentRoom->rightDoor);
+            westDoor(level, level->coord.u, level->coord.v, level->currentRoom->leftDoor);
+            southDoor(level, level->coord.u, level->coord.v, level->currentRoom->downDoor);
         }
     }
 }
