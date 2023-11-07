@@ -45,9 +45,9 @@ void shoot(Level *level, char letter)
     int w = level->coord.p.w;
     switch (letter)
     {
-    case 'o':
-        printf("P position (h,w): (%d,%d)", h, w);
 
+    // up shoot
+    case 'o':
         while ((h - n) > 0)
         {
             if (isClear(level, h - n, w))
@@ -57,7 +57,7 @@ void shoot(Level *level, char letter)
                     level->currentRoom->map[h - n][w] = '|';
                     showCurrentRoom(level);
                     clock_t start = clock();
-                    while (clock() < start + 100000)
+                    while (clock() < start + 30000)
                     {
                     }
                 }
@@ -80,7 +80,7 @@ void shoot(Level *level, char letter)
                 level->currentRoom->map[h - j][w] = ' ';
                 showCurrentRoom(level);
                 clock_t start = clock();
-                while (clock() < start + 100000)
+                while (clock() < start + 20000)
                 {
                 }
             }
@@ -88,11 +88,125 @@ void shoot(Level *level, char letter)
 
         break;
 
+    // left shoot
     case 'k':
+        while ((w - n) > 0)
+        {
+            if (isClear(level, h, w - n))
+            {
+                if (!isGap(level, h, w - n))
+                {
+                    level->currentRoom->map[h][w - n] = '-';
+                    showCurrentRoom(level);
+                    clock_t start = clock();
+                    while (clock() < start + 30000)
+                    {
+                    }
+                }
+            }
+            else
+            {
+                if (isMonster(level, h, w - n))
+                {
+                    dmgMonster(level, h, w - n);
+                }
+                break;
+            }
+            n += 1;
+        }
+
+        for (int j = 1; j < n; j += 1)
+        {
+            if (!isGap(level, h, w - j))
+            {
+                level->currentRoom->map[h][w - j] = ' ';
+                showCurrentRoom(level);
+                clock_t start = clock();
+                while (clock() < start + 20000)
+                {
+                }
+            }
+        }
         break;
+
+    // down shoot
     case 'l':
+        while ((h + n) < level->rows - 1)
+        {
+            if (isClear(level, h + n, w))
+            {
+                if (!isGap(level, h + n, w))
+                {
+                    level->currentRoom->map[h + n][w] = '|';
+                    showCurrentRoom(level);
+                    clock_t start = clock();
+                    while (clock() < start + 30000)
+                    {
+                    }
+                }
+            }
+            else
+            {
+                if (isMonster(level, h + n, w))
+                {
+                    dmgMonster(level, h + n, w);
+                }
+                break;
+            }
+            n += 1;
+        }
+
+        for (int j = 1; j < n; j += 1)
+        {
+            if (!isGap(level, h - j, w))
+            {
+                level->currentRoom->map[h + j][w] = ' ';
+                showCurrentRoom(level);
+                clock_t start = clock();
+                while (clock() < start + 20000)
+                {
+                }
+            }
+        }
         break;
     case 'm':
+        while ((w + n) < level->columns - 1)
+        {
+            if (isClear(level, h, w + n))
+            {
+                if (!isGap(level, h, w + n))
+                {
+                    level->currentRoom->map[h][w + n] = '-';
+                    showCurrentRoom(level);
+                    clock_t start = clock();
+                    while (clock() < start + 30000)
+                    {
+                    }
+                }
+            }
+            else
+            {
+                if (isMonster(level, h, w + n))
+                {
+                    dmgMonster(level, h, w + n);
+                }
+                break;
+            }
+            n += 1;
+        }
+
+        for (int j = 1; j < n; j += 1)
+        {
+            if (!isGap(level, h, w + j))
+            {
+                level->currentRoom->map[h][w + j] = ' ';
+                showCurrentRoom(level);
+                clock_t start = clock();
+                while (clock() < start + 20000)
+                {
+                }
+            }
+        }
         break;
     }
 }
