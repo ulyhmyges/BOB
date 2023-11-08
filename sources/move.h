@@ -12,6 +12,7 @@
 #include "level.h"
 #include "itemFile.h"
 
+boolean isLock(Level *level, int h, int w);
 int isWall(Level* level, int h, int w);
 int isGap(Level* level, int h, int w);
 int isSpike(Level* level, int h, int w);

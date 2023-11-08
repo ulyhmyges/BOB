@@ -92,4 +92,8 @@ void putNorthDoor(Level* level, int h, int w);
 void updateMapLevel(Level* level, int i, int j, char kind);
 MonsterList *createMonsters(char *monsterfile);
 
+
+void unlockDoors(Level *level, int u, int v);
+void lockDoors(Level *level, int u, int v);
+
 #endif // FLOOR_H

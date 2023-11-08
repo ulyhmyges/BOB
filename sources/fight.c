@@ -43,7 +43,7 @@ boolean isClear(Level *level, int h, int w)
 boolean noObstacle(Level *level, int h, int w)
 {
     return !(
-        isWall(level, h, w) || isRock(level, h, w) || isGap(level, h, w) || isPerson(level, h, w) || isHealth(level, h, w));
+        isWall(level, h, w) || isRock(level, h, w) || isGap(level, h, w) || isPerson(level, h, w) || isHealth(level, h, w) || isLock(level, h, w));
 }
 
 void upSS(Level *level, int h, int w)
@@ -60,7 +60,7 @@ void upSS(Level *level, int h, int w)
             }
             showCurrentRoom(level);
             clock_t start = clock();
-            while (clock() < start + 30000)
+            while (clock() < start + 20000)
             {
             }
             if (isPerson(level, h - n, w))
@@ -105,7 +105,7 @@ void upShoot(Level *level, int h, int w)
                 level->currentRoom->map[h - n][w] = '|';
                 showCurrentRoom(level);
                 clock_t start = clock();
-                while (clock() < start + 30000)
+                while (clock() < start + 20000)
                 {
                 }
             }
@@ -154,7 +154,7 @@ void leftSS(Level *level, int h, int w)
             }
             showCurrentRoom(level);
             clock_t start = clock();
-            while (clock() < start + 30000)
+            while (clock() < start + 20000)
             {
             }
             if (isPerson(level, h, w - n))
@@ -199,7 +199,7 @@ void leftShoot(Level *level, int h, int w)
                 level->currentRoom->map[h][w - n] = '-';
                 showCurrentRoom(level);
                 clock_t start = clock();
-                while (clock() < start + 30000)
+                while (clock() < start + 20000)
                 {
                 }
             }
@@ -248,7 +248,7 @@ void downSS(Level *level, int h, int w)
             }
             showCurrentRoom(level);
             clock_t start = clock();
-            while (clock() < start + 30000)
+            while (clock() < start + 20000)
             {
             }
             if (isPerson(level, h + n, w))
@@ -292,7 +292,7 @@ void downShoot(Level *level, int h, int w)
                 level->currentRoom->map[h + n][w] = '|';
                 showCurrentRoom(level);
                 clock_t start = clock();
-                while (clock() < start + 30000)
+                while (clock() < start + 20000)
                 {
                 }
             }
@@ -340,7 +340,7 @@ void rightSS(Level *level, int h, int w)
                 level->currentRoom->map[h][w + n] = '+';
                 showCurrentRoom(level);
                 clock_t start = clock();
-                while (clock() < start + 30000)
+                while (clock() < start + 20000)
                 {
                 }
             }
@@ -385,7 +385,7 @@ void rightShoot(Level *level, int h, int w)
                 level->currentRoom->map[h][w + n] = '-';
                 showCurrentRoom(level);
                 clock_t start = clock();
-                while (clock() < start + 30000)
+                while (clock() < start + 20000)
                 {
                 }
             }
@@ -688,10 +688,7 @@ void restlessMonsters(Level *level)
         {
             // printf("=======monsters: %p, size: %d, list[1]: %p=========", monsters, monsters->size, monsters->list[1]);
 
-            northDoor(level, level->coord.u, level->coord.v, 'W');
-            eastDoor(level, level->coord.u, level->coord.v, 'W');
-            westDoor(level, level->coord.u, level->coord.v, 'W');
-            southDoor(level, level->coord.u, level->coord.v, 'W');
+            lockDoors(level, level->coord.u, level->coord.v);
             for (int i = 0; i < monsters->size; i += 1)
             {
                 movedMonster(level, monsters->list[i]);
@@ -700,10 +697,7 @@ void restlessMonsters(Level *level)
         }
         else
         {
-            northDoor(level, level->coord.u, level->coord.v, level->currentRoom->upDoor);
-            eastDoor(level, level->coord.u, level->coord.v, level->currentRoom->rightDoor);
-            westDoor(level, level->coord.u, level->coord.v, level->currentRoom->leftDoor);
-            southDoor(level, level->coord.u, level->coord.v, level->currentRoom->downDoor);
+            unlockDoors(level, level->coord.u, level->coord.v);
         }
     }
 }

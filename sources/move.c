@@ -102,6 +102,11 @@ boolean isMonster(Level *level, int h, int w)
     return level->currentRoom->map[h][w] == 'M';
 }
 
+boolean isLock(Level *level, int h, int w)
+{
+    return level->currentRoom->map[h][w] == 'L';
+}
+
 /**
  * @brief if the character 'P' change room:
  *          - update coordinates of the current room
@@ -193,7 +198,7 @@ void goToNextPoint(Level *level, int h, int w)
 // no wall, no gap, no rock, no character
 int isSafe(Level *level, int h, int w)
 {
-    if (isWall(level, h, w) || isGap(level, h, w) || isRock(level, h, w) || isMonster(level, h, w))
+    if (isWall(level, h, w) || isGap(level, h, w) || isRock(level, h, w) || isMonster(level, h, w) || isLock(level, h, w))
     {
         return 0;
     }

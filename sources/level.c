@@ -12,7 +12,6 @@
 #include <time.h>
 #include "level.h"
 
-
 /**
  * @brief Create a Special Room object:
  * a ItemRoom/ItemRoomBonus (I)
@@ -322,14 +321,32 @@ int putItemRoom(Level *level, int i, int j, Room *itemRoom)
     return 0;
 }
 
-void lockDoors(Level *level)
+void lockDoors(Level *level, int u, int v)
 {
-    if (isType(level, level->coord.u, level->coord.v, "Room"))
+    if (level->floor[u][v].map[0][level->floor[u][v].columns / 2] == 'D')
     {
-        if (level->currentRoom->monsters->size)
-        {
-        }
+        northDoor(level, level->coord.u, level->coord.v, 'L');
     }
+    if (level->floor[u][v].map[level->floor[u][v].rows / 2][0] == 'D')
+    {
+        westDoor(level, level->coord.u, level->coord.v, 'L');
+    }
+    if (level->floor[u][v].map[level->floor[u][v].rows - 1][level->floor[u][v].columns / 2] == 'D')
+    {
+        southDoor(level, level->coord.u, level->coord.v, 'L');
+    }
+    if (level->floor[u][v].map[level->floor[u][v].rows / 2][level->floor[u][v].columns - 1] == 'D')
+    {
+        eastDoor(level, level->coord.u, level->coord.v, 'L');
+    }
+}
+
+void unlockDoors(Level *level, int u, int v)
+{
+    northDoor(level, u, v, level->currentRoom->upDoor);
+    eastDoor(level, u, v, level->currentRoom->rightDoor);
+    westDoor(level, u, v, level->currentRoom->leftDoor);
+    southDoor(level, u, v, level->currentRoom->downDoor);
 }
 
 void saveCardinalDoors(Level *level)
@@ -562,7 +579,7 @@ void addRoomToFloor(Level *level, int i, int j, Room *r)
 
 MonsterList *createMonsters(char *monsterfile)
 {
-    MonsterList* monsters = newMonsterList();
+    MonsterList *monsters = newMonsterList();
     MonsterList *monsterList = readMonsterFile(monsterfile);
     int numberOne = rand() % 7;
     int numberTwo = 0;
@@ -596,7 +613,7 @@ MonsterList *createMonsters(char *monsterfile)
         // default:
         // do nothing (not a champion)
     }
-    //freeMonsterList(monsterList);
+    // freeMonsterList(monsterList);
     return monsters;
 }
 
@@ -618,13 +635,14 @@ void randomPointMonsters(Room room)
 
 /**
  * @brief Ajoute un nombre aléatoire de monstres dans la pièce et les place aléatoirement
- * 
- * @param level 
- * @param u 
- * @param v 
- * @param monsterfile 
+ *
+ * @param level
+ * @param u
+ * @param v
+ * @param monsterfile
  */
-void addMonstersToRoom(Level* level, int u, int v, char* monsterfile){
+void addMonstersToRoom(Level *level, int u, int v, char *monsterfile)
+{
     level->floor[u][v].monsters = createMonsters(monsterfile);
     randomPointMonsters(level->floor[u][v]);
 }
