@@ -190,10 +190,10 @@ void goToNextPoint(Level *level, int h, int w)
     level->coord.p.w = w;
 }
 
-// no wall, no gap, no rock, no character, no monster
+// no wall, no gap, no rock, no character
 int isSafe(Level *level, int h, int w)
 {
-    if (isWall(level, h, w) || isGap(level, h, w) || isRock(level, h, w) || isPerson(level, h, w) || isMonster(level, h, w))
+    if (isWall(level, h, w) || isGap(level, h, w) || isRock(level, h, w) || isMonster(level, h, w))
     {
         return 0;
     }

@@ -12,6 +12,9 @@
 #include "room.h"
 #include "map.h"
 #include "player.h"
+#include "roomFile.h"
+#include "itemFile.h"
+#include "itemList.h"
 
 typedef enum direction
 {
@@ -56,7 +59,12 @@ Room *createSpecialRoom(int rows, int columns, char kind, char *itemfile, char *
 void createFloor(Level *level, char *monsterfile);
 Level *newLevel(int id, int rows, int columns, char *roomfile, char *itemfile, char *monsterfile, Player* player);
 void freeLevel(Level *level);
-void updateFloor(Level *level, int i, int j, Room* r);
+
+void addRoomToFloor(Level *level, int i, int j, Room *r);
+
+void addMonstersToRoom(Level* level, int u, int v, char* monsterfile);
+void randomPointMonsters(Room room);
+
 void showFloor(Level *level);
 void randFloor(Level *level, char *roomfile, char *monsterfile);
 void putAllDoors(Level *level);
@@ -82,5 +90,6 @@ void putWestDoor(Level* level, int h, int w);
 void putNorthDoor(Level* level, int h, int w);
 
 void updateMapLevel(Level* level, int i, int j, char kind);
+MonsterList *createMonsters(char *monsterfile);
 
 #endif // FLOOR_H

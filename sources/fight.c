@@ -33,7 +33,7 @@ boolean isClear(Level *level, int h, int w)
 boolean noObstacle(Level *level, int h, int w)
 {
     return !(
-        isWall(level, h, w) || isRock(level, h, w));
+        isWall(level, h, w) || isRock(level, h, w) || isGap(level, h, w) || isPerson(level, h, w));
 }
 
 void upSS(Level *level, int h, int w)
@@ -475,7 +475,7 @@ boolean directionTakenMonster(Level *level, Monster *m, direction cardinal)
     switch (cardinal)
     {
     case North:
-        if (isSafe(level, m->p.h - 1, m->p.w))
+        if (noObstacle(level, m->p.h - 1, m->p.w))
         {
             m->p.h -= 1;
             takeDirection = true;
@@ -483,7 +483,7 @@ boolean directionTakenMonster(Level *level, Monster *m, direction cardinal)
         break;
 
     case East:
-        if (isSafe(level, m->p.h, m->p.w + 1))
+        if (noObstacle(level, m->p.h, m->p.w + 1))
         {
             m->p.w += 1;
             takeDirection = true;
@@ -491,14 +491,14 @@ boolean directionTakenMonster(Level *level, Monster *m, direction cardinal)
         break;
 
     case South:
-        if (isSafe(level, m->p.h + 1, m->p.w))
+        if (noObstacle(level, m->p.h + 1, m->p.w))
         {
             m->p.h += 1;
             takeDirection = true;
         }
         break;
     case West:
-        if (isSafe(level, m->p.h, m->p.w - 1))
+        if (noObstacle(level, m->p.h, m->p.w - 1))
         {
             m->p.w -= 1;
             takeDirection = true;
@@ -544,6 +544,8 @@ void restlessMonsters(Level *level)
         MonsterList *monsters = level->currentRoom->monsters;
         if (monsters->size)
         {
+            printf("=======monsters: %p, size: %d, list[1]: %p=========", monsters, monsters->size, monsters->list[1]);
+
             northDoor(level, level->coord.u, level->coord.v, 'W');
             eastDoor(level, level->coord.u, level->coord.v, 'W');
             westDoor(level, level->coord.u, level->coord.v, 'W');
