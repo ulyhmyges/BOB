@@ -197,3 +197,20 @@ float touched(Monster* monster, float dmg){
     }
     return monster->hpMax;
 }
+
+/**
+ * @brief true if 5% of chance 
+ * 
+ * @return boolean 
+ */
+boolean chance(){
+    int random = rand() % 100;
+    if (random < 5){
+        return true;
+    }
+    return false;
+}
+
+boolean hasWeapon(Monster* monster){
+    return (monster->shoot || monster->ss);
+}

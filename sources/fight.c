@@ -5,9 +5,15 @@
 // a shoot ps is stopped by a wall, a monster or a rock
 // a shoot ss is stopped by a wall or a rock
 
-// a monster can attack character body to body or shoot
-//  - dmg: one shield else one hp
+// a monster can attack character body to body or by shooting
 
+/**
+ * @brief damage player of one shield or one hp
+ *
+ * @param level
+ * @param h
+ * @param w
+ */
 void dmgMonster(Level *level, int h, int w)
 {
     MonsterList *monsters = level->currentRoom->monsters;
@@ -19,6 +25,10 @@ void dmgMonster(Level *level, int h, int w)
             {
                 level->currentRoom->map[monsters->list[i]->p.h][monsters->list[i]->p.w] = ' ';
                 removeMonsterByIndex(i, monsters);
+                if (chance())
+                {
+                    level->currentRoom->map[monsters->list[i]->p.h][monsters->list[i]->p.w] = 'H';
+                }
             }
         }
     }
@@ -33,7 +43,7 @@ boolean isClear(Level *level, int h, int w)
 boolean noObstacle(Level *level, int h, int w)
 {
     return !(
-        isWall(level, h, w) || isRock(level, h, w) || isGap(level, h, w) || isPerson(level, h, w));
+        isWall(level, h, w) || isRock(level, h, w) || isGap(level, h, w) || isPerson(level, h, w) || isHealth(level, h, w));
 }
 
 void upSS(Level *level, int h, int w)
@@ -41,17 +51,21 @@ void upSS(Level *level, int h, int w)
     int n = 1;
     while ((h - n) > 0)
     {
-        // not wall, not rock
+        // not wall, not rock, no monster
         if (isClear(level, h - n, w))
         {
             if (level->currentRoom->map[h - n][w] == ' ')
             {
                 level->currentRoom->map[h - n][w] = '+';
-                showCurrentRoom(level);
-                clock_t start = clock();
-                while (clock() < start + 30000)
-                {
-                }
+            }
+            showCurrentRoom(level);
+            clock_t start = clock();
+            while (clock() < start + 30000)
+            {
+            }
+            if (isPerson(level, h - n, w))
+            {
+                dmgPlayer(level);
             }
         }
         else
@@ -95,6 +109,11 @@ void upShoot(Level *level, int h, int w)
                 {
                 }
             }
+            if (isPerson(level, h - n, w))
+            {
+                dmgPlayer(level);
+                break;
+            }
         }
         else
         {
@@ -132,11 +151,15 @@ void leftSS(Level *level, int h, int w)
             if (level->currentRoom->map[h][w - n] == ' ')
             {
                 level->currentRoom->map[h][w - n] = '+';
-                showCurrentRoom(level);
-                clock_t start = clock();
-                while (clock() < start + 30000)
-                {
-                }
+            }
+            showCurrentRoom(level);
+            clock_t start = clock();
+            while (clock() < start + 30000)
+            {
+            }
+            if (isPerson(level, h, w - n))
+            {
+                dmgPlayer(level);
             }
         }
         else
@@ -179,6 +202,11 @@ void leftShoot(Level *level, int h, int w)
                 while (clock() < start + 30000)
                 {
                 }
+            }
+            if (isPerson(level, h, w - n))
+            {
+                dmgPlayer(level);
+                break;
             }
         }
         else
@@ -223,6 +251,10 @@ void downSS(Level *level, int h, int w)
             while (clock() < start + 30000)
             {
             }
+            if (isPerson(level, h + n, w))
+            {
+                dmgPlayer(level);
+            }
         }
         else
         {
@@ -263,6 +295,11 @@ void downShoot(Level *level, int h, int w)
                 while (clock() < start + 30000)
                 {
                 }
+            }
+            if (isPerson(level, h + n, w))
+            {
+                dmgPlayer(level);
+                break;
             }
         }
         else
@@ -307,6 +344,10 @@ void rightSS(Level *level, int h, int w)
                 {
                 }
             }
+            if (isPerson(level, h, w + n))
+            {
+                dmgPlayer(level);
+            }
         }
         else
         {
@@ -348,14 +389,19 @@ void rightShoot(Level *level, int h, int w)
                 {
                 }
             }
+            if (isPerson(level, h, w + n))
+            {
+                dmgPlayer(level);
+                break;
+            }
         }
         else
         {
             if (isMonster(level, h, w + n))
             {
                 dmgMonster(level, h, w + n);
+                break;
             }
-            break;
         }
         n += 1;
     }
@@ -523,11 +569,20 @@ void movedMonster(Level *level, Monster *m)
 
     // monster moved to cardinal direction
     direction way = directionToTakeMonster(level, m);
-    boolean takeDirection = directionTakenMonster(level, m, way);
-    while (!takeDirection)
+
+    if (hasWeapon(m))
     {
-        way = (way + 1) % 4;
-        takeDirection = directionTakenMonster(level, m, way);
+        monsterShoot(level, m, way);
+    }
+    else
+    {
+        // move in direction of the player
+        boolean takeDirection = directionTakenMonster(level, m, way);
+        while (!takeDirection)
+        {
+            way = (way + 1) % 4;
+            takeDirection = directionTakenMonster(level, m, way);
+        }
     }
 
     // mark 'M' if next point is empty
@@ -537,6 +592,93 @@ void movedMonster(Level *level, Monster *m)
     }
 }
 
+void randomMovedMonster(Level* level, Monster *m)
+{
+    int way = rand() % 4;
+    switch (way)
+    {
+        {
+        case North:
+            if (noObstacle(level, m->p.h - 1, m->p.w))
+            {
+                m->p.h -= 1;
+            }
+            break;
+
+        case East:
+            if (noObstacle(level, m->p.h, m->p.w + 1))
+            {
+                m->p.w += 1;
+            }
+            break;
+
+        case South:
+            if (noObstacle(level, m->p.h + 1, m->p.w))
+            {
+                m->p.h += 1;
+            }
+            break;
+
+        case West:
+            if (noObstacle(level, m->p.h, m->p.w - 1))
+            {
+                m->p.w -= 1;
+            }
+            break;
+        }
+    }
+}
+
+void monsterShoot(Level *level, Monster *m, direction way)
+{
+    int h = m->p.h;
+    int w = m->p.w;
+    if (m->ss)
+    {
+        switch (way)
+        {
+        case North:
+            upSS(level, h, w);
+            break;
+
+        case West:
+            leftSS(level, h, w);
+            break;
+
+        case South:
+            downSS(level, h, w);
+            break;
+
+        case East:
+            rightSS(level, h, w);
+            break;
+        }
+    }
+    else
+    {
+        switch (way)
+        {
+        case North:
+            upShoot(level, h, w);
+            break;
+
+        case West:
+            leftShoot(level, h, w);
+            break;
+
+        case South:
+            downShoot(level, h, w);
+            break;
+
+        case East:
+            rightShoot(level, h, w);
+            break;
+        }
+    }
+    // movement aléatoire du monstre
+    randomMovedMonster(level, m);
+}
+
 void restlessMonsters(Level *level)
 {
     if (isType(level, level->coord.u, level->coord.v, "Room"))
@@ -544,7 +686,7 @@ void restlessMonsters(Level *level)
         MonsterList *monsters = level->currentRoom->monsters;
         if (monsters->size)
         {
-            printf("=======monsters: %p, size: %d, list[1]: %p=========", monsters, monsters->size, monsters->list[1]);
+            // printf("=======monsters: %p, size: %d, list[1]: %p=========", monsters, monsters->size, monsters->list[1]);
 
             northDoor(level, level->coord.u, level->coord.v, 'W');
             eastDoor(level, level->coord.u, level->coord.v, 'W');

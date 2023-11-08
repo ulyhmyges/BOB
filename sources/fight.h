@@ -42,4 +42,8 @@ void rightShoot(Level* level, int h, int w);
 void rightSS(Level* level, int h, int w);
 void shoot(Level *level, char letter);
 
+
+void monsterShoot(Level* level, Monster *m, direction way);
+void randomMovedMonster(Level* level, Monster *m);
+
 #endif

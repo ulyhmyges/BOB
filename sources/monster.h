@@ -31,5 +31,7 @@ Monster * readMonster(FILE *f);
 
 Monster* askMonster(Monster* monster);
 float touched(Monster* monster, float dmg);
+boolean chance(void);
+boolean hasWeapon(Monster* monster);
 
 #endif // MONSTER_H
