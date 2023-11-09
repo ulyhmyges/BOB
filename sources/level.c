@@ -116,9 +116,11 @@ Level *newLevel(int id, int rows, int columns, char *roomfile, char *itemfile, c
     level->coord.p.h = level->rows / 2;
     level->coord.p.w = level->columns / 2;
 
-    // ajout de la room spawner
+    // ajout de la room spawner au centre du tableau floor
     addRoomToFloor(level, level->coord.u, level->coord.v, level->spawner); // u,v = 3, 3
     updateMapLevel(level, level->coord.u, level->coord.v, level->map->spawn);
+
+    // save spawner coordinates
     level->spawner->spot.u = level->coord.u;
     level->spawner->spot.v = level->coord.v;
 
@@ -133,6 +135,9 @@ Level *newLevel(int id, int rows, int columns, char *roomfile, char *itemfile, c
     // put cardinal doors for all kind of room and save them
     putAllDoors(level);
     saveCardinalDoors(level);
+
+    // hidden Bonus room
+    hideBonusRoom(level);
 
     // start to Spawner room
     level->coord.u = level->spawner->spot.u;
@@ -350,18 +355,51 @@ void unlockDoors(Level *level, int u, int v)
     southDoor(level, u, v, level->currentRoom->downDoor);
 }
 
+/**
+ * @brief save doors of Rooms, Boss room and Bonus room
+ *
+ * @param level
+ */
 void saveCardinalDoors(Level *level)
 {
     for (int i = 0; i < level->height; i += 1)
     {
         for (int j = 0; j < level->width; j += 1)
         {
-            if (isType(level, i, j, "Room") || isType(level, i, j, "Boss"))
+            if (!isType(level, i, j, "Wall"))
             {
                 level->floor[i][j].upDoor = level->floor[i][j].map[0][level->columns / 2];
                 level->floor[i][j].leftDoor = level->floor[i][j].map[level->rows / 2][0];
                 level->floor[i][j].downDoor = level->floor[i][j].map[level->rows - 1][level->columns / 2];
                 level->floor[i][j].rightDoor = level->floor[i][j].map[level->rows / 2][level->columns - 1];
+            }
+        }
+    }
+}
+
+void hideBonusRoom(Level *level)
+{
+    for (int i = 0; i < level->height; i += 1)
+    {
+        for (int j = 0; j < level->width; j += 1)
+        {
+            if (isType(level, i, j, "Room") || isType(level, i, j, "Spawner") || isType(level, i, j, "Item"))
+            {
+                hideCardinalDoors(level, i, j);
+            }
+        }
+    }
+}
+
+void showBonusRoom(Level *level)
+{
+    for (int i = 0; i < level->height; i += 1)
+    {
+        for (int j = 0; j < level->width; j += 1)
+        {
+            if (isType(level, i, j, "Room") || isType(level, i, j, "Spawner") || isType(level, i, j, "Item"))
+            {
+                showCardinalDoors(level, i, j);
             }
         }
     }
@@ -387,6 +425,109 @@ void putCardinalDoors(Level *level, int h, int w)
     putSouthDoor(level, h, w);
     putWestDoor(level, h, w);
     putNorthDoor(level, h, w);
+}
+void hideCardinalDoors(Level *level, int h, int w)
+{
+    hideEastDoor(level, h, w);
+    hideSouthDoor(level, h, w);
+    hideWestDoor(level, h, w);
+    hideNorthDoor(level, h, w);
+}
+
+void showCardinalDoors(Level *level, int h, int w)
+{
+    showEastDoor(level, h, w);
+    showSouthDoor(level, h, w);
+    showWestDoor(level, h, w);
+    showNorthDoor(level, h, w);
+}
+
+void showEastDoor(Level *level, int u, int v)
+{
+    if (v < level->width - 1)
+    {
+        if (isType(level, u, v + 1, "Bonus"))
+        {
+            eastDoor(level, u, v, level->floor[u][v].rightDoor);
+        }
+    }
+}
+
+void showSouthDoor(Level *level, int u, int v)
+{
+    if (u < level->height - 1)
+    {
+        if (isType(level, u + 1, v, "Bonus"))
+        {
+            southDoor(level, u, v, level->floor[u][v].downDoor);
+        }
+    }
+}
+
+void showWestDoor(Level *level, int u, int v)
+{
+    if (v > 0)
+    {
+        if (isType(level, u, v - 1, "Bonus"))
+        {
+            westDoor(level, u, v, level->floor[u][v].leftDoor);
+        }
+    }
+}
+
+void showNorthDoor(Level *level, int u, int v)
+{
+    if (u > 0)
+    {
+        if (isType(level, u - 1, v, "Bonus"))
+        {
+            northDoor(level, u, v, level->floor[u][v].upDoor);
+        }
+    }
+}
+
+void hideEastDoor(Level *level, int u, int v)
+{
+    if (v < level->width - 1)
+    {
+        if (isType(level, u, v + 1, "Bonus"))
+        {
+            eastDoor(level, u, v, 'W');
+        }
+    }
+}
+
+void hideSouthDoor(Level *level, int u, int v)
+{
+    if (u < level->height - 1)
+    {
+        if (isType(level, u + 1, v, "Bonus"))
+        {
+            southDoor(level, u, v, 'W');
+        }
+    }
+}
+
+void hideWestDoor(Level *level, int u, int v)
+{
+    if (v > 0)
+    {
+        if (isType(level, u, v - 1, "Bonus"))
+        {
+            westDoor(level, u, v, 'W');
+        }
+    }
+}
+
+void hideNorthDoor(Level *level, int u, int v)
+{
+    if (u > 0)
+    {
+        if (isType(level, u - 1, v, "Bonus"))
+        {
+            northDoor(level, u, v, 'W');
+        }
+    }
 }
 
 void putEastDoor(Level *level, int h, int w)
@@ -712,9 +853,9 @@ void updateMapLevel(Level *level, int i, int j, char kind)
     level->map->grid[i][j] = kind;
 }
 
-void addBossToRoom(Room* room)
+void addBossToRoom(Room *room)
 {
-    MonsterList* bossList = newMonsterList();
+    MonsterList *bossList = newMonsterList();
     addMonsterList(createBossJagger(), bossList);
 
     // Boss position in the room
@@ -722,7 +863,6 @@ void addBossToRoom(Room* room)
     bossList->list[0]->p.w = room->columns / 2;
     room->monsters = bossList;
 }
-
 
 Monster *createBossJagger()
 {

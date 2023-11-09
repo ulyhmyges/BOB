@@ -35,6 +35,7 @@ void dmgMonster(Level *level, int h, int w)
                 if (isType(level, level->currentRoom->spot.u, level->currentRoom->spot.v, "Boss"))
                 {
                     level->currentRoom->map[monsters->list[i]->p.h][monsters->list[i]->p.w] = 'I';
+                    showBonusRoom(level);
                 }
                 removeMonsterByIndex(i, monsters);
             }
