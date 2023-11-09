@@ -46,4 +46,7 @@ void shoot(Level *level, char letter);
 void monsterShoot(Level* level, Monster *m, direction way);
 void randomMovedMonster(Level* level, Monster *m);
 
+// boss
+void bossAttack(Level *level, Monster *m);
+
 #endif

@@ -96,4 +96,7 @@ MonsterList *createMonsters(char *monsterfile);
 void unlockDoors(Level *level, int u, int v);
 void lockDoors(Level *level, int u, int v);
 
+void addBossToRoom(Room* room);
+Monster *createBossJagger(void);
+
 #endif // FLOOR_H

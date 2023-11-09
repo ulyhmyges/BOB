@@ -51,10 +51,7 @@ int isDoor(Level *level, int h, int w)
 {
     return level->currentRoom->map[h][w] == 'D';
 }
-int isBoss(Level *level, int h, int w)
-{
-    return level->currentRoom->map[h][w] == 'B';
-}
+
 int isHealth(Level *level, int h, int w)
 {
     return level->currentRoom->map[h][w] == 'H';
@@ -100,6 +97,11 @@ boolean isPerson(Level *level, int h, int w)
 boolean isMonster(Level *level, int h, int w)
 {
     return level->currentRoom->map[h][w] == 'M';
+}
+
+boolean isBoss(Level *level, int h, int w)
+{
+    return level->currentRoom->map[h][w] == 'B';
 }
 
 boolean isLock(Level *level, int h, int w)

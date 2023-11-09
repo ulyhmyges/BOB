@@ -32,7 +32,7 @@ Room *newRoom(int rows, int columns, char *type, int design, char *monsterfile)
     // r->item = malloc(sizeof(Item));
     r->item = newItem("Empty", 0, 0, 0, false, false, false);
     createMapRoom(r, design);
-    createMonsterList(r, monsterfile);
+    //createMonsterList(r, monsterfile);
     return r;
 }
 

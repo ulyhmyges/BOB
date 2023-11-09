@@ -34,6 +34,7 @@ Room *createSpecialRoom(int rows, int columns, char kind, char *itemfile, char *
     case 'B': // boss room
         r = newRoom(rows, columns, "Boss", 3, monsterfile);
         r->map[r->rows / 2][r->columns / 2] = kind; // le boss (B) au milieu de la pièce
+        addBossToRoom(r);
         break;
 
     case 'I': // item room et item room bonus
@@ -129,7 +130,7 @@ Level *newLevel(int id, int rows, int columns, char *roomfile, char *itemfile, c
     // ajout de itemRoom (I)
     addItemRoom(level, level->itemRoom);
 
-    // put cardinal doors for all kind of room
+    // put cardinal doors for all kind of room and save them
     putAllDoors(level);
     saveCardinalDoors(level);
 
@@ -323,19 +324,19 @@ int putItemRoom(Level *level, int i, int j, Room *itemRoom)
 
 void lockDoors(Level *level, int u, int v)
 {
-    if (level->floor[u][v].map[0][level->floor[u][v].columns / 2] == 'D')
+    if (level->floor[u][v].map[0][level->floor[u][v].columns / 2] != 'W')
     {
         northDoor(level, level->coord.u, level->coord.v, 'L');
     }
-    if (level->floor[u][v].map[level->floor[u][v].rows / 2][0] == 'D')
+    if (level->floor[u][v].map[level->floor[u][v].rows / 2][0] != 'W')
     {
         westDoor(level, level->coord.u, level->coord.v, 'L');
     }
-    if (level->floor[u][v].map[level->floor[u][v].rows - 1][level->floor[u][v].columns / 2] == 'D')
+    if (level->floor[u][v].map[level->floor[u][v].rows - 1][level->floor[u][v].columns / 2] != 'W')
     {
         southDoor(level, level->coord.u, level->coord.v, 'L');
     }
-    if (level->floor[u][v].map[level->floor[u][v].rows / 2][level->floor[u][v].columns - 1] == 'D')
+    if (level->floor[u][v].map[level->floor[u][v].rows / 2][level->floor[u][v].columns - 1] != 'W')
     {
         eastDoor(level, level->coord.u, level->coord.v, 'L');
     }
@@ -402,7 +403,7 @@ void putEastDoor(Level *level, int h, int w)
         }
         if (isType(level, h, w + 1, "Bonus")) // room "Bonus" cachée
         {
-            eastDoor(level, h, w, 'W');
+            eastDoor(level, h, w, 'J');
         }
         if (isType(level, h, w + 1, "Boss"))
         {
@@ -437,7 +438,7 @@ void putSouthDoor(Level *level, int h, int w)
         }
         if (isType(level, h + 1, w, "Bonus")) // room "Bonus" cachée
         {
-            southDoor(level, h, w, 'W');
+            southDoor(level, h, w, 'J');
         }
         if (isType(level, h + 1, w, "Boss"))
         {
@@ -472,7 +473,7 @@ void putWestDoor(Level *level, int h, int w)
         }
         if (isType(level, h, w - 1, "Bonus")) // room "Bonus" cachée
         {
-            westDoor(level, h, w, 'W');
+            westDoor(level, h, w, 'J');
         }
         if (isType(level, h, w - 1, "Boss"))
         {
@@ -507,7 +508,7 @@ void putNorthDoor(Level *level, int h, int w)
         }
         if (isType(level, h - 1, w, "Bonus")) // room "Bonus" cachée
         {
-            northDoor(level, h, w, 'W');
+            northDoor(level, h, w, 'J');
         }
         if (isType(level, h - 1, w, "Boss"))
         {
@@ -613,7 +614,6 @@ MonsterList *createMonsters(char *monsterfile)
         // default:
         // do nothing (not a champion)
     }
-    // freeMonsterList(monsterList);
     return monsters;
 }
 
@@ -710,4 +710,22 @@ void showFloor(Level *level)
 void updateMapLevel(Level *level, int i, int j, char kind)
 {
     level->map->grid[i][j] = kind;
+}
+
+void addBossToRoom(Room* room)
+{
+    MonsterList* bossList = newMonsterList();
+    addMonsterList(createBossJagger(), bossList);
+
+    // Boss position in the room
+    bossList->list[0]->p.h = room->rows / 2;
+    bossList->list[0]->p.w = room->columns / 2;
+    room->monsters = bossList;
+}
+
+
+Monster *createBossJagger()
+{
+    Monster *boss = newMonster("Jagger", 100, 1, true, false, false);
+    return boss;
 }

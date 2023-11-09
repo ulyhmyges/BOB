@@ -18,7 +18,7 @@ int isGap(Level* level, int h, int w);
 int isSpike(Level* level, int h, int w);
 int isHealth(Level* level, int h, int w);
 int isRock(Level* level, int h, int w);
-int isBoss(Level* level, int h, int w);
+boolean isBoss(Level *level, int h, int w);
 int isDoor(Level* level, int h, int w);
 int isItem(Level* level, int h, int w);
 int isBlank(Level* level, int h, int w);

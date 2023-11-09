@@ -24,11 +24,19 @@ void dmgMonster(Level *level, int h, int w)
             if (touched(monsters->list[i], level->player->dmg) == 0)
             {
                 level->currentRoom->map[monsters->list[i]->p.h][monsters->list[i]->p.w] = ' ';
-                removeMonsterByIndex(i, monsters);
+
+                // 5% of chance to leave an item 'H'
                 if (chance())
                 {
                     level->currentRoom->map[monsters->list[i]->p.h][monsters->list[i]->p.w] = 'H';
                 }
+                
+                // leave an item 'I' after dead
+                if (isType(level, level->currentRoom->spot.u, level->currentRoom->spot.v, "Boss"))
+                {
+                    level->currentRoom->map[monsters->list[i]->p.h][monsters->list[i]->p.w] = 'I';
+                }
+                removeMonsterByIndex(i, monsters);
             }
         }
     }
@@ -37,7 +45,7 @@ void dmgMonster(Level *level, int h, int w)
 boolean isClear(Level *level, int h, int w)
 {
     return !(
-        isWall(level, h, w) || isRock(level, h, w) || isMonster(level, h, w));
+        isWall(level, h, w) || isRock(level, h, w) || isMonster(level, h, w) || isBoss(level, h, w));
 }
 
 boolean noObstacle(Level *level, int h, int w)
@@ -70,7 +78,7 @@ void upSS(Level *level, int h, int w)
         }
         else
         {
-            if (isMonster(level, h - n, w))
+            if (isMonster(level, h - n, w) || isBoss(level, h - n, w))
             {
                 dmgMonster(level, h - n, w);
             }
@@ -117,7 +125,7 @@ void upShoot(Level *level, int h, int w)
         }
         else
         {
-            if (isMonster(level, h - n, w))
+            if (isMonster(level, h - n, w) || isBoss(level, h - n, w))
             {
                 dmgMonster(level, h - n, w);
             }
@@ -145,7 +153,7 @@ void leftSS(Level *level, int h, int w)
     int n = 1;
     while ((w - n) > 0)
     {
-        // not wall, not rock and not monster
+        // not wall, not rock, not monster and not boss
         if (isClear(level, h, w - n))
         {
             if (level->currentRoom->map[h][w - n] == ' ')
@@ -164,7 +172,7 @@ void leftSS(Level *level, int h, int w)
         }
         else
         {
-            if (isMonster(level, h, w - n))
+            if (isMonster(level, h, w - n) || isBoss(level, h, w - n))
             {
                 dmgMonster(level, h, w - n);
             }
@@ -211,7 +219,7 @@ void leftShoot(Level *level, int h, int w)
         }
         else
         {
-            if (isMonster(level, h, w - n))
+            if (isMonster(level, h, w - n) || isBoss(level, h, w - n))
             {
                 dmgMonster(level, h, w - n);
             }
@@ -258,7 +266,7 @@ void downSS(Level *level, int h, int w)
         }
         else
         {
-            if (isMonster(level, h + n, w))
+            if (isMonster(level, h + n, w) || isBoss(level, h + n, w))
             {
                 dmgMonster(level, h + n, w);
             }
@@ -304,7 +312,7 @@ void downShoot(Level *level, int h, int w)
         }
         else
         {
-            if (isMonster(level, h + n, w))
+            if (isMonster(level, h + n, w) || isBoss(level, h + n, w))
             {
                 dmgMonster(level, h + n, w);
             }
@@ -351,7 +359,7 @@ void rightSS(Level *level, int h, int w)
         }
         else
         {
-            if (isMonster(level, h, w + n))
+            if (isMonster(level, h, w + n) || isBoss(level, h, w + n))
             {
                 dmgMonster(level, h, w + n);
             }
@@ -397,7 +405,7 @@ void rightShoot(Level *level, int h, int w)
         }
         else
         {
-            if (isMonster(level, h, w + n))
+            if (isMonster(level, h, w + n) || isBoss(level, h, w + n))
             {
                 dmgMonster(level, h, w + n);
                 break;
@@ -592,7 +600,7 @@ void movedMonster(Level *level, Monster *m)
     }
 }
 
-void randomMovedMonster(Level* level, Monster *m)
+void randomMovedMonster(Level *level, Monster *m)
 {
     int way = rand() % 4;
     switch (way)
@@ -687,13 +695,26 @@ void restlessMonsters(Level *level)
         if (monsters->size)
         {
             // printf("=======monsters: %p, size: %d, list[1]: %p=========", monsters, monsters->size, monsters->list[1]);
-
             lockDoors(level, level->coord.u, level->coord.v);
             for (int i = 0; i < monsters->size; i += 1)
             {
                 movedMonster(level, monsters->list[i]);
                 sideAttack(level, monsters->list[i]);
             }
+        }
+        else
+        {
+            unlockDoors(level, level->coord.u, level->coord.v);
+        }
+    }
+    if (isType(level, level->coord.u, level->coord.v, "Boss"))
+    {
+        MonsterList *boss = level->currentRoom->monsters;
+        if (boss->size)
+        {
+            printf("=======monster hp: %.2f =========", boss->list[0]->hpMax);
+            lockDoors(level, level->coord.u, level->coord.v);
+            bossAttack(level, boss->list[0]);
         }
         else
         {
@@ -746,4 +767,62 @@ boolean canShoot(Level *level)
 boolean isSpectral(Level *level)
 {
     return level->player->ss;
+}
+
+// Boss Level 1: Jagger
+// 100 hpMax | shoot=true | Tire et se déplace AUSSI vers le joueur
+
+void bossAttack(Level *level, Monster *m)
+{
+
+    // current point
+    if (level->currentRoom->map[m->p.h][m->p.w] == 'B')
+    {
+        level->currentRoom->map[m->p.h][m->p.w] = ' ';
+    }
+    if (isSpike(level, m->p.h, m->p.w))
+    {
+        // loose 0.5 hp if the point of the player is 'S'
+        ouch(level->player, 0.5);
+    }
+
+    int h = m->p.h;
+    int w = m->p.w;
+    // shoot direction
+    direction way = directionToTakeMonster(level, m);
+    switch (way)
+    {
+    case North:
+        upShoot(level, h, w);
+        break;
+
+    case West:
+        leftShoot(level, h, w);
+        break;
+
+    case South:
+        downShoot(level, h, w);
+        break;
+
+    case East:
+        rightShoot(level, h, w);
+        break;
+    }
+
+    // move on direction of the player
+    boolean takeDirection = directionTakenMonster(level, m, way);
+    while (!takeDirection)
+    {
+        way = (way + 1) % 4;
+        takeDirection = directionTakenMonster(level, m, way);
+    }
+
+    // mark 'B' if next point is empty
+    if (isBlank(level, m->p.h, m->p.w))
+    {
+        level->currentRoom->map[m->p.h][m->p.w] = 'B';
+    }
+
+    // attack when boss is next to the player
+    sideAttack(level, m);
 }
