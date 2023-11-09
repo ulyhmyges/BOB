@@ -89,6 +89,16 @@ int isBlank(Level *level, int h, int w)
     return level->currentRoom->map[h][w] == ' ';
 }
 
+boolean isEnd(Level *level, int h, int w)
+{
+    return level->currentRoom->map[h][w] == 'E';
+}
+
+boolean isNext(Level *level, int h, int w)
+{
+    return level->currentRoom->map[h][w] == 'N';
+}
+
 boolean isPerson(Level *level, int h, int w)
 {
     return level->currentRoom->map[h][w] == 'P';
@@ -174,6 +184,36 @@ void showCurrentRoom(Level *level)
     printf("h: %d, w: %d\n", level->coord.p.h, level->coord.p.w);
 }
 
+void showEnd()
+{
+    // clear screen
+    system("clear");
+
+    // color of the sceen
+    system("echo '\e[032m'");
+
+    for (int i = 0; i < 25; i += 1)
+    {
+        printf("\n");
+    }
+    printf("%*s %s   ", 65, "", "================================ THE BINDING OF BRIATTE ================================");
+
+    for (int i = 0; i < 5; i += 1)
+    {
+        printf("\n");
+    }
+    printf("%*s %s   ", 85, "", "==================== THE END ====================");
+
+    for (int i = 0; i < 25; i += 1)
+    {
+        printf("\n");
+    }
+    clock_t start = clock();
+    while (clock() < start + 5000000)
+    {
+    };
+}
+
 void goToNextPoint(Level *level, int h, int w)
 {
     if (h > level->rows - 1 || h < 0 || w < 0 || w > level->columns - 1)
@@ -209,7 +249,7 @@ int isSafe(Level *level, int h, int w)
 
 void movePerson(Level *level, char key)
 {
-   
+
     switch (key)
     {
     case 'z':
@@ -262,15 +302,23 @@ void movePerson(Level *level, char key)
         upgradePlayer(level->player, lifeOrShield());
     }
 
+    // end of the game
+    if (isEnd(level, level->coord.p.h, level->coord.p.w))
+    {
+        showEnd();
+
+        exit(0);
+    }
+
     // mark 'P' if next point is empty or item or health
     if (isBlank(level, level->coord.p.h, level->coord.p.w) || isItem(level, level->coord.p.h, level->coord.p.w) || isHealth(level, level->coord.p.h, level->coord.p.w))
     {
         if (level->player->state == inPain)
         {
-            level->currentRoom->map[level->coord.p.h][level->coord.p.w] = 'b';
+            level->currentRoom->map[level->coord.p.h][level->coord.p.w] = '*';
             showCurrentRoom(level);
             clock_t start = clock();
-            while (clock() < start + 400000)
+            while (clock() < start + 40000)
             {
             }
             level->player->state = inShape;

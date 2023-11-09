@@ -8,6 +8,7 @@
 
 #ifndef FIGHT_H
 #define FIGHT_H
+
 #include "level.h"
 #include "move.h"
 #include "string.h"
@@ -49,4 +50,4 @@ void randomMovedMonster(Level* level, Monster *m);
 // boss
 void bossAttack(Level *level, Monster *m);
 
-#endif
+#endif // FIGHT_H

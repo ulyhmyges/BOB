@@ -25,6 +25,8 @@ int isBlank(Level* level, int h, int w);
 int isSafe(Level *level, int h, int w);
 boolean isPerson(Level* level, int h, int w);
 boolean isMonster(Level* level, int h, int w);
+boolean isEnd(Level* level, int h, int w);
+boolean isNext(Level* level, int h, int w);
 
 void showCurrentRoom(Level* level);
 
@@ -35,5 +37,6 @@ int kbhit(void);
 void movePerson(Level *level, char key);
 void goToNextPoint(Level *level, int h, int w);
 void reachCardinalPoint(Level* level);
+void showEnd(void);
 
 #endif // MOVE_H

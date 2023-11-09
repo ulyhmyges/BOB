@@ -6,9 +6,9 @@
 **  Description : model of a level of the bob's game
 */
 
-#ifndef FLOOR_H
+#ifndef LEVEL_H
 
-#define FLOOR_H
+#define LEVEL_H
 #include "room.h"
 #include "map.h"
 #include "player.h"
@@ -111,4 +111,4 @@ void showSouthDoor(Level *level, int u, int v);
 void showWestDoor(Level *level, int u, int v);
 void showNorthDoor(Level *level, int u, int v);
 
-#endif // FLOOR_H
+#endif // LEVEL_H

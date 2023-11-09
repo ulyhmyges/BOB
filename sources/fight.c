@@ -34,8 +34,9 @@ void dmgMonster(Level *level, int h, int w)
                 // leave an item 'I' after dead
                 if (isType(level, level->currentRoom->spot.u, level->currentRoom->spot.v, "Boss"))
                 {
-                    level->currentRoom->map[monsters->list[i]->p.h][monsters->list[i]->p.w] = 'I';
+                    level->currentRoom->map[level->rows/2][level->columns/2] = 'I';
                     showBonusRoom(level);
+                    level->currentRoom->map[level->rows/4][level->columns/2+level->columns/4] = 'E';
                 }
                 removeMonsterByIndex(i, monsters);
             }
@@ -690,6 +691,7 @@ void monsterShoot(Level *level, Monster *m, direction way)
 
 void restlessMonsters(Level *level)
 {
+    /*
     if (isType(level, level->coord.u, level->coord.v, "Room"))
     {
         MonsterList *monsters = level->currentRoom->monsters;
@@ -708,6 +710,7 @@ void restlessMonsters(Level *level)
             unlockDoors(level, level->coord.u, level->coord.v);
         }
     }
+    */
     if (isType(level, level->coord.u, level->coord.v, "Boss"))
     {
         MonsterList *boss = level->currentRoom->monsters;
