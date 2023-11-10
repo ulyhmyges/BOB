@@ -11,6 +11,10 @@
 #define MOVE_H
 #include "level.h"
 #include "itemFile.h"
+#include "fight.h"
+#include "utils.h"
+
+//#include <stdlib.h>
 
 boolean isLock(Level *level, int h, int w);
 int isWall(Level* level, int h, int w);
@@ -33,7 +37,6 @@ void showCurrentRoom(Level* level);
 // start a game
 void game(Level* level);
 
-int kbhit(void);
 void movePerson(Level *level, char key);
 void goToNextPoint(Level *level, int h, int w);
 void reachCardinalPoint(Level* level);

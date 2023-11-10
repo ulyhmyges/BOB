@@ -30,13 +30,13 @@ void dmgMonster(Level *level, int h, int w)
                 {
                     level->currentRoom->map[monsters->list[i]->p.h][monsters->list[i]->p.w] = 'H';
                 }
-                
+
                 // leave an item 'I' after dead
                 if (isType(level, level->currentRoom->spot.u, level->currentRoom->spot.v, "Boss"))
                 {
-                    level->currentRoom->map[level->rows/2][level->columns/2] = 'I';
+                    level->currentRoom->map[level->rows / 2][level->columns / 2] = 'I';
                     showBonusRoom(level);
-                    level->currentRoom->map[level->rows/4][level->columns/2+level->columns/4] = 'E';
+                    level->currentRoom->map[level->rows / 4][level->columns / 2 + level->columns / 4] = 'E';
                 }
                 removeMonsterByIndex(i, monsters);
             }
@@ -47,7 +47,7 @@ void dmgMonster(Level *level, int h, int w)
 boolean isClear(Level *level, int h, int w)
 {
     return !(
-        isWall(level, h, w) || isRock(level, h, w) || isMonster(level, h, w) || isBoss(level, h, w));
+        isWall(level, h, w) || isRock(level, h, w) || isMonster(level, h, w) || isBoss(level, h, w) || isPerson(level, h, w));
 }
 
 boolean noObstacle(Level *level, int h, int w)
@@ -61,7 +61,7 @@ void upSS(Level *level, int h, int w)
     int n = 1;
     while ((h - n) > 0)
     {
-        // not wall, not rock, no monster
+        // not wall, not rock, no monster, no boss, no person
         if (isClear(level, h - n, w))
         {
             if (level->currentRoom->map[h - n][w] == ' ')
@@ -70,12 +70,8 @@ void upSS(Level *level, int h, int w)
             }
             showCurrentRoom(level);
             clock_t start = clock();
-            while (clock() < start + 20000)
+            while (clock() < start + 10000)
             {
-            }
-            if (isPerson(level, h - n, w))
-            {
-                dmgPlayer(level);
             }
         }
         else
@@ -83,6 +79,14 @@ void upSS(Level *level, int h, int w)
             if (isMonster(level, h - n, w) || isBoss(level, h - n, w))
             {
                 dmgMonster(level, h - n, w);
+            }
+            if (isPerson(level, h - n, w))
+            {
+                dmgPlayer(level);
+            }
+            if (!isRock(level, h - n, w))
+            {
+                break;
             }
         }
         n += 1;
@@ -96,7 +100,7 @@ void upSS(Level *level, int h, int w)
         }
         showCurrentRoom(level);
         clock_t start = clock();
-        while (clock() < start + 20000)
+        while (clock() < start + 10000)
         {
         }
     }
@@ -107,7 +111,7 @@ void upShoot(Level *level, int h, int w)
     int n = 1;
     while ((h - n) > 0)
     {
-        // not wall, not rock and not monster
+        // not wall, not rock, not monster, not boss and not player
         if (isClear(level, h - n, w))
         {
             if (level->currentRoom->map[h - n][w] == ' ')
@@ -115,14 +119,9 @@ void upShoot(Level *level, int h, int w)
                 level->currentRoom->map[h - n][w] = '|';
                 showCurrentRoom(level);
                 clock_t start = clock();
-                while (clock() < start + 20000)
+                while (clock() < start + 10000)
                 {
                 }
-            }
-            if (isPerson(level, h - n, w))
-            {
-                dmgPlayer(level);
-                break;
             }
         }
         else
@@ -130,6 +129,10 @@ void upShoot(Level *level, int h, int w)
             if (isMonster(level, h - n, w) || isBoss(level, h - n, w))
             {
                 dmgMonster(level, h - n, w);
+            }
+            if (isPerson(level, h - n, w))
+            {
+                dmgPlayer(level);
             }
             break;
         }
@@ -144,7 +147,7 @@ void upShoot(Level *level, int h, int w)
         }
         showCurrentRoom(level);
         clock_t start = clock();
-        while (clock() < start + 20000)
+        while (clock() < start + 10000)
         {
         }
     }
@@ -164,12 +167,8 @@ void leftSS(Level *level, int h, int w)
             }
             showCurrentRoom(level);
             clock_t start = clock();
-            while (clock() < start + 20000)
+            while (clock() < start + 10000)
             {
-            }
-            if (isPerson(level, h, w - n))
-            {
-                dmgPlayer(level);
             }
         }
         else
@@ -177,6 +176,14 @@ void leftSS(Level *level, int h, int w)
             if (isMonster(level, h, w - n) || isBoss(level, h, w - n))
             {
                 dmgMonster(level, h, w - n);
+            }
+            if (isPerson(level, h, w - n))
+            {
+                dmgPlayer(level);
+            }
+            if (!isRock(level, h, w - n))
+            {
+                break;
             }
         }
         n += 1;
@@ -190,7 +197,7 @@ void leftSS(Level *level, int h, int w)
         }
         showCurrentRoom(level);
         clock_t start = clock();
-        while (clock() < start + 20000)
+        while (clock() < start + 10000)
         {
         }
     }
@@ -201,7 +208,7 @@ void leftShoot(Level *level, int h, int w)
     int n = 1;
     while ((w - n) > 0)
     {
-        // non wall, no rock, no monster
+        // no wall, no rock, no monster, no boss and no player
         if (isClear(level, h, w - n))
         {
             if (level->currentRoom->map[h][w - n] == ' ')
@@ -209,14 +216,9 @@ void leftShoot(Level *level, int h, int w)
                 level->currentRoom->map[h][w - n] = '-';
                 showCurrentRoom(level);
                 clock_t start = clock();
-                while (clock() < start + 20000)
+                while (clock() < start + 10000)
                 {
                 }
-            }
-            if (isPerson(level, h, w - n))
-            {
-                dmgPlayer(level);
-                break;
             }
         }
         else
@@ -224,6 +226,10 @@ void leftShoot(Level *level, int h, int w)
             if (isMonster(level, h, w - n) || isBoss(level, h, w - n))
             {
                 dmgMonster(level, h, w - n);
+            }
+            if (isPerson(level, h, w - n))
+            {
+                dmgPlayer(level);
             }
             break;
         }
@@ -238,7 +244,7 @@ void leftShoot(Level *level, int h, int w)
         }
         showCurrentRoom(level);
         clock_t start = clock();
-        while (clock() < start + 20000)
+        while (clock() < start + 10000)
         {
         }
     }
@@ -249,7 +255,7 @@ void downSS(Level *level, int h, int w)
     int n = 1;
     while ((h + n) < level->rows - 1)
     {
-        // not wall, not rock and not monster
+        // not wall, not rock, not monster, not boss and not player
         if (isClear(level, h + n, w))
         {
             if (level->currentRoom->map[h + n][w] == ' ')
@@ -258,12 +264,8 @@ void downSS(Level *level, int h, int w)
             }
             showCurrentRoom(level);
             clock_t start = clock();
-            while (clock() < start + 20000)
+            while (clock() < start + 10000)
             {
-            }
-            if (isPerson(level, h + n, w))
-            {
-                dmgPlayer(level);
             }
         }
         else
@@ -271,6 +273,14 @@ void downSS(Level *level, int h, int w)
             if (isMonster(level, h + n, w) || isBoss(level, h + n, w))
             {
                 dmgMonster(level, h + n, w);
+            }
+            if (isPerson(level, h + n, w))
+            {
+                dmgPlayer(level);
+            }
+            if (!isRock(level, h + n, w))
+            {
+                break;
             }
         }
         n += 1;
@@ -284,7 +294,7 @@ void downSS(Level *level, int h, int w)
         }
         showCurrentRoom(level);
         clock_t start = clock();
-        while (clock() < start + 20000)
+        while (clock() < start + 10000)
         {
         }
     }
@@ -302,14 +312,9 @@ void downShoot(Level *level, int h, int w)
                 level->currentRoom->map[h + n][w] = '|';
                 showCurrentRoom(level);
                 clock_t start = clock();
-                while (clock() < start + 20000)
+                while (clock() < start + 10000)
                 {
                 }
-            }
-            if (isPerson(level, h + n, w))
-            {
-                dmgPlayer(level);
-                break;
             }
         }
         else
@@ -317,6 +322,10 @@ void downShoot(Level *level, int h, int w)
             if (isMonster(level, h + n, w) || isBoss(level, h + n, w))
             {
                 dmgMonster(level, h + n, w);
+            }
+            if (isPerson(level, h + n, w))
+            {
+                dmgPlayer(level);
             }
             break;
         }
@@ -331,7 +340,7 @@ void downShoot(Level *level, int h, int w)
         }
         showCurrentRoom(level);
         clock_t start = clock();
-        while (clock() < start + 20000)
+        while (clock() < start + 10000)
         {
         }
     }
@@ -349,14 +358,10 @@ void rightSS(Level *level, int h, int w)
             {
                 level->currentRoom->map[h][w + n] = '+';
                 showCurrentRoom(level);
-                clock_t start = clock();
-                while (clock() < start + 20000)
-                {
-                }
-            }
-            if (isPerson(level, h, w + n))
-            {
-                dmgPlayer(level);
+                //clock_t start = clock();
+                //while (clock() < start + 10000)
+                //{
+                //}
             }
         }
         else
@@ -364,6 +369,14 @@ void rightSS(Level *level, int h, int w)
             if (isMonster(level, h, w + n) || isBoss(level, h, w + n))
             {
                 dmgMonster(level, h, w + n);
+            }
+            if (isPerson(level, h, w + n))
+            {
+                dmgPlayer(level);
+            }
+            if (!isRock(level, h, w + n))
+            {
+                break;
             }
         }
         n += 1;
@@ -377,7 +390,7 @@ void rightSS(Level *level, int h, int w)
         }
         showCurrentRoom(level);
         clock_t start = clock();
-        while (clock() < start + 20000)
+        while (clock() < start + 10000)
         {
         }
     }
@@ -394,15 +407,10 @@ void rightShoot(Level *level, int h, int w)
             {
                 level->currentRoom->map[h][w + n] = '-';
                 showCurrentRoom(level);
-                clock_t start = clock();
-                while (clock() < start + 20000)
-                {
-                }
-            }
-            if (isPerson(level, h, w + n))
-            {
-                dmgPlayer(level);
-                break;
+                //clock_t start = clock();
+                //while (clock() < start + 10000)
+                //{
+                //}
             }
         }
         else
@@ -410,8 +418,12 @@ void rightShoot(Level *level, int h, int w)
             if (isMonster(level, h, w + n) || isBoss(level, h, w + n))
             {
                 dmgMonster(level, h, w + n);
-                break;
             }
+            if (isPerson(level, h, w + n))
+            {
+                dmgPlayer(level);
+            }
+            break;
         }
         n += 1;
     }
@@ -424,7 +436,7 @@ void rightShoot(Level *level, int h, int w)
         }
         showCurrentRoom(level);
         clock_t start = clock();
-        while (clock() < start + 20000)
+        while (clock() < start + 10000)
         {
         }
     }
