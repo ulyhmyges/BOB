@@ -9,9 +9,20 @@
 #ifndef RUN_H
 
 #define RUN_H
-#include "player.h"
+
+#include "level.h"
+#include "utils.h"
+#include "move.h"
+#include "lowercase.h"
+#include "playerFile.h"
+
+
 
 void crudItem(void);
 void crudMonster(void);
 
+// start a game
+void newGame();
+void game(Level* level);
+Level* endOrNextLevel(Level* level);
 #endif // RUN_H

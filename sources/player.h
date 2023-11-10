@@ -31,12 +31,13 @@ typedef struct Player
     boolean invincible; // true par défaut
     ItemList* itemList; // vide par défaut
     Health state;
+    char* pathPlayerfile;
 } Player;
 
 Player *newPlayer(char *name, float hpMax, int shield, float dmg, boolean ps, boolean ss, boolean flight, int achieve);
 void freePlayer(Player *player);
 Player * readPlayer(FILE *f);
-void printPlayer(Player player, FILE *f);
+void writePlayer(Player player, FILE *f);
 void showPlayer(Player player);
 void statsPlayer(Player* player);
 

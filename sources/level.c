@@ -33,7 +33,7 @@ Room *createSpecialRoom(int rows, int columns, char kind, char *itemfile, char *
     {
     case 'B': // boss room
         r = newRoom(rows, columns, "Boss", 3, monsterfile);
-        r->map[r->rows / 2][r->columns / 2] = kind; // le boss (B) au milieu de la pièce
+        r->map[r->rows / 2][r->columns / 2] = kind; // le boss (M) au milieu de la pièce
         addBossToRoom(r);
         break;
 
@@ -204,6 +204,10 @@ void randFloor(Level *level, char *roomfile, char *monsterfile)
                     count += 1;
                     break;
                 }
+            
+            // nothing happen
+            case Center:
+                break;
             }
 
             // création aléatoire d'une room à partir des rooms du fichier roomfile

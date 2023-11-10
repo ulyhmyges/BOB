@@ -21,6 +21,6 @@ PlayerList * newPlayerList();
 void freePlayerList(PlayerList *playerList);
 
 PlayerList * readPlayerList(FILE *f);
-void printPlayerList(PlayerList PlayerList, FILE *f);
+void writePlayerList(PlayerList PlayerList, FILE *f);
 
 #endif // PLAYERLIST_H

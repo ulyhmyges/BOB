@@ -21,7 +21,8 @@ typedef enum direction
     North,
     East,
     South,
-    West
+    West,
+    Center
 } direction;
 
 typedef struct Position

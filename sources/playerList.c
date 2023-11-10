@@ -35,9 +35,9 @@ PlayerList * readPlayerList(FILE *f){
     return playerList;
 }
 
-void printPlayerList(PlayerList playerList, FILE *f){
+void writePlayerList(PlayerList playerList, FILE *f){
     fprintf(f, "{%d}\n", playerList.size);
     for (int i = 0; i < playerList.size; i += 1){
-        printPlayer(*playerList.list[i], f);
+        writePlayer(*playerList.list[i], f);
     }
 }

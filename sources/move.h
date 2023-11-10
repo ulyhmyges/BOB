@@ -34,9 +34,6 @@ boolean isNext(Level* level, int h, int w);
 
 void showCurrentRoom(Level* level);
 
-// start a game
-void game(Level* level);
-
 void movePerson(Level *level, char key);
 void goToNextPoint(Level *level, int h, int w);
 void reachCardinalPoint(Level* level);

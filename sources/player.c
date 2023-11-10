@@ -16,6 +16,7 @@ Player *newPlayer(char *name, float hpMax, int shield, float dmg, boolean ps, bo
 {
     Player *player = malloc(sizeof(Player));
     player->name = malloc(sizeof(char) * 35);
+    player->pathPlayerfile = malloc(sizeof(char) * 99);
     strcpy(player->name, name);
     player->hpMax = hpMax;
     player->shield = shield;
@@ -34,6 +35,7 @@ void freePlayer(Player *player)
 {
     freeItemList(player->itemList);
     free(player->name);
+    free(player->pathPlayerfile);
     free(player);
 }
 
@@ -63,19 +65,22 @@ void upgradePlayer(Player *player, Item *item)
     addItemList(item, player->itemList);
 }
 
-
 /**
  * @brief character is in pain because of damage
- * 
- * @param level 
- * @param dmg 
- * @return float 
+ *
+ * @param level
+ * @param dmg
+ * @return float
  */
-float ouch(Player* player, float dmg){
-    if (player->hpMax >= dmg){
+float ouch(Player *player, float dmg)
+{
+    if (player->hpMax >= dmg)
+    {
         player->hpMax -= dmg;
         player->state = inPain;
-    } else {
+    }
+    else
+    {
         player->hpMax = 0;
         player->state = dead;
     }
@@ -153,7 +158,7 @@ void showPlayer(Player player)
     }
 }
 
-void printPlayer(Player player, FILE *f)
+void writePlayer(Player player, FILE *f)
 {
     // fprintf(f, "---\n");
     fputs("---\n", f);
@@ -212,11 +217,12 @@ Player *readPlayer(FILE *f)
     sscanf(var, "name=%[^\n]", player->name);
     fgets(var, 30, f);
     int i = sscanf(var, "achieve=%d\n", &player->achieve);
+    // succès = 1 et échec = 0
     if (i == 1)
     {
         fgets(var, 30, f);
     }
-    i = sscanf(var, "hpMax=%f\n", &player->hpMax); // succès = 1 et échec = 0
+    i = sscanf(var, "hpMax=%f\n", &player->hpMax);
     if (i == 1)
     {
         fgets(var, 30, f);

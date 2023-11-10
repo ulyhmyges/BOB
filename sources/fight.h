@@ -18,7 +18,7 @@
 
 direction directionToTakeMonster(Level* level, Monster* m);
 boolean directionTakenMonster(Level *level, Monster* m, direction cardinal);
-void movedMonster(Level* level, Monster* m);
+void movedMonster(Level* level, Monster* m, int time);
 void restlessMonsters(Level* level);
 
 void sideAttack(Level* level, Monster* m);

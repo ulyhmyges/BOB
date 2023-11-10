@@ -8,7 +8,6 @@
 
 #include "move.h"
 
-
 int isItem(Level *level, int h, int w)
 {
     return level->currentRoom->map[h][w] == 'I';
@@ -268,15 +267,7 @@ void movePerson(Level *level, char key)
         upgradePlayer(level->player, lifeOrShield());
     }
 
-    // end of the game
-    if (isEnd(level, level->coord.p.h, level->coord.p.w))
-    {
-        showEnd();
-
-        exit(0);
-    }
-
-    // mark 'P' if next point is empty or item or health
+    // mark 'P' if next point is empty or item or health or nextlevel or endgame
     if (isBlank(level, level->coord.p.h, level->coord.p.w) || isItem(level, level->coord.p.h, level->coord.p.w) || isHealth(level, level->coord.p.h, level->coord.p.w))
     {
         if (level->player->state == inPain)
@@ -291,35 +282,9 @@ void movePerson(Level *level, char key)
         }
 
         level->currentRoom->map[level->coord.p.h][level->coord.p.w] = level->character;
-        showCurrentRoom(level);
     }
 
+    showCurrentRoom(level);
     // monsters moved in the direction of the character 'P'
     restlessMonsters(level);
-}
-
-void game(Level *level)
-{
-    char c;
-    while (1)
-    {
-        showCurrentRoom(level);
-        statsPlayer(level->player);
-
-        while (!kbhit())
-        {
-        }
-        c = getchar();
-
-        // player can shoot with o
-
-        if (canShoot(level))
-        {
-            shoot(level, c);
-        }
-        movePerson(level, c);
-
-        fflush(stdin);
-        //  sleep(3);
-    }
 }

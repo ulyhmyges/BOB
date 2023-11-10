@@ -9,12 +9,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "player.h"
-#include "playerFile.h"
-#include "itemFile.h"
-#include "item.h"
-#include "monsterFile.h"
-#include "lowercase.h"
+#include "run.h"
 
 /**
  * @brief CLI CRUD des items
@@ -78,13 +73,13 @@ void crudItem()
 
 /**
  * @brief CRUD of monsters
- * 
+ *
  */
 void crudMonster()
 {
     puts("CRUD FOR MONSTERS");
-    char* input = malloc(sizeof(char) * 7);
-    char* monsterfile = malloc(sizeof(char) * 77);
+    char *input = malloc(sizeof(char) * 7);
+    char *monsterfile = malloc(sizeof(char) * 77);
     puts("Which file do you want to use?");
     printf("Enter the path for monster file (mtbob): ");
     scanf("%s", monsterfile);
@@ -106,7 +101,7 @@ void crudMonster()
         lowercase(input);
     } while (strcmp(input, "show") && strcmp(input, "add") && strcmp(input, "update") && strcmp(input, "remove"));
 
-    MonsterList* monsterList = readMonsterFile(monsterfile);
+    MonsterList *monsterList = readMonsterFile(monsterfile);
     printf("length: %d\n", monsterList->size);
     printf("path: %s\n", monsterfile);
     switch (input[0])
@@ -138,3 +133,73 @@ void crudMonster()
     free(monsterfile);
 }
 
+void newGame()
+{
+
+    char *playerfile = malloc(sizeof(char) * 99);
+    strcpy(playerfile, "/Users/ulyh/programmation/c/bbriatte/bob/binding_of_briatte/ressources/file.ptbob");
+
+    // à modifier
+    Player *player = selectPlayer(playerfile);
+
+    // niveau 1: id=1
+    char *roomfile = malloc(sizeof(char) * 99);
+    strcpy(roomfile, "/Users/ulyh/programmation/c/bbriatte/bob/binding_of_briatte/ressources/file.rtbob");
+
+    char *itemfile = malloc(sizeof(char) * 99);
+    strcpy(itemfile, "/Users/ulyh/programmation/c/bbriatte/bob/binding_of_briatte/ressources/file.itbob");
+
+    char *monsterfile = malloc(sizeof(char) * 99);
+    strcpy(monsterfile, "/Users/ulyh/programmation/c/bbriatte/bob/binding_of_briatte/ressources/file.mtbob");
+
+    Level *level = newLevel(1, 9, 15, roomfile, itemfile, monsterfile, player);
+
+    game(level);
+}
+
+void game(Level *level)
+{
+    char c;
+    while (1)
+    {
+        showCurrentRoom(level);
+        statsPlayer(level->player);
+
+        while (!kbhit())
+        {
+        }
+        c = getchar();
+
+        // player can shoot with o
+
+        if (canShoot(level))
+        {
+            shoot(level, c);
+        }
+        movePerson(level, c);
+        level = endOrNextLevel(level);
+
+        fflush(stdin);
+        //  sleep(3);
+    }
+}
+
+Level* endOrNextLevel(Level* level)
+{
+    // next level
+    if (isNext(level, level->coord.p.h, level->coord.p.w))
+    {
+        // go to next level
+        level = newLevel(level->id + 1, level->rows, level->columns, level->pathRoomfile, level->pathItemfile, level->pathMonsterfile, level->player);
+        showCurrentRoom(level);
+    }
+    // end of the game
+    if (isEnd(level, level->coord.p.h, level->coord.p.w))
+    {
+        showEnd();
+        // save the game
+        savePlayer(level->player);
+        exit(0);
+    }
+    return level;
+}
