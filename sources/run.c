@@ -194,14 +194,17 @@ Level *endOrNextLevel(Level *level)
     if (isNext(level, level->coord.p.h, level->coord.p.w))
     {
         // go to next level
+        level->player->invincible = true;
         level = newLevel(level->id + 1, level->rows, level->columns, level->pathRoomfile, level->pathItemfile, level->pathMonsterfile, level->player);
         showCurrentRoom(level);
     }
     // end of the game
     if (isEnd(level, level->coord.p.h, level->coord.p.w))
     {
+        // level achieved
         level->player->achieve += 1;
         showEnd();
+
         // save the game
         savePlayer(level->player);
         exit(0);

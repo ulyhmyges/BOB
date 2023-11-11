@@ -37,7 +37,7 @@ void dmgMonster(Level *level, int h, int w)
                 {
                     level->currentRoom->map[level->rows / 2][level->columns / 2] = 'I';
 
-                    // unlock Bonus room
+                    // unlock Bonus room if Player's invincible attribute is true
                     showBonusRoom(level);
 
                     // End game or Next level
@@ -815,6 +815,7 @@ void dmgPlayer(Level *level)
     }
     else
     {
+        level->player->invincible = false;
         ouch(level->player, 1);
     }
 }

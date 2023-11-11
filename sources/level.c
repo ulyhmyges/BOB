@@ -24,7 +24,7 @@
  * @param kind I, P or B
  * @return Room*
  */
-Room *createSpecialRoom(Level* level, int rows, int columns, char kind, char *itemfile, char *monsterfile)
+Room *createSpecialRoom(Level *level, int rows, int columns, char kind, char *itemfile, char *monsterfile)
 {
     Room *r = NULL;
     ItemList *itemList = readItemFile(itemfile);
@@ -354,10 +354,22 @@ void lockDoors(Level *level, int u, int v)
 
 void unlockDoors(Level *level, int u, int v)
 {
-    northDoor(level, u, v, level->currentRoom->upDoor);
-    eastDoor(level, u, v, level->currentRoom->rightDoor);
-    westDoor(level, u, v, level->currentRoom->leftDoor);
-    southDoor(level, u, v, level->currentRoom->downDoor);
+    if (level->floor[u][v].map[0][level->floor[u][v].columns / 2] == 'L')
+    {
+        northDoor(level, level->coord.u, level->coord.v, level->floor[u][v].upDoor);
+    }
+    if (level->floor[u][v].map[level->floor[u][v].rows / 2][0] == 'L')
+    {
+        westDoor(level, level->coord.u, level->coord.v, level->floor[u][v].leftDoor);
+    }
+    if (level->floor[u][v].map[level->floor[u][v].rows - 1][level->floor[u][v].columns / 2] == 'L')
+    {
+        southDoor(level, level->coord.u, level->coord.v, level->floor[u][v].downDoor);
+    }
+    if (level->floor[u][v].map[level->floor[u][v].rows / 2][level->floor[u][v].columns - 1] == 'L')
+    {
+        eastDoor(level, level->coord.u, level->coord.v, level->floor[u][v].rightDoor);
+    }
 }
 
 /**
@@ -388,7 +400,7 @@ void hideBonusRoom(Level *level)
     {
         for (int j = 0; j < level->width; j += 1)
         {
-            if (isType(level, i, j, "Room") || isType(level, i, j, "Spawner") || isType(level, i, j, "Item"))
+            if (isType(level, i, j, "Room") || isType(level, i, j, "Spawner") || isType(level, i, j, "Item") || isType(level, i, j, "Boss"))
             {
                 hideCardinalDoors(level, i, j);
             }
@@ -396,16 +408,23 @@ void hideBonusRoom(Level *level)
     }
 }
 
+/**
+ * @brief Bonus room is revealed if the player had lost no hp
+ *
+ * @param level
+ */
 void showBonusRoom(Level *level)
 {
-    
-    for (int i = 0; i < level->height; i += 1)
+    if (level->player->invincible)
     {
-        for (int j = 0; j < level->width; j += 1)
+        for (int i = 0; i < level->height; i += 1)
         {
-            if (isType(level, i, j, "Room") || isType(level, i, j, "Spawner") || isType(level, i, j, "Item"))
+            for (int j = 0; j < level->width; j += 1)
             {
-                showCardinalDoors(level, i, j);
+                if (isType(level, i, j, "Room") || isType(level, i, j, "Spawner") || isType(level, i, j, "Item") || isType(level, i, j, "Boss"))
+                {
+                    showCardinalDoors(level, i, j);
+                }
             }
         }
     }

@@ -3,8 +3,13 @@
 **
 **  Made by : HT
 **
-**  Description : model of a player (for example Briatte)
+**  Description : model of a player (Briatte, Chevaillier or Hennou)
+**
+** Briatte 3 hpMax | 3.50 dmg
+** Chevaillier 1 hpMax | 2.5 dmg | 8 shield | flight 
+** Hennou 6 hpMax | 2 dmg
 */
+
 
 #ifndef PLAYER_H
 

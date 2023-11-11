@@ -29,6 +29,7 @@ Player *newPlayer(char *name, float hpMax, int shield, float dmg, boolean ps, bo
     player->invincible = true;
     player->itemList = newItemList();
     player->state = inShape;
+    player->invincible = true;
     return player;
 }
 
@@ -94,6 +95,7 @@ void statsPlayer(Player *player)
     printf("achieve: %d\n", player->achieve);
     printf("hpMax: %.2f\n", player->hpMax);
     printf("hp: %.2f\n", player->hp);
+    printf("invincible: %d\n", player->invincible);
     printf("shield: %d\n", player->shield);
     printf("dmg: %.2f\n", player->dmg);
     if (player->ps)
@@ -260,7 +262,7 @@ Player *readPlayer(FILE *f)
         fgets(var, 30, f);
     }
     fseek(f, -4, SEEK_CUR);
-    
+
     player->hp = player->hpMax;
     return player;
 }
