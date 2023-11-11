@@ -22,6 +22,7 @@ typedef struct Player
 {
     char *name;
     float hpMax;    //3 pour Briatte
+    float hp;
     int shield;
     float dmg;      //3.50 pour Briatte
     boolean ps;

@@ -398,6 +398,7 @@ void hideBonusRoom(Level *level)
 
 void showBonusRoom(Level *level)
 {
+    
     for (int i = 0; i < level->height; i += 1)
     {
         for (int j = 0; j < level->width; j += 1)

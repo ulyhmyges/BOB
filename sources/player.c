@@ -19,6 +19,7 @@ Player *newPlayer(char *name, float hpMax, int shield, float dmg, boolean ps, bo
     player->pathPlayerfile = malloc(sizeof(char) * 99);
     strcpy(player->name, name);
     player->hpMax = hpMax;
+    player->hp = hpMax;
     player->shield = shield;
     player->dmg = dmg;
     player->ps = ps;
@@ -74,24 +75,25 @@ void upgradePlayer(Player *player, Item *item)
  */
 float ouch(Player *player, float dmg)
 {
-    if (player->hpMax >= dmg)
+    if (player->hp >= dmg)
     {
-        player->hpMax -= dmg;
+        player->hp -= dmg;
         player->state = inPain;
     }
     else
     {
-        player->hpMax = 0;
+        player->hp = 0;
         player->state = dead;
     }
-    return player->hpMax;
+    return player->hp;
 }
 
 void statsPlayer(Player *player)
 {
     printf("\n%s\n", player->name);
     printf("achieve: %d\n", player->achieve);
-    printf("hp: %.1f\n", player->hpMax);
+    printf("hpMax: %.2f\n", player->hpMax);
+    printf("hp: %.2f\n", player->hp);
     printf("shield: %d\n", player->shield);
     printf("dmg: %.2f\n", player->dmg);
     if (player->ps)
@@ -207,7 +209,7 @@ void writePlayer(Player player, FILE *f)
 
 Player *readPlayer(FILE *f)
 {
-    Player *player = newPlayer("p", 0, 0, 0, false, false, false, 1);
+    Player *player = newPlayer("p", 0, 0, 0, false, false, false, 0);
     char binaire[5];
     char var[50];
     fgets(var, 50, f);
@@ -258,5 +260,7 @@ Player *readPlayer(FILE *f)
         fgets(var, 30, f);
     }
     fseek(f, -4, SEEK_CUR);
+    
+    player->hp = player->hpMax;
     return player;
 }
