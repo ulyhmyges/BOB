@@ -133,28 +133,27 @@ void crudMonster()
     free(monsterfile);
 }
 
-void newGame()
+Run *newRun(char *playerfile, char *roomfile, char *itemfile, char *monsterfile)
 {
+    Run *run = malloc(sizeof(Run));
+    run->ptbob = malloc(sizeof(char) * 99);
+    run->rtbob = malloc(sizeof(char) * 99);
+    run->itbob = malloc(sizeof(char) * 99);
+    run->mtbob = malloc(sizeof(char) * 99);
+    strcpy(run->ptbob, playerfile);
+    strcpy(run->rtbob, roomfile);
+    strcpy(run->itbob, itemfile);
+    strcpy(run->mtbob, monsterfile);
+    return run;
+}
 
-    char *playerfile = malloc(sizeof(char) * 99);
-    strcpy(playerfile, "/Users/ulyh/programmation/c/bbriatte/bob/binding_of_briatte/ressources/file.ptbob");
-
-    // à modifier
-    Player *player = selectPlayer(playerfile);
-
-    // niveau 1: id=1
-    char *roomfile = malloc(sizeof(char) * 99);
-    strcpy(roomfile, "/Users/ulyh/programmation/c/bbriatte/bob/binding_of_briatte/ressources/file.rtbob");
-
-    char *itemfile = malloc(sizeof(char) * 99);
-    strcpy(itemfile, "/Users/ulyh/programmation/c/bbriatte/bob/binding_of_briatte/ressources/file.itbob");
-
-    char *monsterfile = malloc(sizeof(char) * 99);
-    strcpy(monsterfile, "/Users/ulyh/programmation/c/bbriatte/bob/binding_of_briatte/ressources/file.mtbob");
-
-    Level *level = newLevel(1, 9, 15, roomfile, itemfile, monsterfile, player);
-
-    game(level);
+void freeRun(Run *run)
+{
+    free(run->ptbob);
+    free(run->rtbob);
+    free(run->itbob);
+    free(run->mtbob);
+    free(run);
 }
 
 void game(Level *level)
