@@ -164,6 +164,11 @@ void game(Level *level)
     {
         showCurrentRoom(level);
         statsPlayer(level->player);
+        if (isType(level, level->coord.u, level->coord.v, "Boss") && level->currentRoom->monsters->list[0]->hpMax > 5)
+        {
+            printf("=======monster hp: %.2f =======================", level->currentRoom->monsters->list[0]->hpMax);
+            printf("=======monster name: %s==========================", level->currentRoom->monsters->list[0]->name);
+        }
 
         while (!kbhit())
         {
@@ -184,7 +189,7 @@ void game(Level *level)
     }
 }
 
-Level* endOrNextLevel(Level* level)
+Level *endOrNextLevel(Level *level)
 {
     // next level
     if (isNext(level, level->coord.p.h, level->coord.p.w))
@@ -196,6 +201,7 @@ Level* endOrNextLevel(Level* level)
     // end of the game
     if (isEnd(level, level->coord.p.h, level->coord.p.w))
     {
+        level->player->achieve += 1;
         showEnd();
         // save the game
         savePlayer(level->player);

@@ -285,6 +285,7 @@ void movePerson(Level *level, char key)
     }
 
     showCurrentRoom(level);
-    // monsters moved in the direction of the character 'P'
+
+    // monsters moved in the direction of the character 'P' or shoot and move randomly
     restlessMonsters(level);
 }

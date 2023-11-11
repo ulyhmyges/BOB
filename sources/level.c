@@ -11,6 +11,7 @@
 #include <string.h>
 #include <time.h>
 #include "level.h"
+#include "fight.h"
 
 /**
  * @brief Create a Special Room object:
@@ -23,7 +24,7 @@
  * @param kind I, P or B
  * @return Room*
  */
-Room *createSpecialRoom(int rows, int columns, char kind, char *itemfile, char *monsterfile)
+Room *createSpecialRoom(Level* level, int rows, int columns, char kind, char *itemfile, char *monsterfile)
 {
     Room *r = NULL;
     ItemList *itemList = readItemFile(itemfile);
@@ -34,7 +35,7 @@ Room *createSpecialRoom(int rows, int columns, char kind, char *itemfile, char *
     case 'B': // boss room
         r = newRoom(rows, columns, "Boss", 3, monsterfile);
         r->map[r->rows / 2][r->columns / 2] = kind; // le boss (M) au milieu de la pièce
-        addBossToRoom(r);
+        addBossToRoom(level, r);
         break;
 
     case 'I': // item room et item room bonus
@@ -94,10 +95,10 @@ Level *newLevel(int id, int rows, int columns, char *roomfile, char *itemfile, c
     createFloor(level, monsterfile);
 
     // création special rooms
-    level->spawner = createSpecialRoom(level->rows, level->columns, 'P', itemfile, monsterfile);
-    level->bossRoom = createSpecialRoom(level->rows, level->columns, 'B', itemfile, monsterfile);
-    level->itemRoom = createSpecialRoom(level->rows, level->columns, 'I', itemfile, monsterfile);
-    level->itemRoomBonus = createSpecialRoom(level->rows, level->columns, 'I', itemfile, monsterfile);
+    level->spawner = createSpecialRoom(level, level->rows, level->columns, 'P', itemfile, monsterfile);
+    level->bossRoom = createSpecialRoom(level, level->rows, level->columns, 'B', itemfile, monsterfile);
+    level->itemRoom = createSpecialRoom(level, level->rows, level->columns, 'I', itemfile, monsterfile);
+    level->itemRoomBonus = createSpecialRoom(level, level->rows, level->columns, 'I', itemfile, monsterfile);
 
     // représentation du personnage dans la pièce
     level->character = 'P';
@@ -204,7 +205,7 @@ void randFloor(Level *level, char *roomfile, char *monsterfile)
                     count += 1;
                     break;
                 }
-            
+
             // nothing happen
             case Center:
                 break;
@@ -855,21 +856,4 @@ void showFloor(Level *level)
 void updateMapLevel(Level *level, int i, int j, char kind)
 {
     level->map->grid[i][j] = kind;
-}
-
-void addBossToRoom(Room *room)
-{
-    MonsterList *bossList = newMonsterList();
-    addMonsterList(createBossJagger(), bossList);
-
-    // Boss position in the room
-    bossList->list[0]->p.h = room->rows / 2;
-    bossList->list[0]->p.w = room->columns / 2;
-    room->monsters = bossList;
-}
-
-Monster *createBossJagger()
-{
-    Monster *boss = newMonster("Jagger", 100, 1, true, false, false);
-    return boss;
 }

@@ -90,6 +90,7 @@ float ouch(Player *player, float dmg)
 void statsPlayer(Player *player)
 {
     printf("\n%s\n", player->name);
+    printf("achieve: %d\n", player->achieve);
     printf("hp: %.1f\n", player->hpMax);
     printf("shield: %d\n", player->shield);
     printf("dmg: %.2f\n", player->dmg);

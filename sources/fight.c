@@ -17,6 +17,7 @@
 void dmgMonster(Level *level, int h, int w)
 {
     MonsterList *monsters = level->currentRoom->monsters;
+
     for (int i = 0; i < monsters->size; i += 1)
     {
         if ((monsters->list[i]->p.h == h) && (monsters->list[i]->p.w == w))
@@ -40,7 +41,7 @@ void dmgMonster(Level *level, int h, int w)
                     showBonusRoom(level);
 
                     // End game or Next level
-                    if (level->player->achieve < level->id)
+                    if (level->player->achieve < level->id || level->id == 3)
                     {
                         level->currentRoom->map[1][level->columns - 3] = 'E';
                     }
@@ -65,6 +66,14 @@ boolean noObstacle(Level *level, int h, int w)
 {
     return !(
         isWall(level, h, w) || isRock(level, h, w) || isGap(level, h, w) || isPerson(level, h, w) || isHealth(level, h, w) || isLock(level, h, w));
+}
+
+void cardinalShoot(Level *level, int h, int w)
+{
+    upShoot(level, h, w);
+    rightShoot(level, h, w);
+    downShoot(level, h, w);
+    leftShoot(level, h, w);
 }
 
 void upSS(Level *level, int h, int w)
@@ -723,37 +732,49 @@ void monsterShoot(Level *level, Monster *m, direction way)
 
 void restlessMonsters(Level *level)
 {
-/*
-    if (isType(level, level->coord.u, level->coord.v, "Room"))
-    {
-        MonsterList *monsters = level->currentRoom->monsters;
-        if (monsters->size)
+    /*
+        if (isType(level, level->coord.u, level->coord.v, "Room"))
         {
-            // printf("=======monsters: %p, size: %d, list[1]: %p=========", monsters, monsters->size, monsters->list[1]);
-            lockDoors(level, level->coord.u, level->coord.v);
-            for (int i = 0; i < monsters->size; i += 1)
+            MonsterList *monsters = level->currentRoom->monsters;
+            if (monsters->size)
             {
+                // printf("=======monsters: %p, size: %d, list[1]: %p=========", monsters, monsters->size, monsters->list[1]);
+                lockDoors(level, level->coord.u, level->coord.v);
+                for (int i = 0; i < monsters->size; i += 1)
+                {
 
-                movedMonster(level, monsters->list[i], (rand() % 2));
-                sideAttack(level, monsters->list[i]);
+                    movedMonster(level, monsters->list[i], (rand() % 2));
+                    sideAttack(level, monsters->list[i]);
+                }
+            }
+            else
+            {
+                unlockDoors(level, level->coord.u, level->coord.v);
             }
         }
-        else
-        {
-            unlockDoors(level, level->coord.u, level->coord.v);
-        }
-    }
-*/
+    */
     if (isType(level, level->coord.u, level->coord.v, "Boss"))
     {
         MonsterList *boss = level->currentRoom->monsters;
         if (boss->size)
         {
-            printf("=======monster hp: %.2f =========", boss->list[0]->hpMax);
             lockDoors(level, level->coord.u, level->coord.v);
 
             // Attack of Jagger Boss: move toward the player and shoot
-            bossAttack(level, boss->list[0]);
+            switch (level->id)
+            {
+            case 1:
+                jaggerBossAttack(level, boss->list[0]);
+                break;
+
+            case 2:
+                LeninaBossAttack(level, boss->list[0]);
+                break;
+
+            case 3:
+                AthinaBossAttack(level, boss->list[0]);
+                break;
+            }
         }
         else
         {
@@ -811,9 +832,8 @@ boolean isSpectral(Level *level)
 // Boss Level 1: Jagger
 // 100 hpMax | shoot=true | Tire et se déplace AUSSI vers le joueur
 
-void bossAttack(Level *level, Monster *m)
+void jaggerBossAttack(Level *level, Monster *m)
 {
-
     // current point
     if (level->currentRoom->map[m->p.h][m->p.w] == 'B')
     {
@@ -868,4 +888,131 @@ void bossAttack(Level *level, Monster *m)
 
     // attack when boss is next to the player
     sideAttack(level, m);
+}
+
+void LeninaBossAttack(Level *level, Monster *m)
+{
+
+    if (isType(level, level->coord.u, level->coord.v, "Boss"))
+    {
+        // Boss initial position when a new level was created
+        level->currentRoom->map[level->rows / 2][level->columns / 2] = ' ';
+
+        // Boss position
+        m->p.h = 1;
+        m->p.w = level->columns / 2;
+
+        // Boss position : up of the room
+        level->currentRoom->map[1][level->columns / 2] = 'B';
+        int h = m->p.h;
+        int w = m->p.w;
+
+        // shoot direction
+        direction way = directionToTakeMonster(level, m);
+        switch (way)
+        {
+        case West:
+            leftShoot(level, h, w);
+            break;
+
+        case South:
+            downShoot(level, h, w);
+            break;
+
+        case East:
+            rightShoot(level, h, w);
+            break;
+
+        // don't shoot
+        default:
+            downShoot(level, h, w);
+        }
+    }
+}
+
+void AthinaBossAttack(Level *level, Monster *m)
+{
+    if (isType(level, level->coord.u, level->coord.v, "Boss"))
+    {
+        // Boss initial position on the map room when a new level was created
+
+        // Boss coordinates, central position
+        m->p.h = level->rows / 2;
+        m->p.w = level->columns / 2;
+
+        int h = m->p.h;
+        int w = m->p.w;
+
+        // shoot in 4 direction
+        cardinalShoot(level, h, w);
+    }
+}
+
+/**
+ * @brief Create a Boss Jagger object
+ * 100 hpMax
+ * shoot=true
+ * Tire et se déplace AUSSI vers le joueur
+ *
+ * @return Monster*
+ */
+Monster *createBossJagger()
+{
+    Monster *boss = newMonster("Jagger", 100, 1, true, false, false);
+
+    return boss;
+}
+
+/**
+ * @brief Create a Boss Lenina object
+ * 300 hpMax
+ * shoot=true
+ * Ne se déplace pas du tout et se positionne en haut de la salle au milieu du mur
+ *
+ * @return Monster*
+ */
+Monster *createBossLenina()
+{
+    Monster *boss = newMonster("Lenina", 300, 1, true, false, false);
+    return boss;
+}
+
+/**
+ * @brief Create a Boss Athina object
+ * 450 hpMax
+ * shoot=true
+ * Ne se déplace pas du tout mais tire 4 projectiles en croix
+ * autour d’elle et se positionne au milieu de la salle
+ *
+ * @return Monster*
+ */
+Monster *createBossAthina()
+{
+    Monster *boss = newMonster("Athina", 450, 1, true, false, false);
+    return boss;
+}
+
+void addBossToRoom(Level *level, Room *room)
+{
+    MonsterList *bossList = newMonsterList();
+    switch (level->id)
+    {
+    case 1:
+        addMonsterList(createBossJagger(), bossList);
+        break;
+
+    case 2:
+        addMonsterList(createBossLenina(), bossList);
+        break;
+
+    case 3:
+        addMonsterList(createBossAthina(), bossList);
+        break;
+    }
+
+    // Boss default position in the room
+    bossList->list[0]->p.h = room->rows / 2;
+    bossList->list[0]->p.w = room->columns / 2;
+
+    room->monsters = bossList;
 }

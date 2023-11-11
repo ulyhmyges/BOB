@@ -9,12 +9,13 @@
 #ifndef LEVEL_H
 
 #define LEVEL_H
-#include "room.h"
+#include <stdio.h>
+
 #include "map.h"
 #include "player.h"
 #include "roomFile.h"
 #include "itemFile.h"
-#include "itemList.h"
+
 
 typedef enum direction
 {
@@ -57,7 +58,7 @@ typedef struct Level
     char *pathMonsterfile;
 } Level;
 
-Room *createSpecialRoom(int rows, int columns, char kind, char *itemfile, char *monsterfile);
+Room *createSpecialRoom(Level* level, int rows, int columns, char kind, char *itemfile, char *monsterfile);
 void createFloor(Level *level, char *monsterfile);
 Level *newLevel(int id, int rows, int columns, char *roomfile, char *itemfile, char *monsterfile, Player *player);
 void freeLevel(Level *level);
@@ -78,7 +79,6 @@ void eastDoor(Level *level, int u, int v, char door);
 void southDoor(Level *level, int u, int v, char door);
 void westDoor(Level *level, int u, int v, char door);
 int addBossRoom(Level *level);
-
 int addItemRoom(Level *level, Room *room);
 int putItemRoom(Level *level, int i, int j, Room *room);
 
@@ -96,8 +96,6 @@ MonsterList *createMonsters(char *monsterfile);
 void unlockDoors(Level *level, int u, int v);
 void lockDoors(Level *level, int u, int v);
 
-void addBossToRoom(Room *room);
-Monster *createBossJagger(void);
 void hideBonusRoom(Level *level);
 void hideCardinalDoors(Level *level, int u, int v);
 void hideEastDoor(Level *level, int u, int v);

@@ -9,11 +9,14 @@
 #ifndef FIGHT_H
 #define FIGHT_H
 
-#include "level.h"
-#include "move.h"
-#include "string.h"
+
+
+#include <string.h>
 #include <unistd.h>
 #include <time.h>
+
+#include "level.h"
+#include "move.h"
 
 
 direction directionToTakeMonster(Level* level, Monster* m);
@@ -48,6 +51,13 @@ void monsterShoot(Level* level, Monster *m, direction way);
 void randomMovedMonster(Level* level, Monster *m);
 
 // boss
-void bossAttack(Level *level, Monster *m);
+void jaggerBossAttack(Level *level, Monster *m);
+void LeninaBossAttack(Level *level, Monster *m);
+void AthinaBossAttack(Level *level, Monster *m);
+Monster *createBossJagger(void);
+Monster *createBossLenina(void);
+Monster *createBossAthina(void);
+void addBossToRoom(Level* level, Room *room);
+void cardinalShoot(Level* level, int h, int w);
 
 #endif // FIGHT_H
