@@ -85,10 +85,12 @@ void savePlayer(Player *player)
     case 'B':
         if (playerList->size > 0)
         {
-            if (player->dmg < 3.5){
+            if (player->dmg < 3.5)
+            {
                 player->dmg = 3.5;
             }
-            if (player->hpMax < 3){
+            if (player->hpMax < 3)
+            {
                 player->hpMax = 3;
             }
             playerList->list[0] = player;
@@ -113,8 +115,15 @@ void savePlayer(Player *player)
         break;
     }
 
+    if (playerList->size == 1 && player->hennou)
+    {
+        Player *hennou = newPlayer("Hennou", 6, 0, 2, false, false, false, 0);
+        
+        playerList->list[1] = hennou;
+        playerList->size += 1;
+    }
+
     // write on the file playerfile
-    printf("player hpMax: %.2f", playerList->list[0]->hpMax);
     writePlayerFile(*playerList, player->pathPlayerfile);
 }
 
@@ -151,7 +160,7 @@ Player *selectPlayer(char *playerfile)
         break;
 
     case 'h':
-        player = newPlayer("Hennou", 6, 0, 2, false, false, false, 1);
+        player = playerList->list[1];
         break;
     }
 

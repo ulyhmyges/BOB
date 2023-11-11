@@ -415,8 +415,12 @@ void hideBonusRoom(Level *level)
  */
 void showBonusRoom(Level *level)
 {
-    if (level->player->invincible)
+    if (level->player->invincible == false)
     {
+        // unlock player Hennou
+        level->player->hennou = true;
+
+        // reveal doors to Bonus room
         for (int i = 0; i < level->height; i += 1)
         {
             for (int j = 0; j < level->width; j += 1)

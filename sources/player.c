@@ -30,6 +30,16 @@ Player *newPlayer(char *name, float hpMax, int shield, float dmg, boolean ps, bo
     player->itemList = newItemList();
     player->state = inShape;
     player->invincible = true;
+    player->hennou = false;
+    player->chevaillier = false;
+    if (!strcmp(player->name, "Hennou"))
+    {
+        player->hennou = true;
+    }
+    if (!strcmp(player->name, "Chevaillier"))
+    {
+        player->chevaillier = true;
+    }
     return player;
 }
 

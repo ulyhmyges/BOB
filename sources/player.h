@@ -38,6 +38,8 @@ typedef struct Player
     ItemList* itemList; // vide par défaut
     Health state;
     char* pathPlayerfile;
+    boolean chevaillier;
+    boolean hennou;
 } Player;
 
 Player *newPlayer(char *name, float hpMax, int shield, float dmg, boolean ps, boolean ss, boolean flight, int achieve);
