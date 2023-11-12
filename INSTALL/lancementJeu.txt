@@ -1,9 +1,3 @@
-Le roglike Binding of Briatte s'exécute dans un Terminal.
+Le roglike Binding of Briatte s'exécute en ligne de commande.
 
-Pour lancer le jeu:
-1.Ouvrir un Terminal
-
-2.Se mettre dans le bon répertoire contenant l'exécutable, c'est-à-dire le jeu
-
-3.Tapez la commande suivante:
-./bob
+(jeu en construction)
