@@ -7,7 +7,11 @@
 */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "playerFile.h"
+#include "lowercase.h"
 
 PlayerList *readPlayerFile(char *playerfile)
 {
@@ -17,6 +21,12 @@ PlayerList *readPlayerFile(char *playerfile)
     {
         PlayerList *playerList = readPlayerList(f);
         fclose(f);
+
+        // initialize pathPlayerfile attribute
+        for (int i = 0; i < playerList->size; i += 1)
+        {
+            strcpy(playerList->list[i]->pathPlayerfile, playerfile);
+        }
         return playerList;
     }
     else
@@ -31,7 +41,7 @@ void writePlayerFile(PlayerList playerList, char *playerfile)
     FILE *f = fopen(playerfile, "w");
     if (f != NULL)
     {
-        printPlayerList(playerList, f);
+        writePlayerList(playerList, f);
         fclose(f);
     }
     else
@@ -54,7 +64,7 @@ int addPlayerFile(Player *player, char *playerfile)
     {
         int playerTotal = 0;
         fscanf(f, "{%d}\n", &playerTotal);
-        printPlayer(*player, f);
+        writePlayer(*player, f);
         fseek(f, 0, SEEK_SET);
         fprintf(f, "{%d}\n", playerTotal + 1);
         fclose(f);
@@ -65,4 +75,95 @@ int addPlayerFile(Player *player, char *playerfile)
         printf("Erreur à l'écriture/lecture du fichier %s\n", playerfile);
         return 0;
     }
+}
+
+void savePlayer(Player *player)
+{
+    PlayerList *playerList = readPlayerFile(player->pathPlayerfile);
+
+    // unlock players
+    if (player->hennou)
+    {
+        playerList->list[1]->unlock = true;
+    }
+    if (player->chevaillier)
+    {
+        playerList->list[2]->unlock = true;
+    }
+
+    switch (player->name[0])
+    {
+
+    // Briatte: index 0
+    case 'B':
+        if (playerList->size > 0)
+        {
+            playerList->list[0] = player;
+        }
+        break;
+
+    // Hennou: index 1
+    case 'H':
+        if (playerList->size > 1)
+        {
+            playerList->list[1] = player;
+        }
+        break;
+
+    // Chevaillier: index 2
+    case 'C':
+        if (playerList->size > 2)
+        {
+            playerList->list[2] = player;
+        }
+        break;
+
+    default:
+        break;
+    }
+
+    // write on the file playerfile
+    writePlayerFile(*playerList, player->pathPlayerfile);
+}
+
+Player *selectPlayer(char *playerfile)
+{
+    PlayerList *playerList = readPlayerFile(playerfile);
+    puts("Choose your player:");
+
+    // display players from the playerfile
+    for (int i = 0; i < playerList->size; i += 1)
+    {
+        if (playerList->list[i]->unlock)
+        {
+            printf("---> %s\n", playerList->list[i]->name);
+        }
+    }
+
+    char *name = malloc(sizeof(char) * 12);
+    do
+    {
+        printf("Tape the name of your player: ");
+        scanf("%s", name);
+        lowercase(name);
+    } while (strcmp(name, "briatte") && strcmp(name, "b") && strcmp(name, "chevaillier") && strcmp(name, "hennou"));
+
+    Player *player;
+
+    switch (name[0])
+    {
+    case 'b':
+        // player = newPlayer("Briatte", 3, 0, 3.50, false, false, false, 1);
+        player = playerList->list[0];
+        break;
+    case 'c':
+        player = newPlayer("Chevaillier", 1, 8, 2.50, false, false, true, 1);
+        break;
+
+    case 'h':
+        player = playerList->list[1];
+        break;
+    }
+
+    return player;
 }

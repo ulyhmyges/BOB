@@ -3,46 +3,10 @@
 **
 **  Made by : HT
 **
-**  Description : attempt to start the bob's game
+**  Description :
 */
 
-#include "room.h"
-#include "level.h"
-#include "itemFile.h"
-
-#include <unistd.h>
-#include <stdlib.h>
-
-#include <termios.h>
-#include <unistd.h>
-#include <fcntl.h>
-
-int kbhit(void)
-{
-    struct termios oldt, newt;
-    int ch;
-    int oldf;
-
-    tcgetattr(STDIN_FILENO, &oldt);
-    newt = oldt;
-    newt.c_lflag &= ~(ICANON | ECHO);
-    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-    oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
-    fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
-
-    ch = getchar();
-
-    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-    fcntl(STDIN_FILENO, F_SETFL, oldf);
-
-    if (ch != EOF)
-    {
-        ungetc(ch, stdin);
-        return 1;
-    }
-
-    return 0;
-}
+#include "move.h"
 
 int isItem(Level *level, int h, int w)
 {
@@ -52,10 +16,7 @@ int isDoor(Level *level, int h, int w)
 {
     return level->currentRoom->map[h][w] == 'D';
 }
-int isBoss(Level *level, int h, int w)
-{
-    return level->currentRoom->map[h][w] == 'B';
-}
+
 int isHealth(Level *level, int h, int w)
 {
     return level->currentRoom->map[h][w] == 'H';
@@ -91,6 +52,36 @@ int isWall(Level *level, int h, int w)
 int isBlank(Level *level, int h, int w)
 {
     return level->currentRoom->map[h][w] == ' ';
+}
+
+boolean isEnd(Level *level, int h, int w)
+{
+    return level->currentRoom->map[h][w] == 'E';
+}
+
+boolean isNext(Level *level, int h, int w)
+{
+    return level->currentRoom->map[h][w] == 'N';
+}
+
+boolean isPerson(Level *level, int h, int w)
+{
+    return level->currentRoom->map[h][w] == 'P';
+}
+
+boolean isMonster(Level *level, int h, int w)
+{
+    return level->currentRoom->map[h][w] == 'M';
+}
+
+boolean isBoss(Level *level, int h, int w)
+{
+    return level->currentRoom->map[h][w] == 'B';
+}
+
+boolean isLock(Level *level, int h, int w)
+{
+    return level->currentRoom->map[h][w] == 'L';
 }
 
 /**
@@ -142,13 +133,50 @@ void reachCardinalPoint(Level *level)
 // tput lines => 52
 void showCurrentRoom(Level *level)
 {
+    // clear screen
+    printf("\e[1;1H\e[2J");
+
+    // color of the sceen
+    system("echo '\e[032m'");
+
     for (int i = 0; i < 15; i += 1)
     {
         printf("\n");
     }
 
-    showRoom(level->floor[level->coord.u][level->coord.v]);
+    // showRoom(level->floor[level->coord.u][level->coord.v]);
+    showRoom(*level->currentRoom);
     printf("h: %d, w: %d\n", level->coord.p.h, level->coord.p.w);
+}
+
+void showEnd()
+{
+    // clear screen
+    system("clear");
+
+    // color of the sceen
+    system("echo '\e[032m'");
+
+    for (int i = 0; i < 25; i += 1)
+    {
+        printf("\n");
+    }
+    printf("%*s %s   ", 65, "", "================================ THE BINDING OF BRIATTE ================================");
+
+    for (int i = 0; i < 5; i += 1)
+    {
+        printf("\n");
+    }
+    printf("%*s %s   ", 85, "", "==================== RUN COMPLETED :) ====================");
+
+    for (int i = 0; i < 25; i += 1)
+    {
+        printf("\n");
+    }
+    clock_t start = clock();
+    while (clock() < start + 2000000)
+    {
+    };
 }
 
 void goToNextPoint(Level *level, int h, int w)
@@ -163,16 +191,21 @@ void goToNextPoint(Level *level, int h, int w)
     {
         level->currentRoom->map[level->coord.p.h][level->coord.p.w] = ' ';
     }
+    if (isSpike(level, level->coord.p.h, level->coord.p.w))
+    {
+        // loose 0.5 hp if the point of the player is 'S'
+        ouch(level->player, 0.5);
+    }
 
     // next position of the character 'P'
     level->coord.p.h = h;
     level->coord.p.w = w;
 }
 
-// no wall, no gap
+// no wall, no gap, no rock, no character
 int isSafe(Level *level, int h, int w)
 {
-    if (isWall(level, h, w) || isGap(level, h, w) || isRock(level, h, w))
+    if (isWall(level, h, w) || isGap(level, h, w) || isRock(level, h, w) || isMonster(level, h, w) || isLock(level, h, w))
     {
         return 0;
     }
@@ -181,6 +214,7 @@ int isSafe(Level *level, int h, int w)
 
 void movePerson(Level *level, char key)
 {
+
     switch (key)
     {
     case 'z':
@@ -233,32 +267,25 @@ void movePerson(Level *level, char key)
         upgradePlayer(level->player, lifeOrShield());
     }
 
-    // mark 'P' if next point is empty or item or health
-    if (isBlank(level, level->coord.p.h, level->coord.p.w) 
-        || isItem(level, level->coord.p.h, level->coord.p.w)
-        || isHealth(level, level->coord.p.h, level->coord.p.w))
+    // mark 'P' if next point is empty or item or health or nextlevel or endgame
+    if (isBlank(level, level->coord.p.h, level->coord.p.w) || isItem(level, level->coord.p.h, level->coord.p.w) || isHealth(level, level->coord.p.h, level->coord.p.w))
     {
+        if (level->player->state == inPain)
+        {
+            level->currentRoom->map[level->coord.p.h][level->coord.p.w] = '*';
+            showCurrentRoom(level);
+            clock_t start = clock();
+            while (clock() < start + 40000)
+            {
+            }
+            level->player->state = inShape;
+        }
+
         level->currentRoom->map[level->coord.p.h][level->coord.p.w] = level->character;
     }
-}
 
-void game(Level *level)
-{
-    char c;
-    while (1)
-    {
-        system("clear");
-        system("echo '\e[032m'");
-        showCurrentRoom(level);
-        statsPlayer(level->player);
+    showCurrentRoom(level);
 
-        while (!kbhit())
-        {
-        }
-        c = getchar();
-        movePerson(level, c);
-
-        // fflush(stdin);
-        //  sleep(3);
-    }
+    // monsters moved in the direction of the character 'P' or shoot and move randomly
+    restlessMonsters(level);
 }

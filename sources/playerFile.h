@@ -14,5 +14,8 @@
 int addPlayerFile(Player *player, char *playerfile);
 void writePlayerFile(PlayerList playerList, char *playerfile);
 PlayerList *readPlayerFile(char *playerfile);
+Player * selectPlayer(char *playerfile);
+void savePlayer(Player *player);
+
 
 #endif // PLAYERFILE_H

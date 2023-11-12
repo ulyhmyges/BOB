@@ -16,8 +16,10 @@ Player *newPlayer(char *name, float hpMax, int shield, float dmg, boolean ps, bo
 {
     Player *player = malloc(sizeof(Player));
     player->name = malloc(sizeof(char) * 35);
+    player->pathPlayerfile = malloc(sizeof(char) * 99);
     strcpy(player->name, name);
     player->hpMax = hpMax;
+    player->hp = hpMax;
     player->shield = shield;
     player->dmg = dmg;
     player->ps = ps;
@@ -26,6 +28,18 @@ Player *newPlayer(char *name, float hpMax, int shield, float dmg, boolean ps, bo
     player->achieve = achieve;
     player->invincible = true;
     player->itemList = newItemList();
+    player->state = inShape;
+    player->invincible = true;
+    player->hennou = false;
+    player->chevaillier = false;
+    if (!strcmp(player->name, "Hennou"))
+    {
+        player->hennou = true;
+    }
+    if (!strcmp(player->name, "Chevaillier"))
+    {
+        player->chevaillier = true;
+    }
     return player;
 }
 
@@ -33,6 +47,7 @@ void freePlayer(Player *player)
 {
     freeItemList(player->itemList);
     free(player->name);
+    free(player->pathPlayerfile);
     free(player);
 }
 
@@ -62,10 +77,35 @@ void upgradePlayer(Player *player, Item *item)
     addItemList(item, player->itemList);
 }
 
+/**
+ * @brief character is in pain because of damage
+ *
+ * @param level
+ * @param dmg
+ * @return float
+ */
+float ouch(Player *player, float dmg)
+{
+    if (player->hp >= dmg)
+    {
+        player->hp -= dmg;
+        player->state = inPain;
+    }
+    else
+    {
+        player->hp = 0;
+        player->state = dead;
+    }
+    return player->hp;
+}
+
 void statsPlayer(Player *player)
 {
     printf("\n%s\n", player->name);
-    printf("hp: %.1f\n", player->hpMax);
+    printf("achieve: %d\n", player->achieve);
+    printf("hpMax: %.2f\n", player->hpMax);
+    printf("hp: %.2f\n", player->hp);
+    printf("invincible: %d\n", player->invincible);
     printf("shield: %d\n", player->shield);
     printf("dmg: %.2f\n", player->dmg);
     if (player->ps)
@@ -131,9 +171,13 @@ void showPlayer(Player player)
     {
         printf("flight=%s\n", "true");
     }
+    if (player.unlock)
+    {
+        printf("unlock=%s\n", "true");
+    }
 }
 
-void printPlayer(Player player, FILE *f)
+void writePlayer(Player player, FILE *f)
 {
     // fprintf(f, "---\n");
     fputs("---\n", f);
@@ -177,11 +221,15 @@ void printPlayer(Player player, FILE *f)
     {
         fprintf(f, "flight=%s\n", "true");
     }
+    if (player.unlock)
+    {
+        fprintf(f, "unlock=%s\n", "true");
+    }
 }
 
 Player *readPlayer(FILE *f)
 {
-    Player *player = newPlayer("p", 0, 0, 0, false, false, false, 1);
+    Player *player = newPlayer("p", 0, 0, 0, false, false, false, 0);
     char binaire[5];
     char var[50];
     fgets(var, 50, f);
@@ -192,11 +240,12 @@ Player *readPlayer(FILE *f)
     sscanf(var, "name=%[^\n]", player->name);
     fgets(var, 30, f);
     int i = sscanf(var, "achieve=%d\n", &player->achieve);
+    // succès = 1 et échec = 0
     if (i == 1)
     {
         fgets(var, 30, f);
     }
-    i = sscanf(var, "hpMax=%f\n", &player->hpMax); // succès = 1 et échec = 0
+    i = sscanf(var, "hpMax=%f\n", &player->hpMax);
     if (i == 1)
     {
         fgets(var, 30, f);
@@ -230,6 +279,14 @@ Player *readPlayer(FILE *f)
         player->flight = true;
         fgets(var, 30, f);
     }
+    i = sscanf(var, "unlock=%s\n", binaire);
+    if (i == 1)
+    {
+        player->unlock = true;
+        fgets(var, 30, f);
+    }
     fseek(f, -4, SEEK_CUR);
+
+    player->hp = player->hpMax;
     return player;
 }

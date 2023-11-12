@@ -59,29 +59,6 @@ int addMonsterList(Monster *monster, MonsterList *monsterList)
     }
 }
 
-int removeMonsterList(Monster *monster, MonsterList *monsterList)
-{
-    int i;
-    for (i = 0; i < monsterList->size; i += 1)
-    {
-        if (monsterList->list[i] == monster)
-        {
-            freeMonster(monsterList->list[i]);
-            monsterList->size -= 1;
-            break;
-        }
-    }
-    for (int j = i; j < monsterList->size; j += 1)
-    {
-        monsterList->list[j] = monsterList->list[j + 1];
-    }
-    if (i <= monsterList->size)
-    {
-        return 1;
-    }
-    return 0;
-}
-
 int removeMonsterListByName(char *name, MonsterList *monsterList)
 {
     int i;
@@ -207,7 +184,7 @@ int removeMonster(Monster *monster, MonsterList *monsterList)
     return 0;
 }
 
-int removeMonsterListByIndex(int index, MonsterList *monsterList)
+int removeMonsterByIndex(int index, MonsterList *monsterList)
 {
     if (index >= 0 && index < monsterList->size)
     {

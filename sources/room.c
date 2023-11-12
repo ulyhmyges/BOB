@@ -32,7 +32,7 @@ Room *newRoom(int rows, int columns, char *type, int design, char *monsterfile)
     // r->item = malloc(sizeof(Item));
     r->item = newItem("Empty", 0, 0, 0, false, false, false);
     createMapRoom(r, design);
-    createMonsterList(r, monsterfile);
+    //createMonsterList(r, monsterfile);
     return r;
 }
 
@@ -70,11 +70,12 @@ void createMonsterList(Room *r, char *monsterfile)
     case 9:
         for (int i = 0; i < r->monsters->size; i += 1)
         {
+            r->monsters->list[i]->champion = true;
             r->monsters->list[i]->hpMax *= 2;
             r->monsters->list[i]->dmg *= 2;
         }
         break;
-    // default:
+        // default:
         // do nothing (not a champion)
     }
 }

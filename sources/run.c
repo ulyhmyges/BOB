@@ -9,54 +9,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "player.h"
-#include "playerFile.h"
-#include "itemFile.h"
-#include "item.h"
-#include "monsterFile.h"
-#include "lowercase.h"
-
-
-
-Player* selectPlayer(char *playerfile)
-{
-    puts("Welcome at Bob's game");
-    puts("Choose your player:");
-    puts("-> Briatte");
-    puts("-> Chevaillier");
-    puts("-> Hennou");
-    char *name = malloc(sizeof(char) * 12);
-    do
-    {
-        printf("Tape the name of your player: ");
-        scanf("%s", name);
-        lowercase(name);
-    } while (strcmp(name, "briatte") && strcmp(name, "chevaillier") && strcmp(name, "hennou"));
-    puts("start...");
-    Player *player;
-    PlayerList *playerList = readPlayerFile(playerfile);
-    switch (name[0])
-    {
-    case 'b':
-        player = newPlayer("Briatte", 3, 0, 3.50, false, false, false, 1);
-        break;
-    case 'c':
-        player = newPlayer("Chevaillier", 1, 8, 2.50, false, false, true, 1);
-        break;
-
-    case 'h':
-        player = newPlayer("Hennou", 6, 0, 2, false, false, false, 1);
-        break;
-    }
-    for (int i = 0; i < playerList->size; i += 1)
-    {
-        if (!strcmp(playerList->list[i]->name, player->name))
-        {
-            player = playerList->list[i];
-        }
-    }
-    return player;
-}
+#include "run.h"
 
 /**
  * @brief CLI CRUD des items
@@ -120,13 +73,13 @@ void crudItem()
 
 /**
  * @brief CRUD of monsters
- * 
+ *
  */
 void crudMonster()
 {
     puts("CRUD FOR MONSTERS");
-    char* input = malloc(sizeof(char) * 7);
-    char* monsterfile = malloc(sizeof(char) * 77);
+    char *input = malloc(sizeof(char) * 7);
+    char *monsterfile = malloc(sizeof(char) * 77);
     puts("Which file do you want to use?");
     printf("Enter the path for monster file (mtbob): ");
     scanf("%s", monsterfile);
@@ -148,7 +101,7 @@ void crudMonster()
         lowercase(input);
     } while (strcmp(input, "show") && strcmp(input, "add") && strcmp(input, "update") && strcmp(input, "remove"));
 
-    MonsterList* monsterList = readMonsterFile(monsterfile);
+    MonsterList *monsterList = readMonsterFile(monsterfile);
     printf("length: %d\n", monsterList->size);
     printf("path: %s\n", monsterfile);
     switch (input[0])
@@ -180,3 +133,137 @@ void crudMonster()
     free(monsterfile);
 }
 
+Run *newRun(char *playerfile, char *roomfile, char *itemfile, char *monsterfile)
+{
+    Run *run = malloc(sizeof(Run));
+    run->ptbob = malloc(sizeof(char) * 99);
+    run->rtbob = malloc(sizeof(char) * 99);
+    run->itbob = malloc(sizeof(char) * 99);
+    run->mtbob = malloc(sizeof(char) * 99);
+    strcpy(run->ptbob, playerfile);
+    strcpy(run->rtbob, roomfile);
+    strcpy(run->itbob, itemfile);
+    strcpy(run->mtbob, monsterfile);
+    return run;
+}
+
+void freeRun(Run *run)
+{
+    free(run->ptbob);
+    free(run->rtbob);
+    free(run->itbob);
+    free(run->mtbob);
+    free(run);
+}
+
+void game(Level *level)
+{
+    char c;
+    while (1)
+    {
+        showCurrentRoom(level);
+        statsPlayer(level->player);
+        if (isType(level, level->coord.u, level->coord.v, "Boss") && level->currentRoom->monsters->list[0]->hpMax > 10)
+        {
+            printf("=======monster hp: %.2f =======================", level->currentRoom->monsters->list[0]->hpMax);
+            printf("=======monster name: %s==========================", level->currentRoom->monsters->list[0]->name);
+        }
+
+        while (!kbhit())
+        {
+        }
+        c = getchar();
+
+        // player can shoot with o
+
+        if (canShoot(level))
+        {
+            shoot(level, c);
+        }
+        movePerson(level, c);
+        level = endOrNextLevel(level);
+
+        fflush(stdin);
+        //  sleep(3);
+    }
+}
+
+Level *endOrNextLevel(Level *level)
+{
+    // next level
+    if (isNext(level, level->coord.p.h, level->coord.p.w))
+    {
+        // go to next level
+        level->player->invincible = true;
+        level = newLevel(level->id + 1, level->rows, level->columns, level->pathRoomfile, level->pathItemfile, level->pathMonsterfile, level->player);
+        showCurrentRoom(level);
+    }
+    // end of the game
+    if (isEnd(level, level->coord.p.h, level->coord.p.w))
+    {
+        // level achieved, 3 levels max
+        if (level->player->achieve < 3)
+        {
+            level->player->achieve += 1;
+        }
+
+        showEnd();
+
+        // save the game
+        savePlayer(level->player);
+        exit(0);
+    }
+    return level;
+}
+
+void start()
+{
+    // clear screen
+    printf("\e[1;1H\e[2J");
+
+    // color of the sceen
+    system("echo '\e[032m'");
+
+    for (int i = 0; i < 15; i += 1)
+    {
+        printf("\n");
+    }
+    puts("Welcome at Bob's game");
+
+    puts("Choose one option (p, r, i or m):");
+
+    // display players from the playerfile
+    printf("Play\n");
+    printf("Room's CRUD\n");
+    printf("Item's CRUD\n");
+    printf("Monster's CRUD\n");
+
+    char *option = malloc(sizeof(char) * 12);
+    do
+    {
+        printf("Which option?: ");
+        scanf("%s", option);
+        lowercase(option);
+    } while (strcmp(option, "p") && strcmp(option, "r") && strcmp(option, "i") && strcmp(option, "m"));
+
+    switch (option[0])
+    {
+    case 'p':
+        newGame();
+        break;
+
+    case 'r':
+        break;
+
+    case 'i':
+        crudItem();
+        break;
+
+    case 'm':
+        crudMonster();
+        break;
+
+    default:
+        newGame();
+    }
+}
