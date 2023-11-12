@@ -80,23 +80,29 @@ int addPlayerFile(Player *player, char *playerfile)
 void savePlayer(Player *player)
 {
     PlayerList *playerList = readPlayerFile(player->pathPlayerfile);
+
+    // unlock players
+    if (player->hennou)
+    {
+        playerList->list[1]->unlock = true;
+    }
+    if (player->chevaillier)
+    {
+        playerList->list[2]->unlock = true;
+    }
+
     switch (player->name[0])
     {
+
+    // Briatte: index 0
     case 'B':
         if (playerList->size > 0)
         {
-            if (player->dmg < 3.5)
-            {
-                player->dmg = 3.5;
-            }
-            if (player->hpMax < 3)
-            {
-                player->hpMax = 3;
-            }
             playerList->list[0] = player;
         }
         break;
 
+    // Hennou: index 1
     case 'H':
         if (playerList->size > 1)
         {
@@ -104,6 +110,7 @@ void savePlayer(Player *player)
         }
         break;
 
+    // Chevaillier: index 2
     case 'C':
         if (playerList->size > 2)
         {
@@ -115,14 +122,6 @@ void savePlayer(Player *player)
         break;
     }
 
-    if (playerList->size == 1 && player->hennou)
-    {
-        Player *hennou = newPlayer("Hennou", 6, 0, 2, false, false, false, 0);
-        
-        playerList->list[1] = hennou;
-        playerList->size += 1;
-    }
-
     // write on the file playerfile
     writePlayerFile(*playerList, player->pathPlayerfile);
 }
@@ -130,13 +129,15 @@ void savePlayer(Player *player)
 Player *selectPlayer(char *playerfile)
 {
     PlayerList *playerList = readPlayerFile(playerfile);
-    puts("Welcome at Bob's game");
     puts("Choose your player:");
 
     // display players from the playerfile
     for (int i = 0; i < playerList->size; i += 1)
     {
-        printf("---> %s\n", playerList->list[i]->name);
+        if (playerList->list[i]->unlock)
+        {
+            printf("---> %s\n", playerList->list[i]->name);
+        }
     }
 
     char *name = malloc(sizeof(char) * 12);

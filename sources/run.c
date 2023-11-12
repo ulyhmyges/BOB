@@ -163,7 +163,7 @@ void game(Level *level)
     {
         showCurrentRoom(level);
         statsPlayer(level->player);
-        if (isType(level, level->coord.u, level->coord.v, "Boss") && level->currentRoom->monsters->list[0]->hpMax > 5)
+        if (isType(level, level->coord.u, level->coord.v, "Boss") && level->currentRoom->monsters->list[0]->hpMax > 10)
         {
             printf("=======monster hp: %.2f =======================", level->currentRoom->monsters->list[0]->hpMax);
             printf("=======monster name: %s==========================", level->currentRoom->monsters->list[0]->name);
@@ -201,8 +201,12 @@ Level *endOrNextLevel(Level *level)
     // end of the game
     if (isEnd(level, level->coord.p.h, level->coord.p.w))
     {
-        // level achieved
-        level->player->achieve += 1;
+        // level achieved, 3 levels max
+        if (level->player->achieve < 3)
+        {
+            level->player->achieve += 1;
+        }
+
         showEnd();
 
         // save the game
@@ -210,4 +214,56 @@ Level *endOrNextLevel(Level *level)
         exit(0);
     }
     return level;
+}
+
+void start()
+{
+    // clear screen
+    printf("\e[1;1H\e[2J");
+
+    // color of the sceen
+    system("echo '\e[032m'");
+
+    for (int i = 0; i < 15; i += 1)
+    {
+        printf("\n");
+    }
+    puts("Welcome at Bob's game");
+
+    puts("Choose one option (p, r, i or m):");
+
+    // display players from the playerfile
+    printf("Play\n");
+    printf("Room's CRUD\n");
+    printf("Item's CRUD\n");
+    printf("Monster's CRUD\n");
+
+    char *option = malloc(sizeof(char) * 12);
+    do
+    {
+        printf("Which option?: ");
+        scanf("%s", option);
+        lowercase(option);
+    } while (strcmp(option, "p") && strcmp(option, "r") && strcmp(option, "i") && strcmp(option, "m"));
+
+    switch (option[0])
+    {
+    case 'p':
+        newGame();
+        break;
+
+    case 'r':
+        break;
+
+    case 'i':
+        crudItem();
+        break;
+
+    case 'm':
+        crudMonster();
+        break;
+
+    default:
+        newGame();
+    }
 }

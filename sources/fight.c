@@ -32,13 +32,18 @@ void dmgMonster(Level *level, int h, int w)
                     level->currentRoom->map[monsters->list[i]->p.h][monsters->list[i]->p.w] = 'H';
                 }
 
-                // leave an item 'I' after dead
+                // leave an item 'I' after boss dead
                 if (isType(level, level->currentRoom->spot.u, level->currentRoom->spot.v, "Boss"))
                 {
                     level->currentRoom->map[level->rows / 2][level->columns / 2] = 'I';
 
                     // unlock Bonus room if Player's invincible attribute is true
                     showBonusRoom(level);
+
+                    // unlock Chevaillier player if Athina Boss is defeated
+                    if (!strcmp(monsters->list[0]->name, "Athina")){
+                        level->player->chevaillier = true;
+                    }
 
                     // End game or Next level
                     if (level->player->achieve < level->id || level->id == 3)

@@ -167,14 +167,14 @@ void showEnd()
     {
         printf("\n");
     }
-    printf("%*s %s   ", 85, "", "==================== THE END ====================");
+    printf("%*s %s   ", 85, "", "==================== RUN COMPLETED :) ====================");
 
     for (int i = 0; i < 25; i += 1)
     {
         printf("\n");
     }
     clock_t start = clock();
-    while (clock() < start + 5000000)
+    while (clock() < start + 2000000)
     {
     };
 }

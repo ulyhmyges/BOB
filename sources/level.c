@@ -415,7 +415,7 @@ void hideBonusRoom(Level *level)
  */
 void showBonusRoom(Level *level)
 {
-    if (level->player->invincible == false)
+    if (level->player->invincible)
     {
         // unlock player Hennou
         level->player->hennou = true;

@@ -171,6 +171,10 @@ void showPlayer(Player player)
     {
         printf("flight=%s\n", "true");
     }
+    if (player.unlock)
+    {
+        printf("unlock=%s\n", "true");
+    }
 }
 
 void writePlayer(Player player, FILE *f)
@@ -216,6 +220,10 @@ void writePlayer(Player player, FILE *f)
     if (player.flight)
     {
         fprintf(f, "flight=%s\n", "true");
+    }
+    if (player.unlock)
+    {
+        fprintf(f, "unlock=%s\n", "true");
     }
 }
 
@@ -269,6 +277,12 @@ Player *readPlayer(FILE *f)
     if (i == 1)
     {
         player->flight = true;
+        fgets(var, 30, f);
+    }
+    i = sscanf(var, "unlock=%s\n", binaire);
+    if (i == 1)
+    {
+        player->unlock = true;
         fgets(var, 30, f);
     }
     fseek(f, -4, SEEK_CUR);

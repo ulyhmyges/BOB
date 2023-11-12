@@ -40,6 +40,7 @@ typedef struct Player
     char* pathPlayerfile;
     boolean chevaillier;
     boolean hennou;
+    boolean unlock;
 } Player;
 
 Player *newPlayer(char *name, float hpMax, int shield, float dmg, boolean ps, boolean ss, boolean flight, int achieve);
