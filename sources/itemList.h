@@ -18,7 +18,7 @@ typedef struct ItemList {
 } ItemList;
 
 ItemList * newItemList(void);
-void freeItemList();
+void freeItemList(ItemList *itemList);
 void printItemList(ItemList itemList, FILE *f);
 void showItemList(ItemList itemList);
 int addItemList(Item *item, ItemList *itemList);
@@ -28,4 +28,4 @@ int removeItemListByIndex(int index, ItemList *itemList);
 Item* getItemByName(ItemList *itemList);
 int updateItemByName(ItemList* itemList);
 
-#endif
+#endif  // ITEMLIST_H

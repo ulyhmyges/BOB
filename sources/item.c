@@ -26,7 +26,7 @@ Item* newItem(char *name, float hpMax, int shield, float dmg, boolean ps, boolea
     return item;
 }
 
-Item* lifeOrShield(){
+Item* lifeOrShield(void){
     int alea = rand() % 2;
     Item* item;
     if (alea){
@@ -52,7 +52,7 @@ void showItem(Item item)
 {
     printf("---\n");
     printf("name=%s\n", item.name);
-    if (item.hpMax)
+    if (item.hpMax > 0)
     {
         if (item.hpMax == (int)item.hpMax)
         {
@@ -63,11 +63,11 @@ void showItem(Item item)
             printf("hpMax=%.1f\n", item.hpMax);
         }
     }
-    if (item.shield)
+    if (item.shield > 0)
     {
         printf("shield=%d\n", item.shield);
     }
-    if (item.dmg)
+    if (item.dmg > 0)
     {
         if (item.dmg == (int)item.dmg)
         {

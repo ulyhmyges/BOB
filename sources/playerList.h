@@ -17,7 +17,7 @@ typedef struct PlayerList {
     int capacity;
 } PlayerList;
 
-PlayerList * newPlayerList();
+PlayerList * newPlayerList(void);
 void freePlayerList(PlayerList *playerList);
 
 PlayerList * readPlayerList(FILE *f);

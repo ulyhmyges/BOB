@@ -18,7 +18,7 @@ ItemList *newItemList(void)
     ItemList *itemList = malloc(sizeof(ItemList));
     itemList->capacity = 35;
     itemList->size = 0;
-    itemList->list = malloc(sizeof(Item *) * itemList->capacity);
+    itemList->list = malloc(sizeof(Item *) * (long)itemList->capacity);
     return itemList;
 }
 

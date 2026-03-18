@@ -2,8 +2,22 @@
 
 CLI game in C
 
-It's a school project.
+A dungeon crawl through procedurally generated levels
 
-An attempt to copy Binding of Isaac.. :)
+Game inspired by The Binding Of Isaac
 
-![image](./documentation/construction.png)
+It's a school project
+
+![image](./documentation/bob.png)
+
+View of the room with statistics
+
+P : Game character
+
+W : Wall
+
+D : Door
+
+L : Door locked
+
+R : Rock
