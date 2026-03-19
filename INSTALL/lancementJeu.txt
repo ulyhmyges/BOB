@@ -1,3 +1,0 @@
-Le roglike Binding of Briatte s'exécute en ligne de commande.
-
-(jeu en construction)

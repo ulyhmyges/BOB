@@ -10,3 +10,4 @@ bin/
 ressources/
 sources/main
 sources/main.c
+sources/main.dSYM/*

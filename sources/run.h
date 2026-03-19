@@ -31,8 +31,8 @@ void crudMonster(void);
 
 // start a game
 Run *newRun(char *playerfile, char *roomfile, char *itemfile, char *monsterfile);
-void start();
-void newGame();
+void start(void);
+void newGame(void);
 void game(Level* level);
 Level* endOrNextLevel(Level* level);
 #endif // RUN_H

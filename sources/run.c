@@ -15,7 +15,7 @@
  * @brief CLI CRUD des items
  *
  */
-void crudItem()
+void crudItem(void)
 {
     puts("CRUD FOR ITEMS");
     char *input = malloc(sizeof(char) * 7);
@@ -75,7 +75,7 @@ void crudItem()
  * @brief CRUD of monsters
  *
  */
-void crudMonster()
+void crudMonster(void)
 {
     puts("CRUD FOR MONSTERS");
     char *input = malloc(sizeof(char) * 7);
@@ -180,6 +180,7 @@ void game(Level *level)
         {
             shoot(level, c);
         }
+        
         movePerson(level, c);
         level = endOrNextLevel(level);
 
@@ -216,7 +217,7 @@ Level *endOrNextLevel(Level *level)
     return level;
 }
 
-void start()
+void start(void)
 {
     // clear screen
     printf("\e[1;1H\e[2J");
@@ -233,10 +234,10 @@ void start()
     puts("Choose one option (p, r, i or m):");
 
     // display players from the playerfile
-    printf("Play\n");
-    printf("Room's CRUD\n");
-    printf("Item's CRUD\n");
-    printf("Monster's CRUD\n");
+    printf("Play (p)\n");
+    printf("Room's CRUD (TODO) (r)\n");
+    printf("Item's CRUD (i)\n");
+    printf("Monster's CRUD (m)\n");
 
     char *option = malloc(sizeof(char) * 12);
     do
@@ -266,4 +267,19 @@ void start()
     default:
         newGame();
     }
+}
+
+void newGame(void)
+{
+    Run *run = newRun("/Users/ulyh/programmation/c/bbriatte/bob/binding_of_briatte/ressources/file.ptbob",
+                      "/Users/ulyh/programmation/c/bbriatte/bob/binding_of_briatte/ressources/file.rtbob",
+                      "/Users/ulyh/programmation/c/bbriatte/bob/binding_of_briatte/ressources/file.itbob",
+                      "/Users/ulyh/programmation/c/bbriatte/bob/binding_of_briatte/ressources/file.mtbob");
+
+
+    Player *player = selectPlayer(run->ptbob);
+
+    Level *level = newLevel(1, 9, 15, run->rtbob, run->itbob, run->mtbob, player);
+
+    game(level);
 }

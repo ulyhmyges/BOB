@@ -59,7 +59,7 @@ Room *createSpecialRoom(Level *level, int rows, int columns, char kind, char *it
  */
 void createFloor(Level *level, char *monsterfile)
 {
-    level->floor = malloc(sizeof(Room *) * level->height);
+    level->floor = malloc(sizeof(Room *) * (long)level->height);
     for (int i = 0; i < level->height; i += 1)
     {
         level->floor[i] = malloc(sizeof(Room) * level->width);
@@ -169,7 +169,7 @@ void randFloor(Level *level, char *roomfile, char *monsterfile)
         int times = 0;
         while (count < 10 && times < 20)
         {
-            level->direction = rand() % 4;
+            level->direction = (direction)rand() % 4;
             int design = rand() % 5;
             design += 1;
             switch (level->direction)

@@ -41,7 +41,8 @@ void dmgMonster(Level *level, int h, int w)
                     showBonusRoom(level);
 
                     // unlock Chevaillier player if Athina Boss is defeated
-                    if (!strcmp(monsters->list[0]->name, "Athina")){
+                    if (!strcmp(monsters->list[0]->name, "Athina"))
+                    {
                         level->player->chevaillier = true;
                     }
 
@@ -737,27 +738,27 @@ void monsterShoot(Level *level, Monster *m, direction way)
 
 void restlessMonsters(Level *level)
 {
-    /*
-        if (isType(level, level->coord.u, level->coord.v, "Room"))
-        {
-            MonsterList *monsters = level->currentRoom->monsters;
-            if (monsters->size)
-            {
-                // printf("=======monsters: %p, size: %d, list[1]: %p=========", monsters, monsters->size, monsters->list[1]);
-                lockDoors(level, level->coord.u, level->coord.v);
-                for (int i = 0; i < monsters->size; i += 1)
-                {
 
-                    movedMonster(level, monsters->list[i], (rand() % 2));
-                    sideAttack(level, monsters->list[i]);
-                }
-            }
-            else
+    if (isType(level, level->coord.u, level->coord.v, "Room"))
+    {
+        MonsterList *monsters = level->currentRoom->monsters;
+        if (monsters->size)
+        {
+            // printf("=======monsters: %p, size: %d, list[1]: %p=========", monsters, monsters->size, monsters->list[1]);
+            lockDoors(level, level->coord.u, level->coord.v);
+            for (int i = 0; i < monsters->size; i += 1)
             {
-                unlockDoors(level, level->coord.u, level->coord.v);
+
+                movedMonster(level, monsters->list[i], (rand() % 2));
+                sideAttack(level, monsters->list[i]);
             }
         }
-    */
+        else
+        {
+            unlockDoors(level, level->coord.u, level->coord.v);
+        }
+    }
+
     if (isType(level, level->coord.u, level->coord.v, "Boss"))
     {
         MonsterList *boss = level->currentRoom->monsters;
@@ -962,7 +963,7 @@ void AthinaBossAttack(Level *level, Monster *m)
  *
  * @return Monster*
  */
-Monster *createBossJagger()
+Monster *createBossJagger(void)
 {
     Monster *boss = newMonster("Jagger", 100, 1, true, false, false);
 
@@ -977,7 +978,7 @@ Monster *createBossJagger()
  *
  * @return Monster*
  */
-Monster *createBossLenina()
+Monster *createBossLenina(void)
 {
     Monster *boss = newMonster("Lenina", 300, 1, true, false, false);
     return boss;
@@ -992,7 +993,7 @@ Monster *createBossLenina()
  *
  * @return Monster*
  */
-Monster *createBossAthina()
+Monster *createBossAthina(void)
 {
     Monster *boss = newMonster("Athina", 450, 1, true, false, false);
     return boss;

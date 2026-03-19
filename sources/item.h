@@ -34,4 +34,4 @@ void showItem(Item item);
 void printItem(Item item, FILE *f);
 Item * readItem(FILE *f);
 Item* askItem(Item* item);
-#endif
+#endif  // ITEM_H
